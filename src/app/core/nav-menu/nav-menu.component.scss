@@ -1,0 +1,49 @@
+@import "../header/header.component.scss";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  outline: none;
+  width: 100%;
+  color: rgba(0,0,0,.65);
+
+  .menu-list-item {
+    cursor: pointer;
+  }
+
+  .menu-list-item:hover {
+    background-color: #e8eaf6;
+  }
+
+  .menu-list-item.active {
+    background-color: #e8eaf6;
+    color: #009ca3 !important;
+  }
+  &:hover,
+  &:focus {
+    > .menu-list-item:not(.expanded) {
+      background-color: #e8eaf6 !important;
+      color: #009ca3 !important;
+    }
+  }
+}
+
+.menu-list-item {
+  // padding: 8px 0;
+  padding: 9px 10px;
+  display: flex;
+  width: auto;
+
+  .route-icon {
+    margin-right: 40px;
+  }
+}
+
+a {
+  align-items: center;
+}
+
+span {
+  display: flex;
+}
+

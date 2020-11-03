@@ -1,0 +1,25 @@
+<ng-container *ngTemplateOutlet="
+isSmallScreen ? responsive : not_responsive
+">
+</ng-container>
+<ng-template #not_responsive let-lessonsCounter="estimate">
+  <label class="labelNotResponsive">{{sesion.name}}</label>
+  <button mat-icon-button>
+    <mat-icon class="example-icon" aria-hidden="false">person
+    </mat-icon>
+  </button>
+  <button mat-icon-button>
+    <mat-icon mat-icon-button class="example-icon" aria-hidden="false" (click)="logOut()">exit_to_app</mat-icon>
+  </button>
+</ng-template>
+<ng-template #responsive let-lessonsCounter="estimate">
+  <button mat-menu-item>
+    <mat-icon class="example-icon" aria-hidden="false">person
+    </mat-icon>
+    Usuarios
+  </button>
+  <button mat-menu-item>
+    <mat-icon mat-icon-button class="example-icon" aria-hidden="false" (click)="logOut()">exit_to_app</mat-icon>
+    Salir
+  </button>
+</ng-template>

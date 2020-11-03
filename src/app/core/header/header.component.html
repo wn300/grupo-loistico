@@ -1,0 +1,21 @@
+<mat-toolbar class="example-toolbar bg-color-corporative">
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" (click)="toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>{{titleToolbar}}</span>
+  <span class="header-spacer"></span>
+  <ng-container *ngTemplateOutlet="isSmallScreen ? responsive : not_responsive">
+  </ng-container>
+</mat-toolbar>
+
+<ng-template #not_responsive>
+  <app-options [isSmallScreen]="isSmallScreen"></app-options>
+</ng-template>
+<ng-template #responsive>
+  <mat-menu #menuResponsiveOptions="matMenu">
+    <app-options [isSmallScreen]="isSmallScreen"></app-options>
+  </mat-menu>
+  <button mat-icon-button [matMenuTriggerFor]="menuResponsiveOptions">
+    <mat-icon class="example-icon" aria-hidden="false" aria-label="menu icon">more_vert</mat-icon>
+  </button>
+</ng-template>
