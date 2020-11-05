@@ -77,8 +77,8 @@ export class DialogFormComponent implements OnInit {
         { type: 'maxLength', message: 'La ciudad no puede superar los 20 caracteres' },
       ],
       contact: [
-        { type: 'required', message: 'Wlcontacto es un campo requerido.' },
-        { type: 'maxLength', message: 'Wlcontacto no puede superar los 20 caracteres' },
+        { type: 'required', message: 'El contacto es un campo requerido.' },
+        { type: 'maxLength', message: 'El contacto no puede superar los 20 caracteres' },
       ],
       phone: [
         { type: 'required', message: 'El telefono es un campo requerido.' },
