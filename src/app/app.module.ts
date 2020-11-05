@@ -6,10 +6,12 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { LayoutModule } from '@angular/cdk/layout';
 
+import { environment } from 'src/environments/environment';
 import { CoreModule } from './core/core.module';
-import { SharedModule } from './shared/shared.module';
 @NgModule({
   declarations: [
     AppComponent
@@ -22,7 +24,8 @@ import { SharedModule } from './shared/shared.module';
     MatSidenavModule,
     MatListModule,
     LayoutModule,
-    SharedModule
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule
   ],
   providers: [],
   bootstrap: [AppComponent]

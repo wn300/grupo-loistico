@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { administrationRootRoute } from './administration/administration-routing.module';
 
-import { exampleOneRootRoute } from './example-one/example-one-routing.module';
 import { homeRootRoute } from './home/home-routing.module';
 
 export const containersRootRoute = 'containers';
@@ -18,9 +18,9 @@ const routes: Routes = [
       import('./home/home.module').then(m => m.HomeModule)
   },
   {
-    path: exampleOneRootRoute,
+    path: administrationRootRoute,
     loadChildren: () =>
-      import('./example-one/example-one.module').then(m => m.ExampleOneModule)
+      import('./administration/administration.module').then(m => m.AdministrationModule)
   }
 ];
 

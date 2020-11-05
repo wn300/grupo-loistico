@@ -10,6 +10,7 @@ import { MatMenuModule } from '@angular/material/menu';
 
 import { NavService } from './services/nav/nav.service';
 import { OptionsComponent } from './header/components/options/options.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [HeaderComponent, NavMenuComponent, OptionsComponent],
@@ -19,7 +20,8 @@ import { OptionsComponent } from './header/components/options/options.component'
     MatToolbarModule,
     MatIconModule,
     MatButtonModule,
-    MatMenuModule
+    MatMenuModule,
+    SharedModule
   ],
   providers: [
     NavService

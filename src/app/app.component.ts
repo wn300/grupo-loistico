@@ -29,20 +29,35 @@ export class AppComponent {
 
     this.menu = [
       {
-        displayName: 'Ejemplo 1',
+        displayName: 'Inicio',
         iconName: 'dashboard',
         route: '/containers/home'
       },
       {
-        displayName: 'Ejemplo 2',
+        displayName: 'Administración',
         iconName: 'supervisor_account',
-        route: '/containers',
+        route: '/containers/administration',
         children: [
           {
-            displayName: 'Ejemplo 2.1',
+            displayName: 'Empresas',
             iconName: '',
-            route: '/containers/example_one'
-          }
+            route: '/containers/administration/company'
+          },
+          {
+            displayName: 'Clientes',
+            iconName: '',
+            route: '/containers/administration/clients'
+          },
+          {
+            displayName: 'Centros de trabajo',
+            iconName: '',
+            route: '/containers/administration/work_center'
+          },
+          {
+            displayName: 'Personas',
+            iconName: '',
+            route: '/containers/administration/people'
+          },
         ]
       }
     ];

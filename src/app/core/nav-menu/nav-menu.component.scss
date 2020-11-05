@@ -5,7 +5,7 @@
   flex-direction: column;
   outline: none;
   width: 100%;
-  color: rgba(0,0,0,.65);
+  color: rgba(0, 0, 0, 0.65);
 
   .menu-list-item {
     cursor: pointer;
@@ -17,13 +17,13 @@
 
   .menu-list-item.active {
     background-color: #e8eaf6;
-    color: #009ca3 !important;
+    color: #0031a3 !important;
   }
   &:hover,
   &:focus {
     > .menu-list-item:not(.expanded) {
       background-color: #e8eaf6 !important;
-      color: #009ca3 !important;
+      color: #0031a3 !important;
     }
   }
 }
@@ -46,4 +46,3 @@ a {
 span {
   display: flex;
 }
-
