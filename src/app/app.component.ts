@@ -46,7 +46,7 @@ export class AppComponent {
           {
             displayName: 'Clientes',
             iconName: '',
-            route: '/containers/administration/clients'
+            route: '/containers/administration/client'
           },
           {
             displayName: 'Centros de trabajo',

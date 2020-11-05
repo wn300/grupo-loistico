@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { clientRootRoute } from './client/client-routing.module';
 import { companyRootRoute } from './company/company-routing.module';
 import { peopleRootRoute } from './people/people-routing.module';
 
@@ -20,6 +21,11 @@ const routes: Routes = [
     path: companyRootRoute,
     loadChildren: () =>
     import('./company/company.module').then(m => m.CompanyModule)
+  },
+  {
+    path: clientRootRoute,
+    loadChildren: () =>
+    import('./client/client.module').then(m => m.ClientModule)
   }
 ];
 
