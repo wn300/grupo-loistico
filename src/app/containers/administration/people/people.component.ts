@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-people',
@@ -8,6 +9,7 @@ import { Component, OnInit } from '@angular/core';
 export class PeopleComponent implements OnInit {
   public titlePage: string;
   public subTitle: string;
+  public subscribe: Subscription;
 
   constructor() {
     this.titlePage = 'Personas';
@@ -15,6 +17,7 @@ export class PeopleComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.subscribe.unsubscribe();
   }
 
   addNewPeople(): void {
