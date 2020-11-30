@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { containersRootRoute } from './containers/containers-routing.module';
 
-import { homeRootRoute } from './containers/home/home-routing.module';
+import { containersRootRoute } from './containers/containers-routing.module';
+import { authenticationRootRoute } from './containers/authentication/authentication-routing.module';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: `${containersRootRoute}/${homeRootRoute}`,
+    redirectTo: `${containersRootRoute}/${authenticationRootRoute}`,
     pathMatch: 'full'
   },
   {

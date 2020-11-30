@@ -18,8 +18,8 @@ isSmallScreen ? responsive : not_responsive
     </mat-icon>
     Usuarios
   </button>
-  <button mat-menu-item>
-    <mat-icon mat-icon-button class="example-icon" aria-hidden="false" (click)="logOut()">exit_to_app</mat-icon>
+  <button mat-menu-item (click)="logOut()">
+    <mat-icon mat-icon-button class="example-icon" aria-hidden="false">exit_to_app</mat-icon>
     Salir
   </button>
 </ng-template>

@@ -12,6 +12,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 
 import { environment } from 'src/environments/environment';
 import { CoreModule } from './core/core.module';
+import { AuthenticationService } from './containers/authentication/services/authentication.service';
 @NgModule({
   declarations: [
     AppComponent
@@ -25,9 +26,9 @@ import { CoreModule } from './core/core.module';
     MatListModule,
     LayoutModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFirestoreModule
+    AngularFirestoreModule,
   ],
-  providers: [],
+  providers: [AuthenticationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

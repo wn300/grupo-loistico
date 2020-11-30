@@ -1,24 +1,30 @@
 <main class="app-component">
-  <div class="example-container">
-    <app-header (toggleEmit)="emitActionClickToogle()" [isSmallScreen]="isSmallScreen"></app-header>
-    <mat-sidenav-container autosize>
-      <mat-sidenav #drawer class="nav-sidenav" [mode]="overOrSide">
-        <mat-nav-list>
-          <span *ngIf='menu.length > 0'>
-            <app-nav-menu *ngFor="let item of menu" [item]="item"></app-nav-menu>
-          </span>
-        </mat-nav-list>
-      </mat-sidenav>
+  <section >
+    <div class="example-container">
+      <app-header *ngIf="isLogged" (toggleEmit)="emitActionClickToogle()" [isSmallScreen]="isSmallScreen"></app-header>
+      <mat-sidenav-container autosize>
+        <mat-sidenav #drawer class="nav-sidenav" [mode]="overOrSide">
+          <mat-nav-list>
+            <span *ngIf='menu.length > 0'>
+              <app-nav-menu *ngFor="let item of menu" [item]="item"></app-nav-menu>
+            </span>
+          </mat-nav-list>
+        </mat-sidenav>
 
-      <mat-sidenav-content class="nav-sidenav-content">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-12">
-              <router-outlet></router-outlet>
+        <mat-sidenav-content class="nav-sidenav-content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <router-outlet></router-outlet>
+              </div>
             </div>
           </div>
-        </div>
-      </mat-sidenav-content>
-    </mat-sidenav-container>
-  </div>
+        </mat-sidenav-content>
+      </mat-sidenav-container>
+    </div>
+  </section>
+
+  <!-- <section  *ngIf="(currentPage === '/containers/authentication' || currentPage === '/')">
+    <router-outlet></router-outlet>
+  </section> -->
 </main>
