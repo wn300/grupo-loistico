@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { clientRootRoute } from './client/client-routing.module';
 import { companyRootRoute } from './company/company-routing.module';
+import { deleteFilesRootRoute } from './delete-files/delete-files-routing.module';
 import { peopleRootRoute } from './people/people-routing.module';
 import { workCenterRootRoute } from './work-center/work-center-routing.module';
 
@@ -21,17 +22,22 @@ const routes: Routes = [
   {
     path: companyRootRoute,
     loadChildren: () =>
-    import('./company/company.module').then(m => m.CompanyModule)
+      import('./company/company.module').then(m => m.CompanyModule)
   },
   {
     path: clientRootRoute,
     loadChildren: () =>
-    import('./client/client.module').then(m => m.ClientModule)
-  }  ,
+      import('./client/client.module').then(m => m.ClientModule)
+  },
   {
     path: workCenterRootRoute,
     loadChildren: () =>
-    import('./work-center/work-center.module').then(m => m.WorkCenterModule)
+      import('./work-center/work-center.module').then(m => m.WorkCenterModule)
+  },
+  {
+    path: deleteFilesRootRoute,
+    loadChildren: () =>
+      import('./delete-files/delete-files.module').then(m => m.DeleteFilesModule)
   }
 ];
 

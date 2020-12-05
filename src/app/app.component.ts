@@ -90,6 +90,11 @@ export class AppComponent implements OnDestroy {
             iconName: '',
             route: '/containers/administration/people'
           },
+          {
+            displayName: 'Imagenes',
+            iconName: '',
+            route: '/containers/administration/delete_files'
+          },
         ]
       }
     ];
