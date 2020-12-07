@@ -44,7 +44,7 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
 
       this.imagesByReport = data.map((catData: any) => {
         const objectReport = {
-          id: catData.payload.doc.data().id,
+          id: catData.payload.doc.id,
           images: catData.payload.doc.data().images,
           address: catData.payload.doc.data().address,
           createAt: catData.payload.doc.data().createAt,
@@ -86,30 +86,58 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
     window.open(image);
   }
 
-  checkDeleteFile(image: string): void {
-    const selected = this.imagesMappper.filter(imageArray => imageArray.name === image)[0].selected;
-    this.imagesMappper.filter(imageArray => imageArray.name === image)[0].selected = !selected;
+  checkDeleteFile(element: any): void {
+    const selected = this.imagesMappper.filter(imageArray => imageArray.name === element.name)[0].selected;
+    this.imagesMappper.filter(imageArray => imageArray.name === element.name)[0].selected = !selected;
 
-    if (this.imagesDelete.filter(imageArray => imageArray === image).length > 0) {
-      this.imagesDelete.splice(this.imagesDelete.findIndex(imageArray => imageArray === image), 1);
+    if (this.imagesDelete.filter(imageArray => imageArray.image === element.name).length > 0) {
+      this.imagesDelete.splice(this.imagesDelete.findIndex(imageArray => imageArray.image === element.name), 1);
     } else {
-      this.imagesDelete.push(image);
+      this.imagesDelete.push({ id: element.id, image: element.name, url: element.url });
     }
   }
 
   deleteImages(): void {
     this.imagesDelete.forEach(data => {
-      console.log(data);
+      console.log(data, 'data');
+      // this.deleteFilesService.downloadFile(data.url).subscribe(response => {
+      //   const blob: any = new Blob([response], { type: 'text/json; charset=utf-8' });
+      //   const url = window.URL.createObjectURL(blob);
+      //   window.open(url);
+      // }, (error) => { console.log('Error downloading the file') });
+      this.storage.storage.ref(`reports/${data.image}`).getDownloadURL()
+        .then(url => {
+          const xhr = new XMLHttpRequest();
+          xhr.responseType = 'blob';
+          xhr.onload = (event) => {
+            const blob = xhr.response;
+            const urlBlogb = window.URL.createObjectURL(blob);
+            window.open(urlBlogb);
+          };
+          xhr.open('GET', url);
+          xhr.send();
 
-      // this.storage.storage.ref(`reports/${data}`).delete();
-      // const fileDeleted = this.imagesMappper.filter(imageArray => imageArray.name === data)[0];
+        });
+      // this.storage.storage.ref(`reports/${data.image}`).delete();
 
+      const imageRemovedObject = this.imagesByReport.filter(imageObject => imageObject.id === data.id);
+      console.log(imageRemovedObject[0], '1');
+      if (imageRemovedObject.length > 0) {
+        imageRemovedObject[0].images.splice(imageRemovedObject[0].images.findIndex(image => image === data.url), 1);
+        console.log(imageRemovedObject[0], '2');
+      }
     });
   }
 
   selectedAllImages(): void {
     this.imagesMappper.forEach(data => data.selected = true);
-    this.imagesDelete = this.imagesMappper.map(data => data.name);
+    this.imagesDelete = this.imagesMappper.map(data => {
+      return {
+        id: data.id,
+        image: data.name,
+        url: data.url
+      }
+    });
   }
 
   deSelectedAll(): void {

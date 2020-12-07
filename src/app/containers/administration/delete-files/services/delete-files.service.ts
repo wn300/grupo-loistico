@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
@@ -6,17 +7,18 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DeleteFilesService {
+  public collectionReport = 'reports';
 
-  constructor(private firestore: AngularFirestore) { }
+  constructor(private firestore: AngularFirestore, private http: HttpClient) { }
 
   getReportsByFiles(): Observable<any> {
-    return this.firestore.collection('reports').snapshotChanges();
+    return this.firestore.collection(this.collectionReport).snapshotChanges();
   }
 
   putReportsByFiles(id: string, dataSave: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       this.firestore
-        .collection('reports')
+        .collection(this.collectionReport)
         .doc(id)
         .set(dataSave)
         .then(
@@ -25,4 +27,9 @@ export class DeleteFilesService {
         );
     });
   }
+
+  downloadFile(url: string): any {
+    return this.http.get(url, { responseType: 'arraybuffer' });
+  }
+
 }

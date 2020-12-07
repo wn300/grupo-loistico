@@ -7,6 +7,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
+import { HttpClientModule } from '@angular/common/http';
 
 import { DeleteFilesRoutingModule } from './delete-files-routing.module';
 import { DeleteFilesComponent } from './delete-files.component';
@@ -25,6 +26,7 @@ import { DeleteFilesService } from './services/delete-files.service';
     MatIconModule,
     MatCheckboxModule,
     MatButtonModule,
+    HttpClientModule
   ],
   providers: [DeleteFilesService]
 })
