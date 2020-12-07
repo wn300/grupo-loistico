@@ -5,7 +5,7 @@
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Identificación</mat-label>
-          <input type="number" autocomplete="off" matInput placeholder="Identificación"
+          <input required type="number" autocomplete="off" matInput placeholder="Identificación"
             formControlName="identification" maxlength="20">
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.identification">
@@ -19,7 +19,7 @@
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Nombre del centro de trabajo</mat-label>
-          <input autocomplete="off" matInput placeholder="Nombre centro de trabajo" formControlName="name"
+          <input required autocomplete="off" matInput placeholder="Nombre centro de trabajo" formControlName="name"
             maxlength="100">
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.name">
@@ -33,7 +33,7 @@
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Ciudad</mat-label>
-          <input autocomplete="off" matInput placeholder="Ciudad" formControlName="city" maxlength="20">
+          <input required autocomplete="off" matInput placeholder="Ciudad" formControlName="city" maxlength="20">
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.city">
           <mat-error class="errorMessages" *ngIf="formWorkCenter.get('city').hasError(validation.type)
@@ -46,7 +46,7 @@
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Código Operación</mat-label>
-          <input type="text" autocomplete="off" matInput placeholder="Código Operación" formControlName="operationCode"
+          <input required type="text" autocomplete="off" matInput placeholder="Código Operación" formControlName="operationCode"
             maxlength="20">
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.operationCode">
@@ -60,7 +60,7 @@
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Operación</mat-label>
-          <input type="text" autocomplete="off" matInput placeholder="Operación" formControlName="operation"
+          <input required type="text" autocomplete="off" matInput placeholder="Operación" formControlName="operation"
             maxlength="20">
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.operation">
@@ -74,7 +74,7 @@
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Dirección</mat-label>
-          <input type="text" autocomplete="off" matInput placeholder="Dirección" formControlName="address"
+          <input required type="text" autocomplete="off" matInput placeholder="Dirección" formControlName="address"
             maxlength="30">
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.address">
@@ -88,7 +88,7 @@
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Latitud</mat-label>
-          <input type="text" autocomplete="off" matInput placeholder="Latitud" formControlName="latitude"
+          <input required type="text" autocomplete="off" matInput placeholder="Latitud" formControlName="latitude"
             maxlength="10">
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.latitude">
@@ -102,7 +102,7 @@
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Longitud</mat-label>
-          <input type="text" autocomplete="off" matInput placeholder="Longitud" formControlName="longitude"
+          <input required type="text" autocomplete="off" matInput placeholder="Longitud" formControlName="longitude"
             maxlength="10">
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.longitude">
@@ -116,7 +116,7 @@
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Cliente</mat-label>
-          <input type="text" autocomplete="off" matInput placeholder="Cliente" formControlName="client">
+          <input required type="text" autocomplete="off" matInput placeholder="Cliente" formControlName="client">
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.client">
           <mat-error class="errorMessages" *ngIf="formWorkCenter.get('client').hasError(validation.type)
@@ -129,7 +129,7 @@
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Identificación Coordinador</mat-label>
-          <input type="number" autocomplete="off" matInput placeholder="Identificación Coordinador"
+          <input required type="number" autocomplete="off" matInput placeholder="Identificación Coordinador"
             formControlName="coordinatorIdentification" maxlength="20">
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.coordinatorIdentification">
@@ -143,7 +143,7 @@
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Coordinador</mat-label>
-          <input type="text" autocomplete="off" matInput placeholder="Coordinador" formControlName="coordinator"
+          <input required type="text" autocomplete="off" matInput placeholder="Coordinador" formControlName="coordinator"
             maxlength="45">
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.coordinator">
@@ -157,7 +157,7 @@
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Telefono</mat-label>
-          <input autocomplete="off" matInput placeholder="Telefono" formControlName="phone" maxlength="10">
+          <input required autocomplete="off" matInput placeholder="Telefono" formControlName="phone" maxlength="10">
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.phone">
           <mat-error class="errorMessages" *ngIf="formWorkCenter.get('phone').hasError(validation.type)

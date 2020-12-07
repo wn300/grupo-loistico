@@ -41,7 +41,7 @@ export class AuthenticationComponent implements OnInit {
 
   singIn(loginForm: FormGroup): void {
     if (loginForm.valid) {
-      const email = `${loginForm.value.email}@whatever.com`;
+      const email = `${loginForm.value.email}`;
       const password = loginForm.value.password;
       this.authenticationService.signInWithEmail(email, password)
         .then(data => {
