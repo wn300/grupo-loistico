@@ -5,6 +5,7 @@ import { AngularFireAuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth
 import { administrationRootRoute } from './administration/administration-routing.module';
 import { authenticationRootRoute } from './authentication/authentication-routing.module';
 import { homeRootRoute } from './home/home-routing.module';
+import { reportsRootRoute } from './reports/reports-routing.module';
 
 export const containersRootRoute = 'containers';
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo([`${containersRootRoute}/${authenticationRootRoute}`]);
@@ -33,6 +34,13 @@ const routes: Routes = [
     data: { authGuardPipe: redirectUnauthorizedToLogin },
     loadChildren: () =>
       import('./administration/administration.module').then(m => m.AdministrationModule)
+  },
+  {
+    path: reportsRootRoute,
+    canActivate: [AngularFireAuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadChildren: () =>
+      import('./reports/reports.module').then(m => m.ReportsModule)
   }
 ];
 

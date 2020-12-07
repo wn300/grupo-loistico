@@ -50,48 +50,50 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.deleteFilesService.getReportsByFiles().subscribe(data => {
-      this.imagesMappper = [];
-      this.imagesByReport = data.map((catData: any) => {
-        const objectReport = {
-          id: catData.payload.doc.id,
-          images: catData.payload.doc.data().images,
-          address: catData.payload.doc.data().address,
-          createAt: catData.payload.doc.data().createAt,
-          createBy: catData.payload.doc.data().createBy,
-          description: catData.payload.doc.data().description,
-          type: catData.payload.doc.data().type,
-          status: catData.payload.doc.data().status,
-          location: catData.payload.doc.data().location,
-        };
+    this.subscription.push(
+      this.deleteFilesService.getReportsByFiles().subscribe(data => {
+        this.imagesMappper = [];
+        this.imagesByReport = data.map((catData: any) => {
+          const objectReport = {
+            id: catData.payload.doc.id,
+            images: catData.payload.doc.data().images,
+            address: catData.payload.doc.data().address,
+            createAt: catData.payload.doc.data().createAt,
+            createBy: catData.payload.doc.data().createBy,
+            description: catData.payload.doc.data().description,
+            type: catData.payload.doc.data().type,
+            status: catData.payload.doc.data().status,
+            location: catData.payload.doc.data().location,
+          };
 
-        const imagesBucket = catData.payload.doc.data().images;
-        this.images = [...imagesBucket];
+          const imagesBucket = catData.payload.doc.data().images;
+          this.images = [...imagesBucket];
 
-        return objectReport;
-      });
+          return objectReport;
+        });
 
-      this.imagesByReport.forEach(imageByReport => {
-        if (imageByReport.images.length > 0) {
-          imageByReport.images.forEach(image => {
-            this.imagesMappper.push({
-              id: imageByReport.id,
-              name: image.split('reports%2F')[1].split('?')[0],
-              url: image,
-              type: imageByReport.type,
-              date: imageByReport.createAt.toDate(),
-              selected: false
+        this.imagesByReport.forEach(imageByReport => {
+          if (imageByReport.images.length > 0) {
+            imageByReport.images.forEach(image => {
+              this.imagesMappper.push({
+                id: imageByReport.id,
+                name: image.split('reports%2F')[1].split('?')[0],
+                url: image,
+                type: imageByReport.type,
+                date: imageByReport.createAt.toDate(),
+                selected: false
+              });
             });
-          });
-        }
-      });
+          }
+        });
 
-      this.dataSourceImages = new MatTableDataSource(this.imagesMappper);
-      setTimeout(() => {
-        this.isLoading = false;
-      }, 100);
+        this.dataSourceImages = new MatTableDataSource(this.imagesMappper);
+        setTimeout(() => {
+          this.isLoading = false;
+        }, 100);
 
-    });
+      })
+    );
   }
 
   goToImage(image: string): void {
