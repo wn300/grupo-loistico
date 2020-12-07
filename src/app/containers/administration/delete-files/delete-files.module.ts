@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { DeleteFilesRoutingModule } from './delete-files-routing.module';
 import { DeleteFilesComponent } from './delete-files.component';
 import { DeleteFilesService } from './services/delete-files.service';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { DeleteFilesService } from './services/delete-files.service';
     MatIconModule,
     MatCheckboxModule,
     MatButtonModule,
-    HttpClientModule
+    HttpClientModule,
+    SharedModule,
   ],
   providers: [DeleteFilesService]
 })

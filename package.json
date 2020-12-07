@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "~10.1.5",
     "@angular/router": "~10.1.5",
     "bootstrap-4-grid": "^3.4.0",
+    "file-saver": "^2.0.5",
     "firebase": "^8.0.0",
     "lodash": "^4.17.20",
     "rxjs": "~6.6.0",

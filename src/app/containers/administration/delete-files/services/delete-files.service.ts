@@ -27,9 +27,4 @@ export class DeleteFilesService {
         );
     });
   }
-
-  downloadFile(url: string): any {
-    return this.http.get(url, { responseType: 'arraybuffer' });
-  }
-
 }

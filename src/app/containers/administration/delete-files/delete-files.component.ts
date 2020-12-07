@@ -2,7 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import * as fileSaver from 'file-saver';
+
 import { DeleteFilesService } from './services/delete-files.service';
+import { DialogConfirmComponent } from 'src/app/shared/components/dialog-confirm/dialog-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-delete-files',
@@ -21,7 +26,12 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
   public isLoading: boolean;
   public dataSourceImages;
 
-  constructor(private storage: AngularFireStorage, private deleteFilesService: DeleteFilesService) {
+  constructor(
+    private storage: AngularFireStorage,
+    private deleteFilesService: DeleteFilesService,
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) {
     this.titlePage = 'Imagenes guardadas';
     this.subTitle = 'Imagenes en bucket de firebase';
     this.images = [];
@@ -41,7 +51,7 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.deleteFilesService.getReportsByFiles().subscribe(data => {
-
+      this.imagesMappper = [];
       this.imagesByReport = data.map((catData: any) => {
         const objectReport = {
           id: catData.payload.doc.id,
@@ -51,6 +61,8 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
           createBy: catData.payload.doc.data().createBy,
           description: catData.payload.doc.data().description,
           type: catData.payload.doc.data().type,
+          status: catData.payload.doc.data().status,
+          location: catData.payload.doc.data().location,
         };
 
         const imagesBucket = catData.payload.doc.data().images;
@@ -93,40 +105,62 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
     if (this.imagesDelete.filter(imageArray => imageArray.image === element.name).length > 0) {
       this.imagesDelete.splice(this.imagesDelete.findIndex(imageArray => imageArray.image === element.name), 1);
     } else {
-      this.imagesDelete.push({ id: element.id, image: element.name, url: element.url });
+      this.imagesDelete.push({
+        id: element.id,
+        image: element.name,
+        url: element.url,
+        type: element.type,
+        date: element.date
+      });
     }
   }
 
   deleteImages(): void {
-    this.imagesDelete.forEach(data => {
-      console.log(data, 'data');
-      // this.deleteFilesService.downloadFile(data.url).subscribe(response => {
-      //   const blob: any = new Blob([response], { type: 'text/json; charset=utf-8' });
-      //   const url = window.URL.createObjectURL(blob);
-      //   window.open(url);
-      // }, (error) => { console.log('Error downloading the file') });
-      this.storage.storage.ref(`reports/${data.image}`).getDownloadURL()
-        .then(url => {
-          const xhr = new XMLHttpRequest();
-          xhr.responseType = 'blob';
-          xhr.onload = (event) => {
-            const blob = xhr.response;
-            const urlBlogb = window.URL.createObjectURL(blob);
-            window.open(urlBlogb);
-          };
-          xhr.open('GET', url);
-          xhr.send();
-
-        });
-      // this.storage.storage.ref(`reports/${data.image}`).delete();
-
-      const imageRemovedObject = this.imagesByReport.filter(imageObject => imageObject.id === data.id);
-      console.log(imageRemovedObject[0], '1');
-      if (imageRemovedObject.length > 0) {
-        imageRemovedObject[0].images.splice(imageRemovedObject[0].images.findIndex(image => image === data.url), 1);
-        console.log(imageRemovedObject[0], '2');
+    const dialogRef = this.dialog.open(DialogConfirmComponent, {
+      width: '500px',
+      data: {
+        title: '¡¡¡Advertencia!!!',
+        question: `¿Esta seguro que desea descargar y eliminar las imagenes seleccionadas?`,
+        actionClose: true
       }
     });
+
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result) {
+          this.imagesDelete.forEach(data => {
+            this.storage.storage.ref(`reports/${data.image}`).getDownloadURL()
+              .then(url => {
+                const xhr = new XMLHttpRequest();
+                xhr.responseType = 'blob';
+                xhr.onload = (event) => {
+                  const blob = xhr.response;
+
+                  fileSaver.saveAs(blob, `${data.type}_${data.date}_${data.image}`);
+
+                  this.storage.storage.ref(`reports/${data.image}`).delete()
+                    .then(resDelete => {
+                      const imageRemovedObject = this.imagesByReport.filter(imageObject => imageObject.id === data.id);
+                      if (imageRemovedObject.length > 0) {
+                        imageRemovedObject[0].images.splice(imageRemovedObject[0].images.findIndex(image => image === data.url), 1);
+
+                        this.deleteFilesService.putReportsByFiles(imageRemovedObject[0].id, imageRemovedObject[0])
+                          .then(resPut => {
+                            this.imagesDelete = [];
+                            this.openSnackBar('Archivos eliminados del bucket y descargados correctamente', 'cerrar');
+                          });
+                      }
+                    });
+                };
+                xhr.open('GET', url);
+                xhr.send();
+
+              });
+          });
+        } else {
+          this.deSelectedAll();
+        }
+      });
   }
 
   selectedAllImages(): void {
@@ -135,7 +169,9 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
       return {
         id: data.id,
         image: data.name,
-        url: data.url
+        url: data.url,
+        type: data.type,
+        date: data.date
       }
     });
   }
@@ -144,6 +180,13 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
     this.imagesMappper.forEach(data => data.selected = false);
     this.imagesDelete = [];
   }
+
+  openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+    });
+  }
+
   ngOnDestroy(): void {
     if (this.subscription.length > 0) {
       this.subscription.forEach(data => data.unsubscribe());
