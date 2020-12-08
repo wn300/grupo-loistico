@@ -29,7 +29,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
     this.titlePage = 'Empresa';
     this.subTitle = 'Empresas del sistema';
     this.companies = [];
-    this.displayedColumns = ['identification', 'name', 'type', 'update', 'delete'];
+    this.displayedColumns = ['code', 'identification', 'name', 'type', 'update', 'delete'];
     this.subscription = [];
     this.isLoading = true;
   }
@@ -40,6 +40,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
         this.companies = dataCompany.map((catData: any) => {
           return {
             id: catData.payload.doc.id,
+            code: catData.payload.doc.data().code,
             identification: catData.payload.doc.data().identification,
             name: catData.payload.doc.data().name,
             type: catData.payload.doc.data().type

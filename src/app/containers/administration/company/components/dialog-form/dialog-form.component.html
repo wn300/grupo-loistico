@@ -1,5 +1,5 @@
-<section>
-  <h1 mat-dialog-title>{{form.title}}</h1>
+<section *ngIf="formCompany">
+  <h1 mat-dialog-title>{{form.title}} - Código: {{codeCompany}}</h1>
   <form class="form-company" [formGroup]="formCompany">
     <div class="row">
       <div class="col-lg-4 col-md-4 col-12">
