@@ -46,6 +46,9 @@ export class CompanyComponent implements OnInit, OnDestroy {
             type: catData.payload.doc.data().type
           };
         });
+
+        this.companies = _.sortBy(this.companies, 'code');
+
         this.dataSourceCompanies = new MatTableDataSource(this.companies);
         setTimeout(() => {
           this.isLoading = false;

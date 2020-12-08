@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import * as _ from 'lodash';
 import { CompanyValidatorForm } from '../../entity/company';
 import { CompanyService } from '../../services/company.service';
 

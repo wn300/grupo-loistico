@@ -35,7 +35,7 @@ export class PeopleComponent implements OnInit {
     dialogRef.afterClosed()
       .subscribe((resultDialogFormPeople: FormGroup) => {
         if (resultDialogFormPeople) {
-          console.log(resultDialogFormPeople);
+          console.log(resultDialogFormPeople.value);
 
           // this.createClient(resultDialogFormPeople.value);
         }

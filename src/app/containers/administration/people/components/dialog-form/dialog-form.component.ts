@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import * as _ from 'lodash';
+
 import { CompanyService } from '../../../company/services/company.service';
 import { PeopleValidatorForm } from '../../entity/people';
 
@@ -22,14 +24,24 @@ export class DialogFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public form: any,
     private companyService: CompanyService
   ) {
-    this.companies = [
-      'Nomina',
-      'Independiente'
-    ];
-    // this.companyService.getCompanies()
-    //   .subscribe(companies => {
+    this.companies = [];
+    this.companyService.getCompanies()
+      .subscribe(companies => {
+        this.companies = companies.map((catData: any) => {
+          return {
+            id: catData.payload.doc.id,
+            code: catData.payload.doc.data().code,
+            identification: catData.payload.doc.data().identification,
+            name: catData.payload.doc.data().name,
+          };
+        });
+        this.companies = _.sortBy(this.companies, 'code');
+      });
 
-    //   });
+    this.managers = [
+      'Activo',
+      'Inactivo'
+    ];
 
     this.memberChips = [
       'Nomina',
@@ -45,10 +57,7 @@ export class DialogFormComponent implements OnInit {
       'Activo',
       'Inactivo'
     ];
-    this.managers = [
-      'Activo',
-      'Inactivo'
-    ];
+
     this.formPeople = new FormGroup({
       firstName: new FormControl({
         value: form.data ? form.data.firstName : '',
