@@ -13,14 +13,16 @@ export class PeopleService {
   constructor(private firestore: AngularFirestore, private firebaseAuth: AngularFireAuth) { }
 
   getPeople(): Observable<any> {
-    return this.firestore.collection(this.collectionPeople).snapshotChanges();
+    return this.firestore
+      .collection(this.collectionPeople)
+      .snapshotChanges();
   }
 
   getCordinators(): Observable<any> {
-    return this.firestore.collection(this.collectionPeople,  ref => ref.where('position', '==', 'Coordinador')).snapshotChanges();
+    return this.firestore.collection(this.collectionPeople, ref => ref.where('position', '==', 'Coordinador')).snapshotChanges();
   }
 
-  postUserAuth({email, password}): Promise<any> {
+  postUserAuth({ email, password }): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       this.firebaseAuth.createUserWithEmailAndPassword(email, password.toString())
         .then(
