@@ -74,6 +74,9 @@ export class DialogFormComponent implements OnInit {
       'Inactivo'
     ];
 
+    console.log(form.data);
+
+
     this.formPeople = new FormGroup({
       firstName: new FormControl({
         value: form.data ? form.data.firstName : '',
@@ -163,13 +166,13 @@ export class DialogFormComponent implements OnInit {
         Validators.required
       ]),
       status: new FormControl({
-        value: form.data ? form.data.status : 'Activo',
-        disabled: form.data ? '' : 'disabled'
+        value: form.data ? form.data.status : '',
+        disabled: ''
       }, [
         Validators.required
       ]),
       manager: new FormControl({
-        value: form.data ? form.data.status : '',
+        value: form.data ? form.data.manager : '',
         disabled: ''
       }, [
         Validators.required

@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Observable } from 'rxjs';
+import { Observable, pipe} from 'rxjs';
 import { People } from '../entity/people';
+import { JoinsFirebaseService } from 'src/app/shared/services/joins-firebase.service';
+import { shareReplay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -10,12 +12,24 @@ import { People } from '../entity/people';
 export class PeopleService {
   public collectionPeople = 'people';
 
-  constructor(private firestore: AngularFirestore, private firebaseAuth: AngularFireAuth) { }
+  constructor(
+    private firestore: AngularFirestore,
+    private firebaseAuth: AngularFireAuth,
+    private JoinsFirebaseService: JoinsFirebaseService) { }
 
   getPeople(): Observable<any> {
     return this.firestore
       .collection(this.collectionPeople)
       .snapshotChanges();
+  }
+
+  getPeopleJoinCompany(): any {
+    return this.firestore
+      .collection(this.collectionPeople)
+      .valueChanges()
+      .pipe(
+        this.JoinsFirebaseService.innerJoin(this.firestore, 'company', 'company'),
+      );
   }
 
   getCordinators(): Observable<any> {

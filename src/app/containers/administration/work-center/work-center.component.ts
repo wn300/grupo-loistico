@@ -103,7 +103,7 @@ export class WorkCenterComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(DialogFormComponent, {
       width: '80%',
       data: {
-        title: 'Edición de WorkCentere',
+        title: 'Edición de centros de trabajo',
         data: element
       },
       disableClose: true
