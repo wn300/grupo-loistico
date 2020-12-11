@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 
 import { CompanyService } from '../../../company/services/company.service';
 import { PeopleValidatorForm } from '../../entity/people';
+import { PeopleService } from '../../services/people.service';
 
 @Component({
   selector: 'app-dialog-form',
@@ -22,7 +23,8 @@ export class DialogFormComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<DialogFormComponent>,
     @Inject(MAT_DIALOG_DATA) public form: any,
-    private companyService: CompanyService
+    private companyService: CompanyService,
+    private peopleService: PeopleService
   ) {
     this.companies = [];
     this.companyService.getCompanies()
@@ -38,20 +40,34 @@ export class DialogFormComponent implements OnInit {
         this.companies = _.sortBy(this.companies, 'code');
       });
 
-    this.managers = [
-      'Activo',
-      'Inactivo'
-    ];
+    this.managers = [];
+    this.peopleService.getCordinators()
+      .subscribe(coordinator => {
+        this.managers = coordinator.map((catData: any) => {
+          return {
+            id: catData.payload.doc.id,
+            identification: catData.payload.doc.data().identification,
+            name: `${catData.payload.doc.data().firstName} ${catData.payload.doc.data().firstLastName}`,
+            nameShow: `${catData.payload.doc.data().identification} - ${catData.payload.doc.data().firstName} ${catData.payload.doc.data().firstLastName}`,
+          };
+        });
+        this.managers.push({
+          id: -1,
+          identification: 0,
+          name: `N/A`,
+          nameShow: 'NA'
+        })
+      });
 
     this.memberChips = [
       'Nomina',
       'Independiente'
     ];
     this.postions = [
-      'Auxiliares operativos',
-      'Supernumerarios',
+      'Auxiliar operativo',
+      'Supernumerario',
       'Coordinador',
-      'Administrativos'
+      'Administrativo'
     ];
     this.status = [
       'Activo',
@@ -138,7 +154,7 @@ export class DialogFormComponent implements OnInit {
         disabled: ''
       }, [
         Validators.required,
-        Validators.maxLength(30)
+        Validators.maxLength(50)
       ]),
       position: new FormControl({
         value: form.data ? form.data.position : '',
@@ -147,8 +163,8 @@ export class DialogFormComponent implements OnInit {
         Validators.required
       ]),
       status: new FormControl({
-        value: form.data ? form.data.status : '',
-        disabled: ''
+        value: form.data ? form.data.status : 'Activo',
+        disabled: form.data ? '' : 'disabled'
       }, [
         Validators.required
       ]),
@@ -203,7 +219,7 @@ export class DialogFormComponent implements OnInit {
       ],
       address: [
         { type: 'required', message: 'La direción es un campo requerido.' },
-        { type: 'maxLength', message: 'La direción no puede superar los 30 caracteres' },
+        { type: 'maxLength', message: 'La direción no puede superar los 50 caracteres' },
       ],
       position: [
         { type: 'required', message: 'El cargo es un campo requerido.' },
@@ -218,6 +234,16 @@ export class DialogFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  changePosition(position: string): any {
+    if (position === 'Supernumerario') {
+      this.formPeople.controls.email.setValue(`${this.formPeople.value.identification}@whatever.com`);
+      this.formPeople.controls.manager.setValue('');
+    } else {
+      this.formPeople.controls.email.setValue('')
+      this.formPeople.controls.manager.setValue('N/A');
+    }
   }
 
   onNoClick(): void {
