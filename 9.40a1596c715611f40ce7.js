@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[9],{PcgK:function(n,e,o){"use strict";o.r(e),o.d(e,"PeopleModule",(function(){return i}));var t=o("ofXK"),r=o("Wp6s"),c=o("bTqV"),p=o("NFeN"),s=o("n2VQ"),u=o("fXoL");let i=(()=>{class n{}return n.\u0275mod=u.Jb({type:n}),n.\u0275inj=u.Ib({factory:function(e){return new(e||n)},imports:[[t.c,s.a,r.e,c.b,p.b]]}),n})()}}]);
