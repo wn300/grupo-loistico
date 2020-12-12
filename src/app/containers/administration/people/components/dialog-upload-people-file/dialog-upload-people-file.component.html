@@ -1,0 +1,19 @@
+<section>
+  <h1 mat-dialog-title>{{form.title}}</h1>
+
+  <div class="row">
+    <div class="col">
+      <app-file-upload [label]="'Cargar Archivo'" [drageable]="true" [nameFile]="filequotation">
+      </app-file-upload>
+    </div>
+  </div>
+
+
+  <div mat-dialog-actions class="justify-content-center mt-3">
+    <section>
+      <button mat-raised-button (click)="onNoClick()">Cancelar</button>
+      <button mat-raised-button color="primary" [mat-dialog-close]="dataSave"
+        [disabled]="dataSave.length > 0 ? false : true">Guardar</button>
+    </section>
+  </div>
+</section>

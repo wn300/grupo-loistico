@@ -1,0 +1,41 @@
+<div (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragenter)="dragHover = true"
+    (dragleave)="dragHover = false" (click)="clickFile()" class="cursor-pointer">
+    <div [ngClass]="{
+      'p-5 text-center border rounded border-dotted-2 bg-drag': drageable,
+      'is-active': dragHover
+    }">
+        <div [ngClass]="{ 'file-upload': !drageable }" >
+            <ng-container *ngTemplateOutlet="drageable ? dragable : button"></ng-container>
+            <ng-template #dragable>
+                <div class="row" *ngIf="textFileUpload == ''">
+                    <div class="col-12">
+                        <mat-icon aria-hidden="false">cloud_upload</mat-icon>
+                    </div>
+                    <div class="col-12">
+                        {{ label }}
+                    </div>
+                </div>
+                <div class="text-truncate" *ngIf="textFileUpload != ''">
+                    {{ textFileUpload }}
+                </div>
+                <div class="row">
+                    <div class="col-12 mt-2">
+                        <mat-progress-bar mode="determinate" [value]="progressBar"></mat-progress-bar>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template #button>
+                <div class="file-button">
+                    <div class="label">
+                        {{ textFileUpload ? textFileUpload : label }}
+                    </div>
+                    <div class="icon">
+                        <mat-icon aria-hidden="false">cloud_upload</mat-icon>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+        <input [attr.id]="nameFile" type="file" class="form-control-file" [attr.accept]="acceptExtensions"
+            (change)="fileEvent($event)" />
+    </div>
+</div>

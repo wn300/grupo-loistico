@@ -1,0 +1,104 @@
+<div class="row mt-4">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col">
+          <div class="row align-items-center justify-content-between">
+            <div class="col-auto">
+              <mat-card-title>{{ titlePage }}</mat-card-title>
+              <mat-card-subtitle>{{ subTitle }}</mat-card-subtitle>
+            </div>
+            <div class="col-auto">
+              <button mat-fab class="bg-color-secundary-corporative" aria-label="add segment" (click)="addNewClient()">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <section *ngIf="!isLoading">
+        <div class="row mt-3" *ngIf="clients.length > 0">
+          <div class="col-12">
+            <mat-form-field>
+              <mat-label>Filtro general</mat-label>
+              <input matInput (keyup)="applyFilter($event)" placeholder="Ej. Consultoria" #input>
+            </mat-form-field>
+            <div class="table-container">
+              <table mat-table [dataSource]="dataSourceClients" class="mat-elevation-z8 w-100">
+                <ng-container matColumnDef="identification">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Identifiación (Nit) </th>
+                  <td mat-cell *matCellDef="let element"> {{element.identification}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Razón Social </th>
+                  <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="city">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Ciudad </th>
+                  <td mat-cell *matCellDef="let element" class="text-center"> {{element.city}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="contact">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Contacto </th>
+                  <td mat-cell *matCellDef="let element" class="text-center"> {{element.contact}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="phone">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Telefono </th>
+                  <td mat-cell *matCellDef="let element" class="text-center"> {{element.phone}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="email">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> E-Mail </th>
+                  <td mat-cell *matCellDef="let element" class="text-center"> {{element.email}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="update">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Editar </th>
+                  <td mat-cell *matCellDef="let element" class="text-center color-blue cursor-pointer"
+                    (click)="editClient(element)">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon"> create</mat-icon>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="delete">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Eliminar </th>
+                  <td mat-cell *matCellDef="let element" class="text-center color-red cursor-pointer"
+                    (click)="deleteClient(element)">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon">delete_forever</mat-icon>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-5" *ngIf="clients.length == 0">
+          <div class="col-12 text-center">
+            <h2>
+              No se encontrarón registros
+            </h2>
+          </div>
+        </div>
+      </section>
+      <section *ngIf="isLoading">
+        <div class="row mt-5">
+          <div class="col-12 text-center">
+            <h2>
+              Cargando
+            </h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          </div>
+        </div>
+      </section>
+    </mat-card>
+  </div>
+</div>

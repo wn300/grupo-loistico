@@ -1,0 +1,16 @@
+<section class="text-center">
+  <h1 mat-dialog-title>{{confirm.title}}</h1>
+  <div mat-dialog-content>
+    <p>{{confirm.question}}</p>
+  </div>
+  <div mat-dialog-actions class="justify-content-center">
+    <section *ngIf="confirm.actionClose">
+      <button mat-raised-button (click)="onNoClick()">Cancelar</button>
+      <button mat-raised-button color="primary" [mat-dialog-close]="confirm.actionClose"
+        cdkFocusInitial>Confirmar</button>
+    </section>
+    <section *ngIf="!confirm.actionClose">
+      <button mat-raised-button color="primary" (click)="onNoClick()">Aceptar</button>
+    </section>
+  </div>
+</section>

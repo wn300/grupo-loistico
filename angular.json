@@ -28,6 +28,8 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "./node_modules/bootstrap-4-grid/css/grid.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -92,6 +94,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -121,8 +124,16 @@
               "devServerTarget": "logistica-web:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {}
         }
       }
-    }},
-  "defaultProject": "logistica-web"
+    }
+  },
+  "defaultProject": "logistica-web",
+  "cli": {
+    "analytics": false
+  }
 }
