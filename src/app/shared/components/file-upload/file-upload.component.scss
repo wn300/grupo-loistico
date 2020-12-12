@@ -1,0 +1,74 @@
+.border-dotted-2 {
+  border: 2px dotted #c9c9c9 !important;
+  transition: all .5s ease-in-out;
+}
+.border-dotted-2:hover,
+.is-active {
+  border: 2px dotted #585858 !important;
+}
+
+.bg-drag {
+  transition: all 0.3s ease;
+  background: #ffffee3b;
+  color: #c9c9c9;
+}
+
+.bg-drag:hover,
+.is-active {
+  background: rgba(255, 255, 255, 0.84);
+  color: #585858 !important;
+}
+
+.fa-cloud-upload {
+  color: #c9c9c9;
+}
+
+.bg-drag:hover div div .fa-cloud-upload,
+.bg-drag.is-active div div .fa-cloud-upload {
+  color: #585858;
+}
+
+.mat-icon {
+  font-size: 50px;
+  margin-right: 25px;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+button:focus {
+  outline: none !important;
+}
+
+.text-truncate {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-button {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  background-color: #3f51b5;
+  padding: 10px 20px;
+  border-radius: 5px;
+  height: 59px;
+  margin-top: 3.5px;
+
+  .label {
+    color: #fff;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .icon {
+    .mat-icon {
+      font-size: 30px;
+      color: #fff;
+    }
+  }
+}

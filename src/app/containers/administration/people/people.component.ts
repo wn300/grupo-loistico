@@ -9,6 +9,7 @@ import * as _ from 'lodash';
 import { DialogFormComponent } from './components/dialog-form/dialog-form.component';
 import { People } from './entity/people';
 import { PeopleService } from './services/people.service';
+import { DialogUploadPeopleFileComponent } from './components/dialog-upload-people-file/dialog-upload-people-file.component';
 
 @Component({
   selector: 'app-people',
@@ -95,16 +96,38 @@ export class PeopleComponent implements OnInit {
     dialogRef.afterClosed()
       .subscribe((resultDialogFormPeople: FormGroup) => {
         if (resultDialogFormPeople) {
-          this.createClient(resultDialogFormPeople.value);
+          this.createPeople(resultDialogFormPeople.value);
         }
       });
   }
 
-  createClient(data: any): void {
+  createPeople(data: any): any {
     const authData = {
       email: data.email,
       password: data.identification
     };
+
+    this.peopleService.postUserAuth(authData)
+      .then(res => {
+        this.peopleService.postPeople(data)
+          .then(res => {
+            this.openSnackBar('Usuario creado correctamente', 'cerrar');
+          })
+          .catch(err => {
+            this.openSnackBar('Error al crear usuaro, verifique la información é intente de nuevo', 'cerrar');
+          });
+      })
+      .catch(err => {
+        this.openSnackBar('Error al crear usuaro, verifique la información é intente de nuevo', 'cerrar');
+      });
+  }
+
+  createPeopleMasiv(data: any): any {
+    const authData = {
+      email: data.email,
+      password: data.identification
+    };
+
     this.peopleService.postUserAuth(authData)
       .then(res => {
         this.peopleService.postPeople(data)
@@ -162,6 +185,24 @@ export class PeopleComponent implements OnInit {
       })
       .catch(err => {
         this.openSnackBar('Error al editar persona, verifique la información é intente de nuevo', 'cerrar');
+      });
+  }
+
+  addFilePeople(): void {
+    const dialogRef = this.dialog.open(DialogUploadPeopleFileComponent, {
+      width: '80%',
+      data: {
+        title: 'Creacion desde plantilla',
+        data: []
+      },
+      disableClose: true
+    });
+
+    dialogRef.afterClosed()
+      .subscribe(dataSendPostAll => {
+        dataSendPostAll.forEach(element => {
+          this.createPeopleMasiv(element);
+        });
       });
   }
 

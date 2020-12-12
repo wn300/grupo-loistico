@@ -4,11 +4,21 @@
       <div class="row">
         <div class="col">
           <div class="row align-items-center justify-content-between">
-            <div class="col-auto">
+            <div class="col-10">
               <mat-card-title>{{ titlePage }}</mat-card-title>
               <mat-card-subtitle>{{ subTitle }}</mat-card-subtitle>
             </div>
-            <div class="col-auto">
+            <div class="col-1">
+              <button
+                mat-fab
+                color="accent"
+                aria-label="add segment"
+                (click)="addFilePeople()"
+              >
+                <mat-icon>backup</mat-icon>
+              </button>
+            </div>
+            <div class="col-1">
               <button
                 mat-fab
                 class="bg-color-secundary-corporative"

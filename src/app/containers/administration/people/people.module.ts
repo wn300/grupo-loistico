@@ -19,9 +19,10 @@ import { PeopleRoutingModule } from './people-routing.module';
 import { PeopleComponent } from './people.component';
 import { DialogFormComponent } from './components/dialog-form/dialog-form.component';
 import { CompanyService } from '../company/services/company.service';
+import { DialogUploadPeopleFileComponent } from './components/dialog-upload-people-file/dialog-upload-people-file.component';
 
 @NgModule({
-  declarations: [PeopleComponent, DialogFormComponent],
+  declarations: [PeopleComponent, DialogFormComponent, DialogUploadPeopleFileComponent],
   imports: [
     CommonModule,
     PeopleRoutingModule,

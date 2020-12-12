@@ -46,6 +46,15 @@ export class PeopleService {
     });
   }
 
+  postUserAuthMasiv({ email, password }): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      this.firebaseAuth.createUserWithEmailAndPassword(email, password.toString())
+        .then(
+          res => resolve(res)
+          , err => reject(err)
+        );
+    });
+  }
 
   postPeople(dataSave: People): Promise<any> {
     return new Promise<any>((resolve, reject) => {

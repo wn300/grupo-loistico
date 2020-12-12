@@ -6,7 +6,7 @@ export interface People {
   firstLastName: string;
   secondLastName: string;
   identification: number;
-  dateAdmission: string;
+  dateAdmission: Date;
   company: string;
   phone: string;
   memberShip: string;
@@ -15,6 +15,8 @@ export interface People {
   position: string;
   status: string;
   manager: string;
+  city: string;
+  dayOfRest: string;
 }
 
 export interface PeopleValidatorForm {
