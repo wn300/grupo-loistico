@@ -1,0 +1,44 @@
+<div class="row mt-4">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col">
+          <div class="row align-items-center justify-content-between">
+            <div class="col-auto">
+              <mat-card-title>{{ titlePage }}</mat-card-title>
+              <mat-card-subtitle>{{ subTitle }}</mat-card-subtitle>
+            </div>
+            <div class="col-auto">
+              <button mat-fab class="bg-color-secundary-corporative" aria-label="add segment" (click)="addItems()">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <section *ngIf="!isLoading">
+        <div class="row mt-5" *ngIf="registries.length == 0">
+          <div class="col-12 text-center">
+            <h2>
+              No se encontrarón registros
+            </h2>
+          </div>
+        </div>
+      </section>
+      <section *ngIf="isLoading">
+        <div class="row mt-5">
+          <div class="col-12 text-center">
+            <h2>
+              Cargando
+            </h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          </div>
+        </div>
+      </section>
+    </mat-card>
+  </div>
+</div>

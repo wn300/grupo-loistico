@@ -1,0 +1,38 @@
+<div class="table">
+  <table>
+    <thead>
+      <tr>
+        <th>1</th>
+        <th style="min-width: 90px">Cédula</th>
+        <th style="min-width: 150px">Nombre</th>
+        <th>Transporte</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th style="min-width: 90px">Cód. Centro de Trabajo</th>
+        <th style="min-width: 130px">Nombre Centro de Trabajo</th>
+        <th>Cód. Operación</th>
+        <th style="min-width: 130px">Nombre Operación</th>
+        <th style="min-width: 90px">Solicitante</th>
+        <th style="min-width: 150px">Nombre Solicitante</th>
+        <th style="min-width: 230px">Observación</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data; let i = index">
+        <td>{{ item.index }}</td>
+        <td [ngClass]="{'danger': hasError(item, 0)}">{{ item.identification }}</td>
+        <td [ngClass]="{'danger': hasError(item, 1)}">{{ item.name }}</td>
+        <td [ngClass]="{'danger': hasError(item, 2)}">{{ item.transport ? "SI" : "NO" }}</td>
+        <td [ngClass]="{'danger': hasError(item, 3)}">{{ mapDate(item, 'date') }}</td>
+        <td [ngClass]="{'danger': hasError(item, 4)}">{{ mapDate(item, 'time') }}</td>
+        <td [ngClass]="{'danger': hasError(item, 5)}">{{ item.workplaceCode }}</td>
+        <td [ngClass]="{'danger': hasError(item, 6)}">{{ item.workplaceName }}</td>
+        <td [ngClass]="{'danger': hasError(item, 7)}">{{ item.operationCode }}</td>
+        <td [ngClass]="{'danger': hasError(item, 8)}">{{ item.operationName }}</td>
+        <td [ngClass]="{'danger': hasError(item, 9)}">{{ item.applicantIdentification }}</td>
+        <td [ngClass]="{'danger': hasError(item, 10)}">{{ item.applicantName }}</td>
+        <td [ngClass]="{'danger': hasError(item, 11)}">{{ item.observation }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -98,6 +98,11 @@ export class AppComponent implements OnDestroy {
         ]
       },
       {
+        displayName: 'Programacion',
+        iconName: 'vertical_split',
+        route: '/containers/programming'
+      },
+      {
         displayName: 'Reportes',
         iconName: 'article',
         route: '/containers/reports'

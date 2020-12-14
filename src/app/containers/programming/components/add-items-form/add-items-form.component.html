@@ -1,0 +1,15 @@
+<section>
+  <h1 mat-dialog-title>{{ data.title }}</h1>
+  <div class="content" mat-dialog-content>
+    <app-programming-upload-items-form
+      [dataBase]="initData"
+      (save)="onSave($event)"
+    ></app-programming-upload-items-form>
+  </div>
+  <div mat-dialog-actions class="justify-content-center mt-3">
+    <section>
+      <button mat-raised-button (click)="handleClose()">Cancelar</button>
+      <button mat-raised-button color="primary" (click)="handleSave()">Guardar</button>
+    </section>
+  </div>
+</section>
