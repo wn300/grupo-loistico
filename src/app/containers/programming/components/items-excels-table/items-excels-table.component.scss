@@ -1,0 +1,30 @@
+.table {
+  font-size: 11px;
+  max-height: 200px;
+  overflow: auto;
+  table {
+    border-collapse: collapse;
+    min-width: 100%;
+  }
+  th,
+  td {
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    line-height: 1.25em;
+    padding: 2px 5px;
+  }
+  td {
+    &.danger {
+      background-color: #fcb8b0;
+    }
+  }
+  thead th,
+  tbody td:first-child {
+    background-color: #ccc;
+    font-size: 0.85em;
+    font-weight: bold;
+    line-height: 1.5em;
+    min-width: 28px;
+    text-align: center;
+  }
+}

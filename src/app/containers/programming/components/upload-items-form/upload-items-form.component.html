@@ -1,0 +1,33 @@
+<div class="form" [formGroup]="form">
+  <div class="input-file">
+    <button mat-flat-button color="primary">Cargar excel</button>
+    <input
+      id="uploadFile"
+      type="file"
+      accept=".csv, .xlsx, .xls"
+      multiple="false"
+      formControlName="file"
+      (change)="uploadFile($event)"
+    />
+  </div>
+  <a
+    href="https://firebasestorage.googleapis.com/v0/b/app-logistica-e66c8.appspot.com/o/templates%2FLogisticaBaseProgramacion.xlsx?alt=media&token=b0af1e2c-8051-40cd-ac02-5113841f1a30"
+    class="link"
+    target="_blank"
+    >Descargar plantilla</a
+  >
+</div>
+
+<div class="data" *ngIf="data.length > 0">
+  <div class="data-section">
+    <div class="header"><h3>Preview</h3></div>
+    <app-programming-items-excels-table [data]="data"></app-programming-items-excels-table>
+  </div>
+</div>
+
+<div class="data" *ngIf="invalidData.length > 0">
+  <div class="data-section">
+    <div class="header"><h3>Errores</h3></div>
+    <app-programming-items-excels-table [data]="invalidData"></app-programming-items-excels-table>
+  </div>
+</div>
