@@ -4,12 +4,20 @@
     <app-programming-upload-items-form
       [dataBase]="initData"
       (save)="onSave($event)"
+      (isValid)="setIsValid($event)"
     ></app-programming-upload-items-form>
   </div>
   <div mat-dialog-actions class="justify-content-center mt-3">
     <section>
       <button mat-raised-button (click)="handleClose()">Cancelar</button>
-      <button mat-raised-button color="primary" (click)="handleSave()">Guardar</button>
+      <button
+        mat-raised-button
+        color="primary"
+        [disabled]="!isValid"
+        (click)="handleSave()"
+      >
+        Guardar
+      </button>
     </section>
   </div>
 </section>

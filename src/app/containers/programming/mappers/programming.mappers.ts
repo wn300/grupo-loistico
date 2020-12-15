@@ -46,6 +46,9 @@ export const validateProgrammingTemp = (
   let valid = true;
   let errors = [];
   const date = moment(`${data[3]} ${data[4]}`, 'DD/MM/YYYY HH:mm');
+  const operationCenter = dataBase.operationCenters.find(
+    (item) => item.code === parseInt(data[7])
+  );
 
   if (
     !dataBase ||
@@ -71,12 +74,12 @@ export const validateProgrammingTemp = (
   if (
     !dataBase ||
     isNaN(data[5]) ||
-    dataBase.workCenters.indexOf(parseInt(data[5])) < 0
+    (operationCenter && operationCenter.workCenterCode !== parseInt(data[5]))
   ) {
     valid = false;
     errors.push(5);
   }
-  if (isNaN(data[7])) {
+  if (!dataBase || isNaN(data[7]) || !operationCenter) {
     valid = false;
     errors.push(7);
   }

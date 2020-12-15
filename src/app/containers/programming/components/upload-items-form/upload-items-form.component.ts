@@ -21,7 +21,10 @@ export class UploadItemsFormComponent implements OnInit {
   public invalidData: ProgrammingTemplate[] = [];
 
   @Input() dataBase: DataBase;
-  @Output() save: EventEmitter<Programming[]> = new EventEmitter<Programming[]>();
+  @Output() isValid: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() save: EventEmitter<Programming[]> = new EventEmitter<
+    Programming[]
+  >();
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -49,6 +52,8 @@ export class UploadItemsFormComponent implements OnInit {
         this.invalidData = data.filter((item) => !item.isValid);
 
         this.form.get('file').setValue('');
+
+        this.isValid.emit(this.data.length > 0);
       };
       reader.readAsBinaryString(file);
     }
@@ -64,11 +69,22 @@ export class UploadItemsFormComponent implements OnInit {
             `${item.date} ${item.time}`,
             'DD/MM/YYYY HH:mm'
           ).toDate(),
-          workplaceCode: item.workplaceCode,
+          operationCode: item.operationCode,
           applicantIdentification: item.applicantIdentification,
           observation: item.observation,
+          name: item.name,
+          workplaceCode: item.workplaceCode,
+          workplaceName: item.workplaceName,
+          operationName: item.operationName,
+          applicantName: item.applicantName,
         };
       })
     );
+  }
+
+  public clear(): void {
+    this.data = [];
+    this.invalidData = [];
+    this.isValid.emit(false);
   }
 }

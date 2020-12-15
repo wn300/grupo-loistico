@@ -1,4 +1,9 @@
+export interface OperationCenterDataBase {
+  code: number;
+  workCenterCode: number;
+}
+
 export interface DataBase {
   people: number[];
-  workCenters: number[];
+  operationCenters: OperationCenterDataBase[];
 }

@@ -18,6 +18,7 @@ import { ItemsExcelsTableComponent } from './components/items-excels-table/items
 import { PeopleModule } from '../administration/people/people.module';
 import { WorkCenterModule } from '../administration/work-center/work-center.module';
 import { ProgrammingService } from './services/programming.service';
+import { OperationCenterService } from './services/operation-center.service';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,6 @@ import { ProgrammingService } from './services/programming.service';
     PeopleModule,
     WorkCenterModule,
   ],
-  providers: [ProgrammingService],
+  providers: [ProgrammingService, OperationCenterService],
 })
 export class ProgrammingModule {}

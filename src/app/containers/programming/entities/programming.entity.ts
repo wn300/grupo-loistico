@@ -2,19 +2,19 @@ export interface Programming {
   identification: number;
   transport: boolean;
   date: Date | string;
-  workplaceCode: number;
+  operationCode: number;
   applicantIdentification: number;
   observation: string;
+  name?: string;
+  workplaceCode?: number;
+  workplaceName?: string;
+  operationName?: string;
+  applicantName?: string;
 }
 
 export interface ProgrammingTemplate extends Programming {
   index: number;
-  name: string;
   time: string;
-  workplaceName: string;
-  operationCode: number;
-  operationName: string;
-  applicantName: string;
   isValid: boolean;
   errorValues: number[];
 }
