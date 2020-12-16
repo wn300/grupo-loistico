@@ -1,0 +1,12 @@
+.input-full-width {
+  width: 100%;
+}
+.fix-label,
+.errorMessages {
+  font-size: calc(14px * .75);
+}
+.radio-options {
+  .mat-radio-button {
+    margin-right: 16px;
+  }
+}

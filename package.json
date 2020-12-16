@@ -7,10 +7,12 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "postinstall": "ngcc"
   },
   "private": true,
   "dependencies": {
+    "@angular-material-components/datetime-picker": "^5.0.3",
     "@angular/animations": "~10.1.5",
     "@angular/cdk": "^10.2.7",
     "@angular/common": "~10.1.5",

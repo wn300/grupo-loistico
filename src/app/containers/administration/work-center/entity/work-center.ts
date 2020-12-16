@@ -8,6 +8,7 @@ export interface WorkCenter {
   contact: string;
   phone: string;
   email: string;
+  code?: number;
 }
 
 export interface WorkCenterValidatorForm {

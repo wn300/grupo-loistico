@@ -1,4 +1,5 @@
 export interface Programming {
+  id?: string;
   identification: number;
   transport: boolean;
   date: Date | string;

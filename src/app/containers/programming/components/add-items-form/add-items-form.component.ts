@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 import { PeopleService } from 'src/app/containers/administration/people/services/people.service';
-import { WorkCenterService } from 'src/app/containers/administration/work-center/services/work-center.service';
 import {
   DataBase,
   OperationCenterDataBase,
