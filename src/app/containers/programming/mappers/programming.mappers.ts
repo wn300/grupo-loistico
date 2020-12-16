@@ -60,8 +60,8 @@ export const validateProgrammingTemp = (
   }
   if (
     !(
-      String(data[2]).toLowerCase() === 'si' ||
-      String(data[2]).toLowerCase() === 'no'
+      String(data[2]).toLowerCase().trim() === 'si' ||
+      String(data[2]).toLowerCase().trim() === 'no'
     )
   ) {
     valid = false;

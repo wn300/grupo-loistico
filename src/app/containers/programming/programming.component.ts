@@ -1,10 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 
+import { Programming } from './entities/programming.entity';
+import { ProgrammingService } from './services/programming.service';
 import { AddItemsFormComponent } from './components/add-items-form/add-items-form.component';
+import { AddItemFormComponent } from './components/add-item-form/add-item-form.component';
 
 @Component({
   selector: 'app-programming',
@@ -12,28 +17,49 @@ import { AddItemsFormComponent } from './components/add-items-form/add-items-for
   styleUrls: ['./programming.component.scss'],
 })
 export class ProgrammingComponent implements OnInit, OnDestroy {
-  public subscriptions: Subscription[];
+  public subscriptions: Subscription[] = [];
   public titlePage: string;
   public subTitle: string;
-  public registries: any[];
+  public registries: Programming[] = [];
   public displayedColumns: string[];
-  public dataSourceCompanies;
-  public isLoading: boolean;
+  public isLoading: boolean = true;
+  public dataSourceRegistries;
 
-  constructor(private dialog: MatDialog, private snackBar: MatSnackBar) {
+  constructor(
+    private programmingService: ProgrammingService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) {
     this.titlePage = 'Programación';
     this.subTitle = 'Registros programados';
-    this.registries = [];
-    this.displayedColumns = [];
-    this.subscriptions = [];
-    this.isLoading = true;
+    this.displayedColumns = [
+      'identification',
+      'name',
+      'date',
+      'workplaceName',
+      'operationName',
+      'update',
+      'delete',
+    ];
   }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.isLoading = false;
-      this.registries = [];
-    }, 2000);
+    this.programmingService.getProgramming().subscribe((data) => {
+      this.registries = data.map((item: any) => {
+        return {
+          ...item.payload.doc.data(),
+          id: item.payload.doc.id,
+          date: new Date(item.payload.doc.data().date.seconds * 1000),
+        };
+      });
+
+      this.registries = _.sortBy(this.registries, 'date');
+
+      this.dataSourceRegistries = new MatTableDataSource(this.registries);
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 100);
+    });
   }
 
   ngOnDestroy(): void {
@@ -48,17 +74,28 @@ export class ProgrammingComponent implements OnInit, OnDestroy {
     });
   }
 
-  public addItems(): void {
-    const dialogRef = this.dialog.open(AddItemsFormComponent, {
+  public applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceRegistries.filter = filterValue.trim().toLowerCase();
+  }
+
+  public addItem(): void {
+    this.dialog.open(AddItemFormComponent, {
       width: '80%',
       data: {
         title: 'Agregar programación',
       },
       disableClose: true,
     });
+  }
 
-    dialogRef.afterClosed().subscribe((resultForm: any) => {
-      console.log(resultForm);
+  public addItems(): void {
+    this.dialog.open(AddItemsFormComponent, {
+      width: '80%',
+      data: {
+        title: 'Agregar programación',
+      },
+      disableClose: true,
     });
   }
 }
