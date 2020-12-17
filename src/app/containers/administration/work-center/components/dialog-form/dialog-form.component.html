@@ -1,12 +1,18 @@
-<section>
+<section *ngIf="formWorkCenter">
   <h1 mat-dialog-title>{{form.title}}</h1>
   <form class="form-work-center" [formGroup]="formWorkCenter">
     <div class="row">
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
-          <mat-label>Identificación</mat-label>
-          <input required type="number" autocomplete="off" matInput placeholder="Identificación"
-            formControlName="identification" maxlength="20">
+          <mat-label>Identificación (Nit)</mat-label>
+          <input type="text" placeholder="Seleccione uno" aria-label="Identification" matInput
+            formControlName="identification" [matAutocomplete]="client">
+          <mat-autocomplete autoActiveFirstOption #client="matAutocomplete"
+            (optionSelected)="selectIdentification($event)">
+            <mat-option *ngFor="let client of filteredClientOptions | async" [value]="client.identification">
+              [{{client.identification}}] {{client.name}}
+            </mat-option>
+          </mat-autocomplete>
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.identification">
           <mat-error class="errorMessages" *ngIf="formWorkCenter.get('identification').hasError(validation.type)
@@ -19,8 +25,13 @@
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Nombre del centro de trabajo</mat-label>
-          <input required autocomplete="off" matInput placeholder="Nombre centro de trabajo" formControlName="name"
-            maxlength="100">
+          <input type="text" placeholder="Seleccione uno" aria-label="Operación" matInput formControlName="name"
+            [matAutocomplete]="workCenters">
+          <mat-autocomplete autoActiveFirstOption #workCenters="matAutocomplete">
+            <mat-option *ngFor="let nameWorkCenter of filteredWorkCenterOptions | async" [value]="nameWorkCenter.name">
+              {{nameWorkCenter.name}}
+            </mat-option>
+          </mat-autocomplete>
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.name">
           <mat-error class="errorMessages" *ngIf="formWorkCenter.get('name').hasError(validation.type)
@@ -46,16 +57,9 @@
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Código Operación</mat-label>
-          <input required type="text" autocomplete="off" matInput placeholder="Código Operación" formControlName="operationCode"
-            maxlength="20">
+          <input readonly type="text" autocomplete="off" matInput placeholder="Código Operación"
+            formControlName="operationCode" maxlength="20">
         </mat-form-field>
-        <ng-container *ngFor="let validation of validationMessages.operationCode">
-          <mat-error class="errorMessages" *ngIf="formWorkCenter.get('operationCode').hasError(validation.type)
-                    && (formWorkCenter.get('operationCode').dirty
-                    || formWorkCenter.get('operationCode').touched)">
-            {{ validation.message }}
-          </mat-error>
-        </ng-container>
       </div>
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
@@ -116,21 +120,20 @@
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Cliente</mat-label>
-          <input required type="text" autocomplete="off" matInput placeholder="Cliente" formControlName="client">
+          <input readonly type="text" autocomplete="off" matInput placeholder="Cliente" formControlName="client">
         </mat-form-field>
-        <ng-container *ngFor="let validation of validationMessages.client">
-          <mat-error class="errorMessages" *ngIf="formWorkCenter.get('client').hasError(validation.type)
-                    && (formWorkCenter.get('client').dirty
-                    || formWorkCenter.get('client').touched)">
-            {{ validation.message }}
-          </mat-error>
-        </ng-container>
       </div>
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Identificación Coordinador</mat-label>
-          <input required type="number" autocomplete="off" matInput placeholder="Identificación Coordinador"
-            formControlName="coordinatorIdentification" maxlength="20">
+          <input type="text" placeholder="Seleccione uno" aria-label="Identificación coordinador" matInput formControlName="coordinatorIdentification"
+            [matAutocomplete]="coordinatorIdentification">
+          <mat-autocomplete autoActiveFirstOption #coordinatorIdentification="matAutocomplete"
+          (optionSelected)="selectIdentificationCordinator($event)">
+            <mat-option *ngFor="let identificationCordinato of filteredIdentificationCordinatorOptions | async" [value]="identificationCordinato.coordinatorIdentification">
+              {{identificationCordinato.coordinatorIdentification}}
+            </mat-option>
+          </mat-autocomplete>
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.coordinatorIdentification">
           <mat-error class="errorMessages" *ngIf="formWorkCenter.get('coordinatorIdentification').hasError(validation.type)
@@ -143,8 +146,13 @@
       <div class="col-lg-4 col-md-4 col-12">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Coordinador</mat-label>
-          <input required type="text" autocomplete="off" matInput placeholder="Coordinador" formControlName="coordinator"
-            maxlength="45">
+          <input type="text" placeholder="Seleccione uno" aria-label="Coordinador" matInput formControlName="coordinator"
+            [matAutocomplete]="cordinator">
+          <mat-autocomplete autoActiveFirstOption #cordinator="matAutocomplete">
+            <mat-option *ngFor="let nameCordinato of filteredNameCordinatorOptions | async" [value]="nameCordinato.coordinator">
+              {{nameCordinato.coordinator}}
+            </mat-option>
+          </mat-autocomplete>
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.coordinator">
           <mat-error class="errorMessages" *ngIf="formWorkCenter.get('coordinator').hasError(validation.type)

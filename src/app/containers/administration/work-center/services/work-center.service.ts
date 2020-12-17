@@ -15,6 +15,10 @@ export class WorkCenterService {
     return this.firestore.collection(this.collectionWorkCenter).snapshotChanges();
   }
 
+  getOperacionCenters(): Observable<any> {
+    return this.firestore.collection('operationCenter').snapshotChanges();
+  }
+
   postWorkCenter(dataSave: WorkCenter): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       this.firestore
@@ -27,10 +31,35 @@ export class WorkCenterService {
     });
   }
 
+  postOperationCenter(dataSave: any): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      this.firestore
+        .collection('operationCenter')
+        .add(dataSave)
+        .then(
+          res => resolve(res)
+          , err => reject(err)
+        );
+    });
+  }
+
   putWorkCenter(id: string, dataSave: WorkCenter): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       this.firestore
         .collection(this.collectionWorkCenter)
+        .doc(id)
+        .set(dataSave)
+        .then(
+          res => resolve(res)
+          , err => reject(err)
+        );
+    });
+  }
+
+  putOperationCenter(id: string, dataSave: any): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      this.firestore
+        .collection('operationCenter')
         .doc(id)
         .set(dataSave)
         .then(
