@@ -11,6 +11,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { WorkCenterRoutingModule } from './work-center-routing.module';
 import { WorkCenterComponent } from './work-center.component';
@@ -33,6 +34,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     MatTableModule,
     MatSnackBarModule,
     MatProgressBarModule,
+    MatAutocompleteModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule,

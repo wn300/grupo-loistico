@@ -30,10 +30,11 @@ export class WorkCenterComponent implements OnInit, OnDestroy {
     this.subTitle = 'Centros de trabajo del sistema';
     this.workCenters = [];
     this.displayedColumns = [
+      'operationCode',
+      'operation',
       'identification',
       'name',
       'city',
-      'operation',
       'address',
       'client',
       'coordinator',
@@ -92,7 +93,19 @@ export class WorkCenterComponent implements OnInit, OnDestroy {
   createWorkCenter(data: any): void {
     this.workCentersService.postWorkCenter(data)
       .then(res => {
-        this.openSnackBar('Centro de trabajo creado correctamente', 'cerrar');
+        const opartionCenterObject = {
+          code: data.operationCode,
+          name: data.operation,
+          workCenterCode: data.identification
+        };
+
+        this.workCentersService.postOperationCenter(opartionCenterObject)
+          .then(resOperation => {
+            this.openSnackBar('Centro de trabajo creado correctamente', 'cerrar');
+          })
+          .catch(err => {
+            this.openSnackBar('Error al crear centro de trabajo, verifique la información é intente de nuevo', 'cerrar');
+          });
       })
       .catch(err => {
         this.openSnackBar('Error al crear centro de trabajo, verifique la información é intente de nuevo', 'cerrar');
@@ -132,7 +145,30 @@ export class WorkCenterComponent implements OnInit, OnDestroy {
   updateWorkCenter(id: string, data: any): void {
     this.workCentersService.putWorkCenter(id, data)
       .then(res => {
-        this.openSnackBar('Centro de trabajo editado correctamente', 'cerrar');
+        const opartionCenterObject = {
+          code: data.operationCode,
+          name: data.operation,
+          workCenterCode: data.identification
+        };
+
+        this.workCentersService.getOperacionCenters()
+          .subscribe(operationCentersData => {
+            const operationCentersMapper = operationCentersData.map((catData: any) => {
+              return {
+                id: catData.payload.doc.id,
+                ...catData.payload.doc.data()
+              };
+            });
+
+            const idOperationCenter = operationCentersMapper.filter(operationCenter => operationCenter.code === data.operationCode)[0];
+            this.workCentersService.putOperationCenter(idOperationCenter.id, opartionCenterObject)
+            .then(resOperation => {
+              this.openSnackBar('Centro de trabajo editado correctamente', 'cerrar');
+            })
+            .catch(err => {
+              this.openSnackBar('Error al editar centro de trabajo, verifique la información é intente de nuevo', 'cerrar');
+            });
+          });
       })
       .catch(err => {
         this.openSnackBar('Error al editar centro de trabajo, verifique la información é intente de nuevo', 'cerrar');

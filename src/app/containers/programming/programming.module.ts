@@ -13,7 +13,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatRadioModule } from '@angular/material/radio';
-import {  } from 'ng-material-datetimepicker';
 
 import { ProgrammingRoutingModule } from './programming-routing.module';
 import { ProgrammingComponent } from './programming.component';
