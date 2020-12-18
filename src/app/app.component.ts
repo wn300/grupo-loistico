@@ -95,6 +95,11 @@ export class AppComponent implements OnDestroy {
             iconName: '',
             route: '/containers/administration/delete_files'
           },
+          {
+            displayName: 'Tipos de novedad',
+            iconName: '',
+            route: '/containers/administration/types-news'
+          },
         ]
       },
       {

@@ -5,6 +5,7 @@ import { companyRootRoute } from './company/company-routing.module';
 import { deleteFilesRootRoute } from './delete-files/delete-files-routing.module';
 import { peopleRootRoute } from './people/people-routing.module';
 import { workCenterRootRoute } from './work-center/work-center-routing.module';
+import { typesNewsRootRoute } from './types-news/types-news-routing.module';
 
 export const administrationRootRoute = 'administration';
 
@@ -38,6 +39,11 @@ const routes: Routes = [
     path: deleteFilesRootRoute,
     loadChildren: () =>
       import('./delete-files/delete-files.module').then(m => m.DeleteFilesModule)
+  },
+  {
+    path: typesNewsRootRoute,
+    loadChildren: () =>
+      import('./types-news/types-news.module').then(m => m.TypesNewsModule)
   }
 ];
 
