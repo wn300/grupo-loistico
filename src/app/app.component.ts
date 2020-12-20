@@ -108,6 +108,11 @@ export class AppComponent implements OnDestroy {
         route: '/containers/programming'
       },
       {
+        displayName: 'Novedades',
+        iconName: 'rule',
+        route: '/containers/news'
+      },
+      {
         displayName: 'Reportes',
         iconName: 'article',
         route: '/containers/reports'
