@@ -1,0 +1,153 @@
+<div class="row mt-4">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col">
+          <div class="row align-items-center justify-content-between">
+            <div class="col-auto">
+              <mat-card-title>{{ titlePage }}</mat-card-title>
+              <mat-card-subtitle>{{ subTitle }}</mat-card-subtitle>
+            </div>
+            <div class="col-auto">
+              <button
+                mat-fab
+                class="bg-color-secundary-corporative"
+                aria-label="add segment"
+                (click)="handleAdd()"
+              >
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <section *ngIf="!isLoading">
+        <div class="row mt-3" *ngIf="news.length > 0">
+          <div class="col-12">
+            <mat-form-field>
+              <mat-label>Filtro general</mat-label>
+              <input
+                matInput
+                (keyup)="applyFilter($event)"
+                placeholder="Ej. Consultoria"
+                #input
+              />
+            </mat-form-field>
+            <div class="table-container">
+              <table
+                mat-table
+                [dataSource]="dataSourceNews"
+                class="mat-elevation-z8 w-100"
+              >
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef>#</th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ i + 1 }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="identification">
+                  <th mat-header-cell *matHeaderCellDef>Identificación</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.identification }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                  <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="type">
+                  <th mat-header-cell *matHeaderCellDef>Tipo de novedad</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.type.name }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dateStart">
+                  <th mat-header-cell *matHeaderCellDef>Desde</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.dateStart | date: "MMM d, y, h:mm a" }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dateEnd">
+                  <th mat-header-cell *matHeaderCellDef>Hasta</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.dateEnd | date: "MMM d, y, h:mm a" }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="observations">
+                  <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.observations }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="update">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef>
+                    Editar
+                  </th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="text-center color-blue cursor-pointer"
+                    (click)="handleEdit(element)"
+                  >
+                    <mat-icon
+                      aria-hidden="false"
+                      aria-label="Example home icon"
+                    >
+                      create</mat-icon
+                    >
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="delete">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef>
+                    Eliminar
+                  </th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="text-center color-red cursor-pointer"
+                    (click)="handleDelete(element)"
+                  >
+                    <mat-icon aria-hidden="false" aria-label="Example home icon"
+                      >delete_forever</mat-icon
+                    >
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumns; let i = index"
+                ></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-5" *ngIf="types.length == 0">
+          <div class="col-12 text-center">
+            <h2>No se encontrarón registros</h2>
+          </div>
+        </div>
+      </section>
+      <section *ngIf="isLoading">
+        <div class="row mt-5">
+          <div class="col-12 text-center">
+            <h2>Cargando</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          </div>
+        </div>
+      </section>
+    </mat-card>
+  </div>
+</div>

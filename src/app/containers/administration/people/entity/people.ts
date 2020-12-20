@@ -1,6 +1,7 @@
 import { ValidationMessageForm } from 'src/app/shared/entity/validator-message-form';
 
 export interface People {
+  id?: string;
   firstName: string;
   secondName: string;
   firstLastName: string;
