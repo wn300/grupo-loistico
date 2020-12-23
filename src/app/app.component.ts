@@ -115,8 +115,20 @@ export class AppComponent implements OnDestroy {
       {
         displayName: 'Reportes',
         iconName: 'article',
-        route: '/containers/reports'
-      },
+        route: '/containers/reports',
+        children: [
+          {
+            displayName: 'Aplicación',
+            iconName: '',
+            route: '/containers/reports/app'
+          },
+          {
+            displayName: 'Programación',
+            iconName: '',
+            route: '/containers/reports/programming'
+          }
+        ]
+      }
 
     ];
   }

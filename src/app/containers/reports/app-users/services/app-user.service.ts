@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ReportsService {
+export class AppUserService {
   public collectionReport = 'reports';
 
   constructor(private firestore: AngularFirestore) { }
