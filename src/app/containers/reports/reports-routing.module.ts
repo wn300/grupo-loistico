@@ -16,7 +16,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./app-users/app-users.module').then(m => m.AppUsersModule)
   },
-  ,
   {
     path: programmingRootRoute,
     loadChildren: () =>
