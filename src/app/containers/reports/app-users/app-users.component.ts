@@ -1,14 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
-import { ReportsService } from './services/reports.service';
+
+import { AppUserService } from './services/app-user.service';
 
 @Component({
-  selector: 'app-reports',
-  templateUrl: './reports.component.html',
-  styleUrls: ['./reports.component.scss']
+  selector: 'app-app-users',
+  templateUrl: './app-users.component.html',
+  styleUrls: ['./app-users.component.scss']
 })
-export class ReportsComponent implements OnInit, OnDestroy {
+export class AppUsersComponent implements OnInit, OnDestroy {
   public subscription: Subscription[];
   public titlePage: string;
   public subTitle: string;
@@ -17,7 +18,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
   public dataSourceReports;
   public isLoading: boolean;
 
-  constructor(public reportsService: ReportsService) {
+  constructor(public reportsService: AppUserService) {
     this.titlePage = 'Reportes';
     this.subTitle = 'Reportes desde la App';
     this.subscription = [];
@@ -71,5 +72,4 @@ export class ReportsComponent implements OnInit, OnDestroy {
       this.subscription.forEach(data => data.unsubscribe());
     }
   }
-
 }
