@@ -11,6 +11,8 @@ export interface Programming {
   workplaceName?: string;
   operationName?: string;
   applicantName?: string;
+
+  dateFormat?: string;
 }
 
 export interface ProgrammingTemplate extends Programming {

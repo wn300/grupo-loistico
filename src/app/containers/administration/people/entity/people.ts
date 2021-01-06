@@ -1,3 +1,4 @@
+import { New } from 'src/app/containers/news/entity/new.entity';
 import { ValidationMessageForm } from 'src/app/shared/entity/validator-message-form';
 
 export interface People {
@@ -35,4 +36,8 @@ export interface PeopleValidatorForm {
   position: ValidationMessageForm[];
   status: ValidationMessageForm[];
   manager: ValidationMessageForm[];
+}
+
+export interface PeopleNew extends People {
+  new?: New;
 }

@@ -126,6 +126,11 @@ export class AppComponent implements OnDestroy {
             displayName: 'Programación',
             iconName: '',
             route: '/containers/reports/programming'
+          },
+          {
+            displayName: 'No Programados',
+            iconName: '',
+            route: '/containers/reports/not-scheduled'
           }
         ]
       }
