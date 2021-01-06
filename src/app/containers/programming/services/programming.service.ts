@@ -3,7 +3,9 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Programming } from '../entities/programming.entity';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class ProgrammingService {
   public collectionProgramming = 'programming';
 
@@ -12,6 +14,14 @@ export class ProgrammingService {
   getProgramming(): Observable<any> {
     return this.firestore
       .collection(this.collectionProgramming)
+      .snapshotChanges();
+  }
+
+  getProgrammingByDates(from: Date, to: Date): Observable<any> {
+    return this.firestore
+      .collection(this.collectionProgramming, (ref) =>
+        ref.where('date', '>=', from).where('date', '<', to)
+      )
       .snapshotChanges();
   }
 
