@@ -65,7 +65,6 @@ export class ProgrammingComponent implements OnInit {
 
       const startDate = moment(this.startDate, this.dateFormat).toDate();
       const endDate = moment(this.endDate, this.dateFormat).toDate();
-      console.log(startDate, endDate);
 
       this.progrmmingService.getPrograming(startDate, endDate)
         .subscribe(dataPrograming => {
