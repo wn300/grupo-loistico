@@ -60,6 +60,9 @@ export class ProgrammingComponent implements OnInit {
   getReport(): void {
     if (this.startDate !== null && this.endDate !== null) {
       this.selected = 'Todos';
+      this.dataSourceReports = [];
+      this.reports = [];
+
       const startDate = moment(this.startDate, this.dateFormat).toDate();
       const endDate = moment(this.endDate, this.dateFormat).toDate();
 
