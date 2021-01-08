@@ -115,6 +115,9 @@ export class ProgrammingComponent implements OnInit {
                   this.diffHours(mapperObject.reportUser[0].date, mapperObject.reportUser[1].date) :
                   undefined;
 
+                console.log(mapperObject);
+
+
                 const objectReturn = {
                   identification: mapperObject.identification,
                   name: mapperObject.name,
