@@ -8,10 +8,227 @@
               <mat-card-title>{{ titlePage }}</mat-card-title>
               <mat-card-subtitle>{{ subTitle }}</mat-card-subtitle>
             </div>
-
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-lg-3 col-md-6 col-12">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Fecha Inicial</mat-label>
+            <input matInput [matDatepicker]="pickerStart" [(ngModel)]="startDate" readonly />
+            <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+            <mat-datepicker #pickerStart></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-lg-3 col-md-6 col-12">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Fecha Final</mat-label>
+            <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="endDate" readonly />
+            <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+            <mat-datepicker #pickerEnd></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-lg-3 col-md-6 col-12">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Asistencia</mat-label>
+            <mat-select [(value)]="selected" (selectionChange)="validationAssistance($event)">
+              <mat-option value="Todos">
+                Todos
+              </mat-option>
+              <mat-option value="Asistieron">
+                Asistieron
+              </mat-option>
+              <mat-option value="No asistieron">
+                No asistieron
+              </mat-option>
+              <mat-option value="Asistieron sin salida">
+                Asistieron sin salida
+              </mat-option>
+              <mat-option value="Dentro de rango al ingreso">
+                Dentro de rango al ingreso
+              </mat-option>
+              <mat-option value="Dentro de rango a la salida">
+                Dentro de rango a la salida
+              </mat-option>
+              <mat-option value="Fuera de rango al ingreso">
+                Fuera de rango al ingreso
+              </mat-option>
+              <mat-option value="Fuera de rango a la salida">
+                Fuera de rango a la salida
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-lg-3 col-md-6 col-12">
+          <button mat-raised-button color="primary" class="w-100 mt-3" (click)="getReport()">Cosultar</button>
+        </div>
+      </div>
+      <section *ngIf="!isLoading">
+        <div class="row mt-3" *ngIf="reports.length > 0">
+          <div class="col-12">
+            <mat-form-field>
+              <mat-label>Filtro general</mat-label>
+              <input matInput (keyup)="applyFilter($event)" placeholder="Ej. Consultoria" #input>
+            </mat-form-field>
+            <div class="table-container">
+              <table mat-table [dataSource]="dataSourceReports" class="mat-elevation-z8 w-100">
+                <ng-container matColumnDef="dateProgramming">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Fecha programada </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.dateProgramming | date: 'dd/MM/yyyy'}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="identification">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Identificacion </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.identification}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Nombre </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.name}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dateInit">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Fecha Inicio </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    <span *ngIf="element.dateInit === 'No Registra'">
+                      {{element.dateInit}}
+                    </span>
+                    <span *ngIf="element.dateInit !== 'No Registra'">
+                      {{element.dateInit | date: 'dd/MM/yyyy - HH:mm:ss'}}
+                    </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dateEnd">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Fecha Fin </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    <span *ngIf="element.dateEnd === 'No Registra'">
+                      {{element.dateEnd}}
+                    </span>
+                    <span *ngIf="element.dateEnd !== 'No Registra'">
+                      {{element.dateEnd | date: 'dd/MM/yyyy - HH:mm:ss'}}
+                    </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="hours">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Horas </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.hours}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="observations">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Observación </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.observations}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="applicantName">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Solicitante </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.applicantName}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="identificationWorckCenter">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Id centro de trabajo </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.identificationWorckCenter}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="workCenter">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Centro de trabajo </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.workCenter}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="codeOperation">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Cod de operación </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.codeOperation}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="operation">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Operacion </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.operation}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="transport">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Transporte </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.transport}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="positionEntry">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Localización Entrada </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.positionEntry}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="positionExit">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Localización Salida </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.positionExit}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="addressEntry">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Dirección Salida </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.addressEntry}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="addressExit">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Dirección Salida </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.addressExit}}
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-5" *ngIf="reports.length == 0">
+          <div class="col-12 text-center">
+            <h2>
+              No se encontrarón registros
+            </h2>
+          </div>
+        </div>
+      </section>
+      <section *ngIf="isLoading">
+        <div class="row mt-5">
+          <div class="col-12 text-center">
+            <h2>
+              Cargando
+            </h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          </div>
+        </div>
+      </section>
     </mat-card>
   </div>
 </div>

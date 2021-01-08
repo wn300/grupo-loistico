@@ -127,14 +127,14 @@ export class NotScheduledComponent implements OnInit, OnDestroy {
   private getNotScheduled(): void {
     const peopleNotScheduled = this.people.filter((people) => {
       const programming = this.programmings.find(
-        (item) => item.identification == people.identification
+        (item) => item.identification === people.identification
       );
       return !programming;
     });
     this.peopleNotScheduled = [];
     this.peopleNotScheduledNew = [];
     peopleNotScheduled.forEach((item) => {
-      const _new = this.news.find((_new) => _new.peopleId == item.id);
+      const _new = this.news.find((_new) => _new.peopleId === item.id);
       if (_new) this.peopleNotScheduledNew.push({ ...item, new: _new });
       else this.peopleNotScheduled.push(item);
     });

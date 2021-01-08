@@ -14,8 +14,11 @@ export class ProgrmmingService {
 
   constructor(private firestore: AngularFirestore) { }
 
-  getPrograming(): Observable<any> {
-    return this.firestore.collection(this.collectionProgramming).valueChanges()
+  getPrograming(startDate: Date, endDate: Date): Observable<any> {
+    return this.firestore.collection(this.collectionProgramming, (ref) =>
+      ref.where('date', '<=', endDate).where('date', '>=', startDate),
+    )
+      .valueChanges()
       .pipe(
         switchMap((programmings: any) => {
           const operationCodeIds = uniq(programmings.map(p => p.operationCode));
@@ -40,5 +43,11 @@ export class ProgrmmingService {
           });
         })
       );
+  }
+
+  getReportsUsers(startDate: Date, endDate: Date): Observable<any> {
+    return this.firestore.collection(this.collectionReport, (ref) =>
+      ref.where('createAt', '<=', endDate).where('createAt', '>=', startDate),
+    ).valueChanges();
   }
 }
