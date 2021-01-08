@@ -74,28 +74,28 @@
               <table mat-table [dataSource]="dataSourceReports" class="mat-elevation-z8 w-100">
                 <ng-container matColumnDef="dateProgramming">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Fecha programada </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
-                    {{element.dateProgramming | date: 'dd/MM/yyyy'}}
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
+                    {{element.dateProgramming | date: 'dd/MM/yyyy - HH:mm:ss'}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="identification">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Identificacion </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.identification}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="name">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Nombre </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.name}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="dateInit">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Fecha Inicio </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     <span *ngIf="element.dateInit === 'No Registra'">
                       {{element.dateInit}}
                     </span>
@@ -107,7 +107,7 @@
 
                 <ng-container matColumnDef="dateEnd">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Fecha Fin </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     <span *ngIf="element.dateEnd === 'No Registra'">
                       {{element.dateEnd}}
                     </span>
@@ -119,84 +119,84 @@
 
                 <ng-container matColumnDef="hours">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Horas </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.hours}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="observations">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Observación </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.observations}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="applicantName">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Solicitante </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.applicantName}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="identificationWorckCenter">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Id centro de trabajo </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.identificationWorckCenter}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="workCenter">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Centro de trabajo </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.workCenter}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="codeOperation">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Cod de operación </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.codeOperation}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="operation">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Operacion </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.operation}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="transport">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Transporte </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.transport}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="positionEntry">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Localización Entrada </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.positionEntry}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="positionExit">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Localización Salida </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.positionExit}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="addressEntry">
-                  <th mat-header-cell class="text-center" *matHeaderCellDef> Dirección Salida </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Dirección Entrada </th>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.addressEntry}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="addressExit">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Dirección Salida </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.addressExit}}
                   </td>
                 </ng-container>
