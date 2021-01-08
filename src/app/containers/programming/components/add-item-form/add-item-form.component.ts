@@ -14,7 +14,10 @@ import { ClientService } from 'src/app/containers/administration/client/services
 
 import { People } from 'src/app/containers/administration/people/entity/people';
 import { PeopleService } from 'src/app/containers/administration/people/services/people.service';
-import { WorkCenter } from 'src/app/containers/administration/work-center/entity/work-center';
+import {
+  WorkCenter,
+  WorkCenterBasic,
+} from 'src/app/containers/administration/work-center/entity/work-center';
 import { WorkCenterService } from 'src/app/containers/administration/work-center/services/work-center.service';
 import { OperationCenter } from '../../entities/operation-center.entity';
 import { OperationCenterService } from '../../services/operation-center.service';
@@ -33,13 +36,21 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
 
   public people: People[] = [];
   public operationCenters: OperationCenter[] = [];
-  public workCenters: WorkCenter[] = [];
-  public clients: Client[] = [];
+  public workCenters: WorkCenterBasic[] = [];
+  public applicants: {
+    identification: number;
+    name: string;
+    workCenterId: number;
+  }[] = [];
 
   public filteredPeople: Observable<People[]>;
-  public filteredWorkCenters: Observable<WorkCenter[]>;
+  public filteredWorkCenters: Observable<WorkCenterBasic[]>;
   public filteredOperationCenters: Observable<OperationCenter[]>;
-  public filteredClients: Observable<Client[]>;
+  public filterApplicants: {
+    identification: number;
+    name: string;
+    workCenterId: number;
+  }[] = [];
 
   @ViewChild(UploadItemsFormComponent)
   uploadComponent: UploadItemsFormComponent;
@@ -48,7 +59,6 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
     private peopleService: PeopleService,
     private workCenterService: WorkCenterService,
     private operationCenterService: OperationCenterService,
-    private clientsService: ClientService,
     private programmingService: ProgrammingService,
     private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<AddItemFormComponent>,
@@ -64,6 +74,7 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
         .getPeople()
         .pipe(take(1))
         .subscribe((data) => {
+          this.people = [];
           (data as Array<any>).forEach((item) => {
             this.people.push({ ...item.payload.doc.data() });
           });
@@ -74,8 +85,26 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
         .getWorkCenters()
         .pipe(take(1))
         .subscribe((data) => {
+          const items = [];
+          const itemsApplications = [];
+          this.workCenters = [];
+          this.applicants = [];
           (data as Array<any>).forEach((item) => {
-            this.workCenters.push({ ...item.payload.doc.data() });
+            const itemWork = item.payload.doc.data() as WorkCenter;
+            if (items.indexOf(itemWork.identification) < 0) {
+              this.workCenters.push({ ...itemWork });
+            }
+            if (
+              itemsApplications.indexOf(itemWork.coordinatorIdentification) < 0
+            ) {
+              this.applicants.push({
+                identification: itemWork.coordinatorIdentification,
+                name: itemWork.coordinator,
+                workCenterId: itemWork.identification,
+              });
+            }
+            items.push(itemWork.identification);
+            itemsApplications.push(itemWork.coordinatorIdentification);
           });
         })
     );
@@ -84,18 +113,9 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
         .getOperations()
         .pipe(take(1))
         .subscribe((data) => {
+          this.operationCenters = [];
           (data as Array<any>).forEach((item) => {
             this.operationCenters.push({ ...item.payload.doc.data() });
-          });
-        })
-    );
-    this.subscriptions.push(
-      this.clientsService
-        .getClients()
-        .pipe(take(1))
-        .subscribe((data) => {
-          (data as Array<any>).forEach((item) => {
-            this.clients.push({ ...item.payload.doc.data() });
           });
         })
     );
@@ -121,9 +141,12 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
       startWith(''),
       debounceTime(300),
       map((value) => (typeof value === 'string' ? value : value.name)),
-      map((name) =>
-        name ? this._filterWorkCenter(name) : this.workCenters.slice()
-      )
+      map((name) => {
+        this.form.get('operationCenter').setValue('');
+        this.form.get('client').setValue('');
+        this._filterApplications();
+        return name ? this._filterWorkCenter(name) : this.workCenters.slice();
+      })
     );
     this.filteredOperationCenters = this.form
       .get('operationCenter')
@@ -133,12 +156,6 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
         map((value) => (typeof value === 'string' ? value : value.name)),
         map((name) => this._filterOperationCenter(name))
       );
-    this.filteredClients = this.form.get('client').valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      map((value) => (typeof value === 'string' ? value : value.name)),
-      map((name) => (name ? this._filterClients(name) : this.clients.slice()))
-    );
   }
 
   ngOnDestroy(): void {
@@ -163,16 +180,15 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
       ? `[${people.identification}] ${people.firstName} ${people.firstLastName}`
       : '';
   }
-  public displayWorkCenterFn(workCenter: WorkCenter): string {
-    return workCenter ? `[${workCenter.code}] ${workCenter.name}` : '';
+  public displayWorkCenterFn(workCenter: WorkCenterBasic): string {
+    return workCenter
+      ? `[${workCenter.identification}] ${workCenter.name}`
+      : '';
   }
   public displayOperationCenterFn(operationCenter: OperationCenter): string {
     return operationCenter
       ? `[${operationCenter.code}] ${operationCenter.name}`
       : '';
-  }
-  public displayClientsFn(client: Client): string {
-    return client ? `[${client.identification}] ${client.name}` : '';
   }
 
   public validateAutoInput(_control: string): void {
@@ -193,10 +209,14 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
   public handleSave(): void {
     if (this.form.valid) {
       const people = this.fControl('people').value as People;
-      const workCenter = this.fControl('workCenter').value as WorkCenter;
+      const workCenter = this.fControl('workCenter').value as WorkCenterBasic;
       const operationCenter = this.fControl('operationCenter')
         .value as OperationCenter;
-      const client = this.fControl('client').value as Client;
+      const client = this.fControl('client').value as {
+        identification: number;
+        name: string;
+        workCenterId: number;
+      };
       const data = {
         identification: people.identification,
         name: `${people.firstName} ${people.secondName} ${people.firstLastName} ${people.secondLastName}`,
@@ -204,7 +224,7 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
         date: this.fControl('date').value,
         operationCode: operationCenter.code,
         operationName: operationCenter.name,
-        workplaceCode: workCenter.code,
+        workplaceCode: workCenter.identification,
         workplaceName: workCenter.name,
         applicantIdentification: client.identification,
         applicantName: client.name,
@@ -258,29 +278,27 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
     return this.workCenters.filter(
       (option) =>
         option.name.toLowerCase().indexOf(filterValue) >= 0 ||
-        String(option.code).toLowerCase().indexOf(filterValue) >= 0
+        String(option.identification).toLowerCase().indexOf(filterValue) >= 0
     );
   }
   private _filterOperationCenter(value: string): any[] {
     const filterValue = value ? value.toLowerCase() : '';
-    const workCenter = this.form.get('workCenter').value as WorkCenter;
+    const workCenter = this.form.get('workCenter').value as WorkCenterBasic;
 
     return this.operationCenters.filter(
       (option) =>
         typeof workCenter !== 'string' &&
-        option.workCenterCode === workCenter.code &&
+        option.workCenterCode === workCenter.identification &&
         (filterValue.length === 0 ||
           option.name.toLowerCase().indexOf(filterValue) >= 0 ||
           String(option.code).toLowerCase().indexOf(filterValue) >= 0)
     );
   }
-  private _filterClients(value: string): any[] {
-    const filterValue = value.toLowerCase();
-
-    return this.clients.filter(
-      (option) =>
-        option.name.toLowerCase().indexOf(filterValue) >= 0 ||
-        String(option.identification).toLowerCase().indexOf(filterValue) >= 0
+  private _filterApplications(): void {
+    this.filterApplicants = this.applicants.filter(
+      (applicat) =>
+        applicat.workCenterId ===
+        (this.fControl('workCenter').value as WorkCenterBasic).identification
     );
   }
 

@@ -1,14 +1,19 @@
 import { ValidationMessageForm } from 'src/app/shared/entity/validator-message-form';
 
-export interface WorkCenter {
+export interface WorkCenterBasic {
   id: string;
   name: string;
   identification: number;
+}
+
+export interface WorkCenter extends WorkCenterBasic {
   city: string;
   contact: string;
   phone: string;
   email: string;
   code?: number;
+  coordinator?: string;
+  coordinatorIdentification?: number;
 }
 
 export interface WorkCenterValidatorForm {
