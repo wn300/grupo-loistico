@@ -26,6 +26,7 @@ import { ProgrammingService } from './services/programming.service';
 import { OperationCenterService } from './services/operation-center.service';
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatIconModule,
     MatProgressBarModule,
     MatRadioModule,
+    MatSelectModule,
     MatTableModule,
     MatToolbarModule,
     NgxMatNativeDateModule,
