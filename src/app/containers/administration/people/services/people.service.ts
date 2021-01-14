@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Observable, pipe} from 'rxjs';
+import { Observable, pipe } from 'rxjs';
 import { People } from '../entity/people';
 import { JoinsFirebaseService } from 'src/app/shared/services/joins-firebase.service';
-import { shareReplay } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +38,8 @@ export class PeopleService {
 
   postUserAuth({ email, password }): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      this.firebaseAuth.createUserWithEmailAndPassword(email, password.toString())
+      // const detachedAuth = authApp.auth();
+      this.firebaseAuth.createUserWithEmailAndPassword( email, password.toString() )
         .then(
           res => resolve(res)
           , err => reject(err)
@@ -56,8 +57,9 @@ export class PeopleService {
     });
   }
 
-  postPeople(dataSave: People): Promise<any> {
+  postPeople(dataSave: People, uid: string): Promise<any> {
     return new Promise<any>((resolve, reject) => {
+      dataSave.uid = uid;
       this.firestore
         .collection(this.collectionPeople)
         .add(dataSave)
