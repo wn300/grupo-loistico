@@ -34,10 +34,16 @@
                     {{element.date  | date: 'dd/MM/yyyy - HH:mm:ss'}}
                   </td>
                 </ng-container>
-                <ng-container matColumnDef="createBy">
-                  <th mat-header-cell class="text-center" *matHeaderCellDef> Creado por </th>
+                <ng-container matColumnDef="createByIdentification">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Identificación creador</th>
                   <td mat-cell *matCellDef="let element" class="text-center">
-                    {{element.createBy }}
+                    {{element.createByIdentification }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="createBy">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Nombre creador </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.createByNames }}
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="address">

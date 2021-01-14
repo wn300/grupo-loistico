@@ -126,7 +126,13 @@ export class DialogFormComponent implements OnInit {
             Validators.required,
             Validators.maxLength(10)
           ]),
-          client: new FormControl(form.data ? form.data.client : ''),
+          client: new FormControl({
+            value: form.data ? form.data.client : '',
+            disabled: ''
+          },
+            [
+              Validators.required
+            ]),
           coordinator: new FormControl({
             value: form.data ? form.data.coordinator : '',
             disabled: ''

@@ -4,7 +4,6 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable, pipe } from 'rxjs';
 import { People } from '../entity/people';
 import { JoinsFirebaseService } from 'src/app/shared/services/joins-firebase.service';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'

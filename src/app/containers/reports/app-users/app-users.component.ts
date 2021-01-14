@@ -26,6 +26,7 @@ export class AppUsersComponent implements OnInit, OnDestroy {
     this.displayedColumns = [
       'type',
       'date',
+      'createByIdentification',
       'createBy',
       'address',
       'description',
@@ -36,22 +37,17 @@ export class AppUsersComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription.push(
-      this.reportsService.getReportsByFiles()
+      this.reportsService.getReportsByFilesByDates()
         .subscribe(data => {
-          this.reports = data.map((catData: any) => {
-            const objectReport = {
-              id: catData.payload.doc.id,
-              images: catData.payload.doc.data().images,
-              address: catData.payload.doc.data().address,
-              createAt: catData.payload.doc.data().createAt,
-              date: catData.payload.doc.data().createAt.toDate(),
-              createBy: catData.payload.doc.data().createBy,
-              description: catData.payload.doc.data().description,
-              type: catData.payload.doc.data().type,
-              status: catData.payload.doc.data().status,
-              location: catData.payload.doc.data().location,
+          console.log(data);
+
+          this.reports = data.map(dataMapper => {
+            return {
+              ...dataMapper,
+              createByIdentification: dataMapper.people.identification,
+              createByNames: `${dataMapper.people.firstName} ${dataMapper.people.secondName} ${dataMapper.people.firstLastName} ${dataMapper.people.secondLastName}`,
+              date: dataMapper.createAt.toDate(),
             };
-            return objectReport;
           });
 
           this.dataSourceReports = new MatTableDataSource(this.reports);
