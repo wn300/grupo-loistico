@@ -39,8 +39,6 @@ export class AppUsersComponent implements OnInit, OnDestroy {
     this.subscription.push(
       this.reportsService.getReportsByFilesByDates()
         .subscribe(data => {
-          console.log(data);
-
           this.reports = data.map(dataMapper => {
             return {
               ...dataMapper,
