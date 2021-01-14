@@ -13,6 +13,7 @@
                 mat-fab
                 class="bg-color-secundary-corporative"
                 aria-label="add segment"
+                *ngIf="canAdd"
                 (click)="handleAdd()"
               >
                 <mat-icon>add</mat-icon>

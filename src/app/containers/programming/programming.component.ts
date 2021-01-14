@@ -10,6 +10,8 @@ import { Programming } from './entities/programming.entity';
 import { ProgrammingService } from './services/programming.service';
 import { AddItemsFormComponent } from './components/add-items-form/add-items-form.component';
 import { AddItemFormComponent } from './components/add-item-form/add-item-form.component';
+import { FUNCTIONS, PermissionsService } from 'src/app/core/services/permissions.service';
+import { MODULE } from 'src/app/constants/app.constants';
 
 @Component({
   selector: 'app-programming',
@@ -25,10 +27,13 @@ export class ProgrammingComponent implements OnInit, OnDestroy {
   public isLoading: boolean = true;
   public dataSourceRegistries;
 
+  private readonly _module: MODULE = MODULE.news;
+
   constructor(
     private programmingService: ProgrammingService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private permissionsService: PermissionsService
   ) {
     this.titlePage = 'Programación';
     this.subTitle = 'Registros programados';
@@ -38,8 +43,6 @@ export class ProgrammingComponent implements OnInit, OnDestroy {
       'date',
       'workplaceName',
       'operationName',
-      'update',
-      'delete',
     ];
   }
 
@@ -60,12 +63,23 @@ export class ProgrammingComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       }, 100);
     });
+
+    if (this.permissionsService.canActiveFunction(this._module, FUNCTIONS.update)) {
+      this.displayedColumns.push('update');
+    }
+    if (this.permissionsService.canActiveFunction(this._module, FUNCTIONS.delete)) {
+      this.displayedColumns.push('delete');
+    }
   }
 
   ngOnDestroy(): void {
     if (this.subscriptions.length > 0) {
       this.subscriptions.forEach((data) => data.unsubscribe());
     }
+  }
+
+  get canAdd(): boolean {
+    return this.permissionsService.canActiveFunction(this._module, FUNCTIONS.add);
   }
 
   public openSnackBar(message: string, action: string): void {
