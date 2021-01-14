@@ -38,7 +38,6 @@ export class PeopleService {
 
   postUserAuth({ email, password }): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      // const detachedAuth = authApp.auth();
       this.firebaseAuth.createUserWithEmailAndPassword( email, password.toString() )
         .then(
           res => resolve(res)
