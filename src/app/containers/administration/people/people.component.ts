@@ -109,7 +109,7 @@ export class PeopleComponent implements OnInit {
 
     this.peopleService.postUserAuth(authData)
       .then(res => {
-        this.peopleService.postPeople(data)
+        this.peopleService.postPeople(data, res.user.uid)
           .then(res => {
             this.openSnackBar('Usuario creado correctamente', 'cerrar');
           })
@@ -130,7 +130,7 @@ export class PeopleComponent implements OnInit {
 
     this.peopleService.postUserAuth(authData)
       .then(res => {
-        this.peopleService.postPeople(data)
+        this.peopleService.postPeople(data, 'idmasivo')
           .then(res => {
             this.openSnackBar('Usuario creado correctamente', 'cerrar');
           })

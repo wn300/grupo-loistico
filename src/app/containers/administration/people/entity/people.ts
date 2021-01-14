@@ -19,6 +19,7 @@ export interface People {
   manager: string;
   city: string;
   dayOfRest: string;
+  uid: string;
 }
 
 export interface PeopleValidatorForm {
