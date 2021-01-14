@@ -4,7 +4,7 @@
       <app-header *ngIf="isLogged" (toggleEmit)="emitActionClickToogle()" [isSmallScreen]="isSmallScreen"></app-header>
       <mat-sidenav-container autosize>
         <mat-sidenav #drawer class="nav-sidenav" [mode]="overOrSide">
-          <mat-nav-list>
+          <mat-nav-list *ngIf="menu">
             <span *ngIf='menu.length > 0'>
               <app-nav-menu *ngFor="let item of menu" [item]="item"></app-nav-menu>
             </span>

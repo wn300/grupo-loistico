@@ -11,6 +11,8 @@ import { New, NewPayload } from './entity/new.entity';
 import { DialogConfirmComponent } from 'src/app/shared/components/dialog-confirm/dialog-confirm.component';
 import { TypesNewsService } from '../administration/types-news/services/types-news.service';
 import { TypeNew } from '../administration/types-news/entity/type-new.entity';
+import { FUNCTIONS, PermissionsService } from 'src/app/core/services/permissions.service';
+import { MODULE } from 'src/app/constants/app.constants';
 
 @Component({
   selector: 'app-news',
@@ -27,11 +29,14 @@ export class NewsComponent implements OnInit, OnDestroy {
   public dataSourceNews;
   public isLoading: boolean = false;
 
+  private readonly _module: MODULE = MODULE.news;
+
   constructor(
     public dialog: MatDialog,
     private snackBar: MatSnackBar,
     private typesNewsService: TypesNewsService,
-    private newsService: NewsService
+    private newsService: NewsService,
+    private permissionsService: PermissionsService
   ) {
     this.titlePage = 'Novedades';
     this.subTitle = 'Novedades registradas en el sistema';
@@ -43,8 +48,6 @@ export class NewsComponent implements OnInit, OnDestroy {
       'dateStart',
       'dateEnd',
       'observations',
-      'update',
-      'delete',
     ];
   }
 
@@ -71,12 +74,23 @@ export class NewsComponent implements OnInit, OnDestroy {
         }, 100);
       })
     );
+
+    if (this.permissionsService.canActiveFunction(this._module, FUNCTIONS.update)) {
+      this.displayedColumns.push('update');
+    }
+    if (this.permissionsService.canActiveFunction(this._module, FUNCTIONS.delete)) {
+      this.displayedColumns.push('delete');
+    }
   }
 
   ngOnDestroy(): void {
     if (this.subscriptions.length > 0) {
       this.subscriptions.forEach((data) => data.unsubscribe());
     }
+  }
+
+  get canAdd(): boolean {
+    return this.permissionsService.canActiveFunction(this._module, FUNCTIONS.add);
   }
 
   public applyFilter(event: Event): void {
@@ -158,10 +172,7 @@ export class NewsComponent implements OnInit, OnDestroy {
         this.newsService
           .delete(element.id)
           .then((res) => {
-            this.openSnackBar(
-              'Novedad eliminada correctamente',
-              'cerrar'
-            );
+            this.openSnackBar('Novedad eliminada correctamente', 'cerrar');
           })
           .catch((err) => {
             this.openSnackBar(
