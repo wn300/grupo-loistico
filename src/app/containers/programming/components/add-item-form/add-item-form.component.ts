@@ -11,6 +11,7 @@ import { Observable, Subscription } from 'rxjs';
 import { debounceTime, map, startWith, take } from 'rxjs/operators';
 import { Client } from 'src/app/containers/administration/client/entity/client';
 import { ClientService } from 'src/app/containers/administration/client/services/client.service';
+import { CoordinatorsWorkCenterService } from 'src/app/containers/administration/coordinators-work-center/services/coordinators-work-center.service';
 
 import { People } from 'src/app/containers/administration/people/entity/people';
 import { PeopleService } from 'src/app/containers/administration/people/services/people.service';
@@ -61,12 +62,13 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
     private operationCenterService: OperationCenterService,
     private programmingService: ProgrammingService,
     private snackBar: MatSnackBar,
+    public coordinatorsWorkCenterService: CoordinatorsWorkCenterService,
     public dialogRef: MatDialogRef<AddItemFormComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       title: string;
     }
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.subscriptions.push(
@@ -94,17 +96,17 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
             if (items.indexOf(itemWork.identification) < 0) {
               this.workCenters.push({ ...itemWork });
             }
-            if (
-              itemsApplications.indexOf(itemWork.coordinatorIdentification) < 0
-            ) {
-              this.applicants.push({
-                identification: itemWork.coordinatorIdentification,
-                name: itemWork.coordinator,
-                workCenterId: itemWork.identification,
-              });
-            }
+            // if (
+            //   itemsApplications.indexOf(itemWork.coordinatorIdentification) < 0
+            // ) {
+            //   this.applicants.push({
+            //     identification: itemWork.coordinatorIdentification,
+            //     name: itemWork.coordinator,
+            //     workCenterId: itemWork.identification,
+            //   });
+            // }
             items.push(itemWork.identification);
-            itemsApplications.push(itemWork.coordinatorIdentification);
+            // itemsApplications.push(itemWork.coordinatorIdentification);
           });
         })
     );
@@ -144,7 +146,6 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
       map((name) => {
         this.form.get('operationCenter').setValue('');
         this.form.get('client').setValue('');
-        this._filterApplications();
         return name ? this._filterWorkCenter(name) : this.workCenters.slice();
       })
     );
@@ -162,6 +163,20 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
     if (this.subscriptions.length > 0) {
       this.subscriptions.forEach((data) => data.unsubscribe());
     }
+  }
+
+  selectWorkCenter(selected: any): void {
+    this.filterApplicants = [];
+    this.coordinatorsWorkCenterService.getCoordinatorsWorkCentersByIdentificationWorkCenter(selected.option.value.identification)
+      .subscribe(data => {
+        this.filterApplicants = data.map(dataMapper => {
+          return {
+            identification: dataMapper.identification,
+            name: dataMapper.name,
+            workCenterId: dataMapper.workCenterCode,
+          };
+        });
+      });
   }
 
   public fControl(control: string): AbstractControl {
@@ -292,13 +307,6 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
         (filterValue.length === 0 ||
           option.name.toLowerCase().indexOf(filterValue) >= 0 ||
           String(option.code).toLowerCase().indexOf(filterValue) >= 0)
-    );
-  }
-  private _filterApplications(): void {
-    this.filterApplicants = this.applicants.filter(
-      (applicat) =>
-        applicat.workCenterId ===
-        (this.fControl('workCenter').value as WorkCenterBasic).identification
     );
   }
 

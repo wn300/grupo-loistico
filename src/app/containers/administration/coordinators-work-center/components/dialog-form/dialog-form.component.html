@@ -1,0 +1,79 @@
+<section *ngIf="formCoordinatorWorkCenter">
+  <h1 mat-dialog-title>{{form.title}}</h1>
+
+  <form class="form--work-center" [formGroup]="formCoordinatorWorkCenter">
+    <div class="row">
+      <div class="col-lg-4 col-md-4 col-12">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Código del centro de trabajo</mat-label>
+          <input type="text" placeholder="Seleccione uno" aria-label="Operación" matInput
+            formControlName="workCenterCode" [matAutocomplete]="workCentersCode" (keyup)="keyupWorkCenterCode(formCoordinatorWorkCenter.value.workCenterCode)">
+          <mat-autocomplete autoActiveFirstOption #workCentersCode="matAutocomplete"
+            (optionSelected)="selectIdentification($event)">
+            <mat-option *ngFor="let workCenterCode of filteredWorkCenterOptions | async"
+              [value]="workCenterCode.identification + '-' + workCenterCode.name">
+              [{{workCenterCode.identification}}] - {{workCenterCode.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <ng-container *ngFor="let validation of validationMessages.workCenterCode">
+          <mat-error class="errorMessages" *ngIf="formCoordinatorWorkCenter.get('workCenterCode').hasError(validation.type)
+                    && (formCoordinatorWorkCenter.get('workCenterCode').dirty
+                    || formCoordinatorWorkCenter.get('workCenterCode').touched)">
+            {{ validation.message }}
+          </mat-error>
+        </ng-container>
+      </div>
+      <div class="col-lg-4 col-md-4 col-12">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Nombre del centro de trabajo</mat-label>
+          <input readonly autocomplete="off" matInput placeholder="Nombre centro de trabajo"
+            formControlName="workCenterName" maxlength="20">
+        </mat-form-field>
+        <ng-container *ngFor="let validation of validationMessages.workCenterName">
+          <mat-error class="errorMessages" *ngIf="formCoordinatorWorkCenter.get('workCenterName').hasError(validation.type)
+                    && (formCoordinatorWorkCenter.get('workCenterName').dirty
+                    || formCoordinatorWorkCenter.get('workCenterName').touched)">
+            {{ validation.message }}
+          </mat-error>
+        </ng-container>
+      </div>
+      <div class="col-lg-4 col-md-4 col-12">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Identificación coordinador</mat-label>
+          <input required autocomplete="off" matInput placeholder="Ciudad" formControlName="identification"
+            maxlength="20">
+        </mat-form-field>
+        <ng-container *ngFor="let validation of validationMessages.identification">
+          <mat-error class="errorMessages" *ngIf="formCoordinatorWorkCenter.get('identification').hasError(validation.type)
+                    && (formCoordinatorWorkCenter.get('identification').dirty
+                    || formCoordinatorWorkCenter.get('identification').touched)">
+            {{ validation.message }}
+          </mat-error>
+        </ng-container>
+      </div>
+      <div class="col-lg-4 col-md-4 col-12">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Nombre coordinador</mat-label>
+          <input required autocomplete="off" matInput placeholder="Nombre coordinador" formControlName="name"
+            maxlength="20">
+        </mat-form-field>
+        <ng-container *ngFor="let validation of validationMessages.name">
+          <mat-error class="errorMessages" *ngIf="formCoordinatorWorkCenter.get('name').hasError(validation.type)
+                    && (formCoordinatorWorkCenter.get('name').dirty
+                    || formCoordinatorWorkCenter.get('name').touched)">
+            {{ validation.message }}
+          </mat-error>
+        </ng-container>
+      </div>
+    </div>
+  </form>
+
+  <div mat-dialog-actions class="justify-content-center mt-3">
+    <section>
+      <button mat-raised-button (click)="onNoClick()">Cancelar</button>
+      <button mat-raised-button color="primary" [mat-dialog-close]="formCoordinatorWorkCenter"
+        [disabled]="!formCoordinatorWorkCenter.valid">Guardar</button>
+    </section>
+  </div>
+</section>

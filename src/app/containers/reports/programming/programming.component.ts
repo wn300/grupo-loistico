@@ -66,89 +66,97 @@ export class ProgrammingComponent implements OnInit {
       const startDate = moment(this.startDate, this.dateFormat).toDate();
       const endDate = moment(this.endDate, this.dateFormat).toDate();
 
+
       this.progrmmingService.getPrograming(startDate, endDate)
-        .subscribe(dataPrograming => {
-          this.progrmmingService.getReportsUsers(startDate, endDate)
-            .subscribe(dataReports => {
-              const reportProgramming = dataPrograming.map(elementPrograming => {
-                const reportUser = [];
-                dataReports.forEach(elementReports => {
+        .subscribe(
+          dataPrograming => {
+            if (dataPrograming.length > 0) {
+              this.progrmmingService.getReportsUsers(startDate, endDate)
+                .subscribe(dataReports => {
+                  const reportProgramming = dataPrograming.map(elementPrograming => {
+                    const reportUser = [];
+                    dataReports.forEach(elementReports => {
 
-                  if (parseFloat(elementPrograming.identification) === parseFloat(elementReports.email.split('@')[0])) {
-                    const diffTime = this.diffHours(elementPrograming.date.toDate(), elementReports.createAt.toDate());
+                      if (parseFloat(elementPrograming.identification) === parseFloat(elementReports.email.split('@')[0])) {
+                        const diffTime = this.diffHours(elementPrograming.date.toDate(), elementReports.createAt.toDate());
 
-                    if ((diffTime[0] === 0 && diffTime[1] <= 60 && elementReports.type === 'Llegada')
-                      || (diffTime[0] <= 12 && elementReports.type === 'Salida')) {
+                        if ((diffTime[0] === 0 && diffTime[1] <= 60 && elementReports.type === 'Llegada')
+                          || (diffTime[0] <= 12 && elementReports.type === 'Salida')) {
 
-                      const x1 = this.digitThrird(elementPrograming.workCenter.latitude);
-                      const y1 = this.digitThrird(elementPrograming.workCenter.longitude);
-                      const x2 = this.digitThrird(elementReports.location.latitude);
-                      const y2 = this.digitThrird(elementReports.location.longitude);
-                      const delta = 4;
+                          const x1 = this.digitThrird(elementPrograming.workCenter.latitude);
+                          const y1 = this.digitThrird(elementPrograming.workCenter.longitude);
+                          const x2 = this.digitThrird(elementReports.location.latitude);
+                          const y2 = this.digitThrird(elementReports.location.longitude);
+                          const delta = 4;
 
-                      let position = 'Fuera de rango';
-                      if ((x1 - delta < x2 < x1 + delta) && (y1 - delta < y2 < y1 + delta)) {
-                        position = 'Dentro del rango';
+                          let position = 'Fuera de rango';
+                          if ((x1 - delta < x2 < x1 + delta) && (y1 - delta < y2 < y1 + delta)) {
+                            position = 'Dentro del rango';
+                          }
+
+                          reportUser.push({
+                            ...elementReports,
+                            date: elementReports.createAt.toDate(),
+                            position,
+                            diferenceHours: diffTime,
+                            identificationUser: parseFloat(elementReports.email.split('@')[0]),
+                          });
+                        }
                       }
+                    });
 
-                      reportUser.push({
-                        ...elementReports,
-                        date: elementReports.createAt.toDate(),
-                        position,
-                        diferenceHours: diffTime,
-                        identificationUser: parseFloat(elementReports.email.split('@')[0]),
-                      });
+                    return {
+                      ...elementPrograming,
+                      date: elementPrograming.date.toDate(),
+                      reportUser,
+                    };
+                  });
+
+                  this.reports = reportProgramming.map(mapperObject => {
+
+                    const hoursDiff = mapperObject.reportUser[0] !== undefined && mapperObject.reportUser[1] !== undefined ?
+                      this.diffHours(mapperObject.reportUser[0].date, mapperObject.reportUser[1].date) :
+                      undefined;
+
+                    const objectReturn = {
+                      identification: mapperObject.identification,
+                      name: mapperObject.name,
+                      dateInit: mapperObject.reportUser[0] !== undefined ? mapperObject.reportUser[0].date : 'No Registra',
+                      dateEnd: mapperObject.reportUser[1] !== undefined ? mapperObject.reportUser[1].date : 'No Registra',
+                      hours: hoursDiff !== undefined ? `${hoursDiff[0]}:${hoursDiff[1]}` : 'No Registra',
+                      observations: mapperObject.observation,
+                      applicantName: mapperObject.applicantName,
+                      dateProgramming: moment(mapperObject.date, this.dateFormat),
+                      identificationWorckCenter: mapperObject.workCenter.identification,
+                      workCenter: mapperObject.workCenter.name,
+                      codeOperation: mapperObject.workCenter.operationCode,
+                      operation: mapperObject.workCenter.operation,
+                      transport: mapperObject.transport === true ? 'Si' : 'No',
+                      positionEntry: mapperObject.reportUser[0] !== undefined ? mapperObject.reportUser[0].position : 'No Registra',
+                      positionExit: mapperObject.reportUser[1] !== undefined ? mapperObject.reportUser[1].position : 'No Registra',
+                      addressEntry: mapperObject.reportUser[0] !== undefined ? mapperObject.reportUser[0].address : 'No Registra',
+                      addressExit: mapperObject.reportUser[1] !== undefined ? mapperObject.reportUser[1].address : 'No Registra',
                     }
-                  }
+
+                    return objectReturn;
+                  });
+
+
+                  this.dataSourceReports = new MatTableDataSource(this.reports);
+
+                  setTimeout(() => {
+                    this.isLoading = false;
+                  }, 100);
+
                 });
-
-                return {
-                  ...elementPrograming,
-                  date: elementPrograming.date.toDate(),
-                  reportUser,
-                };
-              });
-
-              this.reports = reportProgramming.map(mapperObject => {
-
-                const hoursDiff = mapperObject.reportUser[0] !== undefined && mapperObject.reportUser[1] !== undefined ?
-                  this.diffHours(mapperObject.reportUser[0].date, mapperObject.reportUser[1].date) :
-                  undefined;
-
-                console.log(mapperObject);
-
-
-                const objectReturn = {
-                  identification: mapperObject.identification,
-                  name: mapperObject.name,
-                  dateInit: mapperObject.reportUser[0] !== undefined ? mapperObject.reportUser[0].date : 'No Registra',
-                  dateEnd: mapperObject.reportUser[1] !== undefined ? mapperObject.reportUser[1].date : 'No Registra',
-                  hours: hoursDiff !== undefined ? `${hoursDiff[0]}:${hoursDiff[1]}` : 'No Registra',
-                  observations: mapperObject.observation,
-                  applicantName: mapperObject.applicantName,
-                  dateProgramming: moment(mapperObject.date, this.dateFormat),
-                  identificationWorckCenter: mapperObject.workCenter.identification,
-                  workCenter: mapperObject.workCenter.name,
-                  codeOperation: mapperObject.workCenter.operationCode,
-                  operation: mapperObject.workCenter.operation,
-                  transport: mapperObject.transport === true ? 'Si' : 'No',
-                  positionEntry: mapperObject.reportUser[0] !== undefined ? mapperObject.reportUser[0].position : 'No Registra',
-                  positionExit: mapperObject.reportUser[1] !== undefined ? mapperObject.reportUser[1].position : 'No Registra',
-                  addressEntry: mapperObject.reportUser[0] !== undefined ? mapperObject.reportUser[0].address : 'No Registra',
-                  addressExit: mapperObject.reportUser[1] !== undefined ? mapperObject.reportUser[1].address : 'No Registra',
-                }
-
-                return objectReturn;
-              });
-
-
-              this.dataSourceReports = new MatTableDataSource(this.reports);
+            } else {
+              this.reports = [];
               setTimeout(() => {
                 this.isLoading = false;
               }, 100);
-
-            });
-        });
+            }
+          },
+          error => console.log(error));
     }
   }
 

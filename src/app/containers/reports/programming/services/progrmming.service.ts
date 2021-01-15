@@ -22,25 +22,35 @@ export class ProgrmmingService {
       .pipe(
         switchMap((programmings: any) => {
           const operationCodeIds = uniq(programmings.map(p => p.operationCode));
-          return combineLatest(
-            of(programmings),
-            combineLatest(
-              operationCodeIds.map(operationCodeId =>
-                this.firestore.collection(this.collectionWorkCenter,
-                  ref => ref.where('operationCode', '==', operationCodeId)).valueChanges().pipe(
-                    map(workCenter => workCenter[0])
-                  )
+
+          if (operationCodeIds.length > 0) {
+            return combineLatest(
+              of(programmings),
+              combineLatest(
+                operationCodeIds.map(operationCodeId =>
+                  this.firestore.collection(this.collectionWorkCenter,
+                    ref => ref.where('operationCode', '==', operationCodeId)).valueChanges().pipe(
+                      map(workCenter => workCenter[0])
+                    )
+                )
               )
-            )
-          );
+            );
+          } else {
+            return ['N'];
+          }
+
         }),
         map(([programmings, workCenter]) => {
-          return programmings.map(programming => {
-            return {
-              ...programming,
-              workCenter: workCenter.find((wc: any) => wc.operationCode === programming.operationCode)
-            };
-          });
+          if (workCenter) {
+            return programmings.map(programming => {
+              return {
+                ...programming,
+                workCenter: workCenter.find((wc: any) => wc.operationCode === programming.operationCode)
+              };
+            });
+          } else {
+            return [];
+          }
         })
       );
   }

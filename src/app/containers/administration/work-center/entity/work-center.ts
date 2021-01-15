@@ -12,8 +12,6 @@ export interface WorkCenter extends WorkCenterBasic {
   phone: string;
   email: string;
   code?: number;
-  coordinator?: string;
-  coordinatorIdentification?: number;
 }
 
 export interface WorkCenterValidatorForm {
@@ -26,7 +24,5 @@ export interface WorkCenterValidatorForm {
   latitude: ValidationMessageForm[];
   longitude: ValidationMessageForm[];
   client: ValidationMessageForm[];
-  coordinator: ValidationMessageForm[];
-  coordinatorIdentification: ValidationMessageForm[];
   phone: ValidationMessageForm[];
 }

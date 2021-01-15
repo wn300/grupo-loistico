@@ -75,7 +75,8 @@ export class DialogUploadPeopleFileComponent implements OnInit {
         status: element.estado,
         manager: element.identificacion_coordinador,
         city: element.ciudad,
-        dayOfRest: element.dia_descanso
+        dayOfRest: element.dia_descanso,
+        uid: ''
       }
 
       this.dataSave.push(objectFirebasePeople);

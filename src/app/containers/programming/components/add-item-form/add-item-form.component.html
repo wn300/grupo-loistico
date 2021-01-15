@@ -43,6 +43,7 @@
             <mat-autocomplete
               #autoWorkCenter="matAutocomplete"
               [displayWith]="displayWorkCenterFn"
+              (optionSelected)="selectWorkCenter($event)"
             >
               <mat-option
                 *ngFor="let option of filteredWorkCenters | async"
@@ -140,7 +141,7 @@
                 *ngFor="let applicant of filterApplicants"
                 [value]="applicant"
               >
-                {{ applicant.name }}
+              [{{ applicant.identification }}] - {{ applicant.name }}
               </mat-option>
             </mat-select>
             <mat-error class="errorMessages" *ngIf="!fControlIsValid('client')">

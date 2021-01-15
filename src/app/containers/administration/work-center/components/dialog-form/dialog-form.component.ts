@@ -20,12 +20,8 @@ export class DialogFormComponent implements OnInit {
   public validationMessages: WorkCenterValidatorForm;
   public clients: Client[];
   public workCentersFilter: any[];
-  public identificationCordinatorFilter: any[];
-  public nameCordinatorFilter: any[];
   public clientSelected: string;
   public codeWorkCenter: number;
-  filteredIdentificationCordinatorOptions: Observable<any[]>;
-  filteredNameCordinatorOptions: Observable<any[]>;
   filteredClientOptions: Observable<Client[]>;
   filteredWorkCenterOptions: Observable<any[]>;
 
@@ -69,8 +65,6 @@ export class DialogFormComponent implements OnInit {
           }
         }
 
-        this.identificationCordinatorFilter = _.uniqBy(workCenterResult, 'coordinatorIdentification');
-        this.nameCordinatorFilter = _.uniqBy(workCenterResult, 'coordinator');
         this.workCentersFilter = _.uniqBy(workCenterResult, 'name');
 
         this.formWorkCenter = new FormGroup({
@@ -126,21 +120,13 @@ export class DialogFormComponent implements OnInit {
             Validators.required,
             Validators.maxLength(10)
           ]),
-          client: new FormControl(form.data ? form.data.client : ''),
-          coordinator: new FormControl({
-            value: form.data ? form.data.coordinator : '',
+          client: new FormControl({
+            value: form.data ? form.data.client : '',
             disabled: ''
-          }, [
-            Validators.required,
-            Validators.maxLength(45)
-          ]),
-          coordinatorIdentification: new FormControl({
-            value: form.data ? form.data.coordinatorIdentification : '',
-            disabled: ''
-          }, [
-            Validators.required,
-            Validators.maxLength(20)
-          ]),
+          },
+            [
+              Validators.required
+            ]),
           phone: new FormControl({
             value: form.data ? form.data.phone : '',
             disabled: ''
@@ -187,14 +173,6 @@ export class DialogFormComponent implements OnInit {
           client: [
             { type: 'required', message: 'El cliente es un campo requerido.' },
           ],
-          coordinator: [
-            { type: 'required', message: 'El coordinador es un campo requerido.' },
-            { type: 'maxLength', message: 'El coordinador no puede superar los 45 caracteres' },
-          ],
-          coordinatorIdentification: [
-            { type: 'required', message: 'La identificación del coordinador es un campo requerido.' },
-            { type: 'maxLength', message: 'La identificación del coordinador no puede superar los 20 caracteres' },
-          ],
           phone: [
             { type: 'required', message: 'El telefono del coordinador es un campo requerido.' },
             { type: 'maxLength', message: 'El telefono del coordinador no puede superar los 10 caracteres' },
@@ -213,41 +191,24 @@ export class DialogFormComponent implements OnInit {
           map(value => this._filterWorkCenter(value))
         );
 
-        this.filteredIdentificationCordinatorOptions = this.formWorkCenter.get('coordinatorIdentification').valueChanges.pipe(
-          startWith(''),
-          debounceTime(300),
-          map(value => {
-            const identificationCoodinator = this._filterIdentificationCoordinator(value);
-            if (identificationCoodinator.length === 0) {
-              // tslint:disable-next-line:max-line-length
-              const currentCoordnator = this.nameCordinatorFilter.filter(cooridinators => cooridinators.coordinator === this.formWorkCenter.value.coordinator);
-              if (currentCoordnator.length > 0) {
-                this.formWorkCenter.controls.coordinator.setValue('');
-              }
-            }
-            return identificationCoodinator;
-          })
-        );
-
-        this.filteredNameCordinatorOptions = this.formWorkCenter.get('coordinator').valueChanges.pipe(
-          startWith(''),
-          debounceTime(300),
-          map(value => {
-            const coordinator = this._filterNameCoordinator(value);
-            if (coordinator.length === 0) {
-              // tslint:disable-next-line:max-line-length
-              const currentCoordnator = this.identificationCordinatorFilter.filter(cooridinators => cooridinators.coordinatorIdentification === this.formWorkCenter.value.coordinatorIdentification);
-              if (currentCoordnator.length > 0) {
-                this.formWorkCenter.controls.coordinatorIdentification.setValue('');
-              }
-            }
-            return coordinator;
-          })
-        );
       });
   }
 
   ngOnInit(): void {
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  keyupWorkCenterCode(text: any): void {
+    const exist = this.clients
+      .filter(filt => filt.identification === text.toString().trim());
+
+    if (exist.length === 0) {
+      this.formWorkCenter.controls.client.setValue('');
+      this.formWorkCenter.controls.name.setValue('');
+    }
   }
 
   selectIdentification(select: any): void {
@@ -256,21 +217,6 @@ export class DialogFormComponent implements OnInit {
 
     const nameWorkCenter = this.workCentersFilter.filter(data => data.identification === select.option.value);
     this.formWorkCenter.controls.name.setValue(nameWorkCenter.length > 0 ? nameWorkCenter[0].name : '');
-  }
-
-  selectIdentificationCordinator(select: any): void {
-    // tslint:disable-next-line:max-line-length
-    const cordinatorSelected = this.identificationCordinatorFilter.filter(data => data.coordinatorIdentification === select.option.value)[0];
-    this.formWorkCenter.controls.coordinator.setValue(cordinatorSelected.coordinator);
-  }
-
-  selectCordinator(select: any): void {
-    const cordinatorSelected = this.nameCordinatorFilter.filter(data => data.coordinator === select.option.value)[0];
-    this.formWorkCenter.controls.coordinatorIdentification.setValue(cordinatorSelected.coordinatorIdentification);
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close();
   }
 
   private _filterClient(value: string): Client[] {
@@ -286,17 +232,5 @@ export class DialogFormComponent implements OnInit {
     return this.workCentersFilter.filter(option =>
       option.name.toString().toLowerCase().indexOf(filterValue) >= 0);
   }
-  private _filterIdentificationCoordinator(value: string): any[] {
-    const filterValue = value.toString().toLowerCase();
 
-    return this.identificationCordinatorFilter.filter(option =>
-      String(option.coordinatorIdentification).toLowerCase().indexOf(filterValue) >= 0
-    )
-  }
-  private _filterNameCoordinator(value: string): any[] {
-    const filterValue = value.toString().toLowerCase();
-
-    return this.nameCordinatorFilter.filter(option =>
-      option.coordinator.toString().toLowerCase().indexOf(filterValue) >= 0);
-  }
 }

@@ -8,6 +8,7 @@ import { workCenterRootRoute } from './work-center/work-center-routing.module';
 import { typesNewsRootRoute } from './types-news/types-news-routing.module';
 import { ManagementGuard } from './guards/permissions.guard';
 import { MODULE } from 'src/app/constants/app.constants';
+import { coordinatorsWorkCenterRootRoute } from './coordinators-work-center/coordinators-work-center-routing.module';
 
 export const administrationRootRoute = 'administration';
 
@@ -73,6 +74,17 @@ const routes: Routes = [
     canActivate: [ManagementGuard],
     data: {
       modulePermission: MODULE.newTypes,
+    },
+  },
+  {
+    path: coordinatorsWorkCenterRootRoute,
+    loadChildren: () =>
+      import('./coordinators-work-center/coordinators-work-center.module').then(
+        (m) => m.CoordinatorsWorkCenterModule
+      ),
+    canActivate: [ManagementGuard],
+    data: {
+      modulePermission: MODULE.workCenters,
     },
   },
 ];

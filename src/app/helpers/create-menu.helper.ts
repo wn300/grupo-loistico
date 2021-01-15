@@ -56,6 +56,13 @@ export const createMenu = (permissions: {
           route: '/containers/administration/types-news',
         });
       }
+      if (permissions[MODULE.management][MODULE.coordinatorsWorkCenter]) {
+        childrens.push({
+          displayName: 'Coordinadores centros de trabajo',
+          iconName: '',
+          route: '/containers/administration/coordinators_work_center',
+        });
+      }
       if (childrens.length > 0) {
         menu.push({
           displayName: 'Administración',
