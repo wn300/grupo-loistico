@@ -37,7 +37,6 @@ export class WorkCenterComponent implements OnInit, OnDestroy {
       'city',
       'address',
       'client',
-      'coordinator',
       'phone',
       'update',
       'delete'
@@ -61,7 +60,6 @@ export class WorkCenterComponent implements OnInit, OnDestroy {
             latitude: catData.payload.doc.data().latitude,
             longitude: catData.payload.doc.data().longitude,
             client: catData.payload.doc.data().client,
-            coordinator: catData.payload.doc.data().coordinator,
             coordinatorIdentification: catData.payload.doc.data().coordinatorIdentification,
             phone: catData.payload.doc.data().phone
           };

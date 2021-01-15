@@ -6,7 +6,7 @@
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Identificación (Nit)</mat-label>
           <input type="text" placeholder="Seleccione uno" aria-label="Identification" matInput
-            formControlName="identification" [matAutocomplete]="client">
+            formControlName="identification" [matAutocomplete]="client" (keyup)="keyupWorkCenterCode(formWorkCenter.value.identification)">
           <mat-autocomplete autoActiveFirstOption #client="matAutocomplete"
             (optionSelected)="selectIdentification($event)">
             <mat-option *ngFor="let client of filteredClientOptions | async" [value]="client.identification">
