@@ -14,6 +14,12 @@ export class CoordinatorsWorkCenterService {
     return this.firestore.collection(this.collectionCoordinatorsWorkCenter).snapshotChanges();
   }
 
+  getCoordinatorsWorkCentersByIdentificationWorkCenter(identificationWorkCenter: any): Observable<any> {
+    return this.firestore.collection(this.collectionCoordinatorsWorkCenter, (ref) =>
+      ref.where('workCenterCode', '==', identificationWorkCenter.toString()),
+    ).valueChanges();
+  }
+
   postCoordinatorsWorkCenter(dataSave: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       this.firestore
