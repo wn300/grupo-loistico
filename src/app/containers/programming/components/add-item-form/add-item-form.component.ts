@@ -94,17 +94,17 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
             if (items.indexOf(itemWork.identification) < 0) {
               this.workCenters.push({ ...itemWork });
             }
-            if (
-              itemsApplications.indexOf(itemWork.coordinatorIdentification) < 0
-            ) {
-              this.applicants.push({
-                identification: itemWork.coordinatorIdentification,
-                name: itemWork.coordinator,
-                workCenterId: itemWork.identification,
-              });
-            }
+            // if (
+            //   itemsApplications.indexOf(itemWork.coordinatorIdentification) < 0
+            // ) {
+            //   this.applicants.push({
+            //     identification: itemWork.coordinatorIdentification,
+            //     name: itemWork.coordinator,
+            //     workCenterId: itemWork.identification,
+            //   });
+            // }
             items.push(itemWork.identification);
-            itemsApplications.push(itemWork.coordinatorIdentification);
+            // itemsApplications.push(itemWork.coordinatorIdentification);
           });
         })
     );

@@ -133,20 +133,6 @@ export class DialogFormComponent implements OnInit {
             [
               Validators.required
             ]),
-          coordinator: new FormControl({
-            value: form.data ? form.data.coordinator : '',
-            disabled: ''
-          }, [
-            Validators.required,
-            Validators.maxLength(45)
-          ]),
-          coordinatorIdentification: new FormControl({
-            value: form.data ? form.data.coordinatorIdentification : '',
-            disabled: ''
-          }, [
-            Validators.required,
-            Validators.maxLength(20)
-          ]),
           phone: new FormControl({
             value: form.data ? form.data.phone : '',
             disabled: ''
@@ -193,14 +179,6 @@ export class DialogFormComponent implements OnInit {
           client: [
             { type: 'required', message: 'El cliente es un campo requerido.' },
           ],
-          coordinator: [
-            { type: 'required', message: 'El coordinador es un campo requerido.' },
-            { type: 'maxLength', message: 'El coordinador no puede superar los 45 caracteres' },
-          ],
-          coordinatorIdentification: [
-            { type: 'required', message: 'La identificación del coordinador es un campo requerido.' },
-            { type: 'maxLength', message: 'La identificación del coordinador no puede superar los 20 caracteres' },
-          ],
           phone: [
             { type: 'required', message: 'El telefono del coordinador es un campo requerido.' },
             { type: 'maxLength', message: 'El telefono del coordinador no puede superar los 10 caracteres' },
@@ -217,22 +195,6 @@ export class DialogFormComponent implements OnInit {
           startWith(''),
           debounceTime(300),
           map(value => this._filterWorkCenter(value))
-        );
-
-        this.filteredIdentificationCordinatorOptions = this.formWorkCenter.get('coordinatorIdentification').valueChanges.pipe(
-          startWith(''),
-          debounceTime(300),
-          map(value => {
-            const identificationCoodinator = this._filterIdentificationCoordinator(value);
-            if (identificationCoodinator.length === 0) {
-              // tslint:disable-next-line:max-line-length
-              const currentCoordnator = this.nameCordinatorFilter.filter(cooridinators => cooridinators.coordinator === this.formWorkCenter.value.coordinator);
-              if (currentCoordnator.length > 0) {
-                this.formWorkCenter.controls.coordinator.setValue('');
-              }
-            }
-            return identificationCoodinator;
-          })
         );
 
         this.filteredNameCordinatorOptions = this.formWorkCenter.get('coordinator').valueChanges.pipe(
@@ -268,11 +230,6 @@ export class DialogFormComponent implements OnInit {
     // tslint:disable-next-line:max-line-length
     const cordinatorSelected = this.identificationCordinatorFilter.filter(data => data.coordinatorIdentification === select.option.value)[0];
     this.formWorkCenter.controls.coordinator.setValue(cordinatorSelected.coordinator);
-  }
-
-  selectCordinator(select: any): void {
-    const cordinatorSelected = this.nameCordinatorFilter.filter(data => data.coordinator === select.option.value)[0];
-    this.formWorkCenter.controls.coordinatorIdentification.setValue(cordinatorSelected.coordinatorIdentification);
   }
 
   onNoClick(): void {
