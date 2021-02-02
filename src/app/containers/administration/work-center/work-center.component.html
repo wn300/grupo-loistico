@@ -28,48 +28,48 @@
               <table mat-table [dataSource]="dataSourceWorkCenters" class="mat-elevation-z8 w-100">
                 <ng-container matColumnDef="operationCode">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Código operación </th>
-                  <td mat-cell *matCellDef="let element" class="text-center"> {{element.operationCode}} </td>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable"> {{element.operationCode}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="operation">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Operación </th>
-                  <td mat-cell *matCellDef="let element" class="text-center"> {{element.operation}} </td>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable"> {{element.operation}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="identification">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Identifiación (Nit) </th>
-                  <td mat-cell *matCellDef="let element"> {{element.identification}} </td>
+                  <td mat-cell *matCellDef="let element" class="border-dable"> {{element.identification}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="name">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Nombre del centro de trabajo </th>
-                  <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                  <td mat-cell *matCellDef="let element" class="border-dable"> {{element.name}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="city">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Ciudad </th>
-                  <td mat-cell *matCellDef="let element" class="text-center"> {{element.city}} </td>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable"> {{element.city}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="address">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Dirección </th>
-                  <td mat-cell *matCellDef="let element" class="text-center"> {{element.address}} </td>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable"> {{element.address}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="client">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Cliente </th>
-                  <td mat-cell *matCellDef="let element" class="text-center"> {{element.client}} </td>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable"> {{element.client}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="phone">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Telefono </th>
-                  <td mat-cell *matCellDef="let element" class="text-center"> {{element.phone}} </td>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable"> {{element.phone}} </td>
                 </ng-container>
 
 
                 <ng-container matColumnDef="update">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Editar </th>
-                  <td mat-cell *matCellDef="let element" class="text-center color-blue cursor-pointer"
+                  <td mat-cell *matCellDef="let element" class="text-center color-blue cursor-pointer border-dable"
                     (click)="editWorkCenter(element)">
                     <mat-icon aria-hidden="false" aria-label="Example home icon"> create</mat-icon>
                   </td>
@@ -77,7 +77,7 @@
 
                 <ng-container matColumnDef="delete">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Eliminar </th>
-                  <td mat-cell *matCellDef="let element" class="text-center color-red cursor-pointer"
+                  <td mat-cell *matCellDef="let element" class="text-center color-red cursor-pointer border-dable"
                     (click)="deleteWorkCenter(element)">
                     <mat-icon aria-hidden="false" aria-label="Example home icon">delete_forever</mat-icon>
                   </td>

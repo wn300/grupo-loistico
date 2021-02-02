@@ -12,7 +12,7 @@ export class HeaderComponent implements OnInit {
   public titleToolbar: string;
 
   constructor() {
-    this.titleToolbar = 'Logistica';
+    this.titleToolbar = 'App Asistencia';
   }
 
   ngOnInit(): void {

@@ -60,7 +60,7 @@ export class DialogFormComponent implements OnInit {
       });
 
     this.memberChips = [
-      'Nomina',
+      'Dependiente',
       'Independiente'
     ];
     this.postions = [

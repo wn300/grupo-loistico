@@ -30,38 +30,38 @@
               <table mat-table [dataSource]="dataSourcePeople" class="mat-elevation-z8 w-100">
                 <ng-container matColumnDef="identification">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Identifiación (CC) </th>
-                  <td mat-cell *matCellDef="let element"> {{element.identification}} </td>
+                  <td mat-cell *matCellDef="let element" class="border-dable"> {{element.identification}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="names">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Nombre </th>
-                  <td mat-cell *matCellDef="let element"> {{element.names}} </td>
+                  <td mat-cell *matCellDef="let element" class="border-dable"> {{element.names}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="date">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Fech Ingreso </th>
-                  <td mat-cell *matCellDef="let element" class="text-center"> {{element.date | date: 'dd/MM/yyyy'}}
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable"> {{element.date | date: 'dd/MM/yyyy'}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="company">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Empresa </th>
-                  <td mat-cell *matCellDef="let element"> {{element.company}} </td>
+                  <td mat-cell *matCellDef="let element" class="border-dable"> {{element.company}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="phone">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Telefono </th>
-                  <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
+                  <td mat-cell *matCellDef="let element" class="border-dable"> {{element.phone}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="memberShip">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Afiliación </th>
-                  <td mat-cell *matCellDef="let element"> {{element.memberShip}} </td>
+                  <td mat-cell *matCellDef="let element" class="border-dable"> {{element.memberShip}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="email">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> E-Mail </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="border-dable">
                     <span *ngIf="element.position !== 'Supernumerario'">
                       {{element.email}}
                     </span>
@@ -73,27 +73,27 @@
 
                 <ng-container matColumnDef="position">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Cargo </th>
-                  <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                  <td mat-cell *matCellDef="let element" class="border-dable"> {{element.position}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="status">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Estado </th>
-                  <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                  <td mat-cell *matCellDef="let element" class="border-dable"> {{element.status}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="city">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Ciudad </th>
-                  <td mat-cell *matCellDef="let element"> {{element.city}} </td>
+                  <td mat-cell *matCellDef="let element" class="border-dable"> {{element.city}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="dayOfRest">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Día Descanso </th>
-                  <td mat-cell *matCellDef="let element"> {{element.dayOfRest}} </td>
+                  <td mat-cell *matCellDef="let element" class="border-dable"> {{element.dayOfRest}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="update">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Editar </th>
-                  <td mat-cell *matCellDef="let element" class="text-center color-blue cursor-pointer"
+                  <td mat-cell *matCellDef="let element" class="text-center color-blue cursor-pointer border-dable"
                     (click)="editPeople(element)">
                     <mat-icon aria-hidden="false" aria-label="Example home icon"> create</mat-icon>
                   </td>

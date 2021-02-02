@@ -23,28 +23,28 @@
               <table mat-table [dataSource]="dataSourceImages" class="mat-elevation-z8 w-100">
                 <ng-container matColumnDef="name">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Nombre </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="border-dable">
                     <p (click)='goToImage(element.url)'>{{element.name}}</p>
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="type">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Tipo </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.type}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="date">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Fecha </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.date  | date: 'dd/MM/yyyy'}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="url">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Imagen </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="border-dable">
                     <div class="row  justify-content-center" (click)='goToImage(element.url)'>
                       <div style="width: 100px; height: 100px;">
                         <img style="width: 100%;height: 100%;" [src]="element.url" alt="element.name">
@@ -61,7 +61,7 @@
                       (click)="deSelectedAll()">
                       delete_forever</mat-icon>
                   </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="border-dable">
                     <div class="row  justify-content-center">
                       <mat-checkbox [checked]="element.selected" (change)="checkDeleteFile(element)">
                       </mat-checkbox>

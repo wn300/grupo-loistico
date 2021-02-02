@@ -23,44 +23,44 @@
               <table mat-table [dataSource]="dataSourceReports" class="mat-elevation-z8 w-100">
                 <ng-container matColumnDef="type">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Tipo </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.type}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="date">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Fecha </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.date  | date: 'dd/MM/yyyy - HH:mm:ss'}}
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="createByIdentification">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Identificación creador</th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.createByIdentification }}
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="createBy">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Nombre creador </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.createByNames }}
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="address">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Dirección </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.address }}
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="description">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Descripción </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     {{element.description }}
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="images">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Imagenes </th>
-                  <td mat-cell *matCellDef="let element" class="text-center">
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
                     <mat-icon *ngIf="element.images.length === 0">
                       visibility_off</mat-icon>
                     <mat-icon color="accent" *ngIf="element.images.length > 0" class="cursor-pointer">

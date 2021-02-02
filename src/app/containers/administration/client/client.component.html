@@ -27,37 +27,37 @@
               <table mat-table [dataSource]="dataSourceClients" class="mat-elevation-z8 w-100">
                 <ng-container matColumnDef="identification">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Identifiación (Nit) </th>
-                  <td mat-cell *matCellDef="let element"> {{element.identification}} </td>
+                  <td mat-cell *matCellDef="let element" class="border-dable"> {{element.identification}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="name">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Razón Social </th>
-                  <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                  <td mat-cell *matCellDef="let element" class="border-dable"> {{element.name}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="city">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Ciudad </th>
-                  <td mat-cell *matCellDef="let element" class="text-center"> {{element.city}} </td>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable"> {{element.city}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="contact">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Contacto </th>
-                  <td mat-cell *matCellDef="let element" class="text-center"> {{element.contact}} </td>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable"> {{element.contact}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="phone">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Telefono </th>
-                  <td mat-cell *matCellDef="let element" class="text-center"> {{element.phone}} </td>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable"> {{element.phone}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="email">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> E-Mail </th>
-                  <td mat-cell *matCellDef="let element" class="text-center"> {{element.email}} </td>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable"> {{element.email}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="update">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Editar </th>
-                  <td mat-cell *matCellDef="let element" class="text-center color-blue cursor-pointer"
+                  <td mat-cell *matCellDef="let element" class="text-center color-blue cursor-pointer border-dable"
                     (click)="editClient(element)">
                     <mat-icon aria-hidden="false" aria-label="Example home icon"> create</mat-icon>
                   </td>
@@ -65,7 +65,7 @@
 
                 <ng-container matColumnDef="delete">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Eliminar </th>
-                  <td mat-cell *matCellDef="let element" class="text-center color-red cursor-pointer"
+                  <td mat-cell *matCellDef="let element" class="text-center color-red cursor-pointer border-dable"
                     (click)="deleteClient(element)">
                     <mat-icon aria-hidden="false" aria-label="Example home icon">delete_forever</mat-icon>
                   </td>
