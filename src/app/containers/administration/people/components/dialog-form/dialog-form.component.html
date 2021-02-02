@@ -163,7 +163,7 @@
       <div class="col-lg-4 col-md-4 col-12" *ngIf="formPeople.value.position !== 'Supernumerario'">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>E-Mail</mat-label>
-          <input required autocomplete="off" matInput placeholder="E-Mail" formControlName="email" maxlength="30">
+          <input required autocomplete="off" matInput placeholder="E-Mail" formControlName="email" maxlength="100">
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.email">
           <mat-error class="errorMessages" *ngIf="formPeople.get('email').hasError(validation.type)
