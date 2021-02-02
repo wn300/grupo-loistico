@@ -15,6 +15,8 @@ export class ProgrmmingService {
   constructor(private firestore: AngularFirestore) { }
 
   getPrograming(startDate: Date, endDate: Date): Observable<any> {
+    console.log(startDate, endDate);
+
     return this.firestore.collection(this.collectionProgramming, (ref) =>
       ref.where('date', '<=', endDate).where('date', '>=', startDate),
     )
@@ -56,6 +58,8 @@ export class ProgrmmingService {
   }
 
   getReportsUsers(startDate: Date, endDate: Date): Observable<any> {
+    console.log(startDate, endDate);
+
     return this.firestore.collection(this.collectionReport, (ref) =>
       ref.where('createAt', '<=', endDate).where('createAt', '>=', startDate),
     ).valueChanges();

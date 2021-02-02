@@ -24,7 +24,7 @@ export class ProgrammingComponent implements OnInit {
   private readonly dateFormat = 'DD/MM/YYYY';
 
   constructor(private progrmmingService: ProgrmmingService) {
-    const onlyDateNow = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    const onlyDateNow = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 12, 59, 59);
     this.startDate = moment(onlyDateNow).subtract(1, 'days').toDate();
     this.endDate = moment(onlyDateNow).add(1, 'days').toDate();
 
@@ -81,7 +81,7 @@ export class ProgrammingComponent implements OnInit {
                         const diffTime = this.diffHours(elementPrograming.date.toDate(), elementReports.createAt.toDate());
 
                         if ((diffTime[0] === 0 && diffTime[1] <= 60 && elementReports.type === 'Llegada')
-                          || (diffTime[0] <= 12 && elementReports.type === 'Salida')) {
+                          || ((diffTime[0] <= 12 && diffTime[0] > 0) && elementReports.type === 'Salida')) {
 
                           const x1 = this.digitThrird(elementPrograming.workCenter.latitude);
                           const y1 = this.digitThrird(elementPrograming.workCenter.longitude);
