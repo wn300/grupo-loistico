@@ -32,7 +32,8 @@ export class DialogFormComponent implements OnInit {
           };
         });
 
-        this.workCentersFilter = _.uniqBy(workCenterResult, 'name');
+        // this.workCentersFilter = _.uniqBy(workCenterResult, 'identification', 'name');
+        this.workCentersFilter = workCenterResult;
 
         this.formCoordinatorWorkCenter = new FormGroup({
           name: new FormControl({
@@ -49,21 +50,21 @@ export class DialogFormComponent implements OnInit {
           }, [
             Validators.required,
             Validators.pattern('^(?=.*[0-9])[- +()0-9]+$'),
-            Validators.maxLength(20)
+            Validators.maxLength(50)
           ]),
           workCenterCode: new FormControl({
             value: form.data ? form.data.workCenterCode : '',
             disabled: ''
           }, [
             Validators.required,
-            Validators.maxLength(20)
+            Validators.maxLength(50)
           ]),
           workCenterName: new FormControl({
             value: form.data ? form.data.workCenterName : '',
             disabled: ''
           }, [
             Validators.required,
-            Validators.maxLength(20)
+            Validators.maxLength(50)
           ]),
 
         });

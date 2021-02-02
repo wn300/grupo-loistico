@@ -43,7 +43,7 @@ export class DialogFormComponent implements OnInit {
         disabled: ''
       }, [
         Validators.required,
-        Validators.maxLength(20)
+        Validators.maxLength(50)
       ]),
       phone: new FormControl({
         value: form.data ? form.data.phone : '',
@@ -58,7 +58,7 @@ export class DialogFormComponent implements OnInit {
       }, [
         Validators.required,
         Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
-        Validators.maxLength(30)
+        Validators.maxLength(50)
       ])
     });
 
@@ -78,7 +78,7 @@ export class DialogFormComponent implements OnInit {
       ],
       contact: [
         { type: 'required', message: 'El contacto es un campo requerido.' },
-        { type: 'maxLength', message: 'El contacto no puede superar los 20 caracteres' },
+        { type: 'maxLength', message: 'El contacto no puede superar los 50 caracteres' },
       ],
       phone: [
         { type: 'required', message: 'El telefono es un campo requerido.' },
@@ -87,7 +87,7 @@ export class DialogFormComponent implements OnInit {
       email: [
         { type: 'required', message: 'El email es un campo requerido.' },
         { type: 'pattern', message: 'El email es incorrecto Ej. xxx@xxxx.xx .' },
-        { type: 'maxLength', message: 'El email no puede superar los 30 caracteres' },
+        { type: 'maxLength', message: 'El email no puede superar los 50 caracteres' },
       ]
     };
   }

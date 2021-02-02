@@ -28,7 +28,7 @@
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Nombre del centro de trabajo</mat-label>
           <input readonly autocomplete="off" matInput placeholder="Nombre centro de trabajo"
-            formControlName="workCenterName" maxlength="20">
+            formControlName="workCenterName" maxlength="50">
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.workCenterName">
           <mat-error class="errorMessages" *ngIf="formCoordinatorWorkCenter.get('workCenterName').hasError(validation.type)
@@ -42,7 +42,7 @@
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Identificación coordinador</mat-label>
           <input required autocomplete="off" matInput placeholder="Ciudad" formControlName="identification"
-            maxlength="20">
+            maxlength="50">
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.identification">
           <mat-error class="errorMessages" *ngIf="formCoordinatorWorkCenter.get('identification').hasError(validation.type)
@@ -56,7 +56,7 @@
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Nombre coordinador</mat-label>
           <input required autocomplete="off" matInput placeholder="Nombre coordinador" formControlName="name"
-            maxlength="20">
+            maxlength="50">
         </mat-form-field>
         <ng-container *ngFor="let validation of validationMessages.name">
           <mat-error class="errorMessages" *ngIf="formCoordinatorWorkCenter.get('name').hasError(validation.type)
