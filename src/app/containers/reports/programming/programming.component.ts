@@ -34,11 +34,14 @@ export class ProgrammingComponent implements OnInit {
       'identification',
       'name',
       'dateInit',
+      'hourInit',
       'dateEnd',
+      'hourEnd',
       'hours',
       'observations',
       'applicantName',
       'dateProgramming',
+      'hourProgramming',
       'identificationWorckCenter',
       'workCenter',
       'codeOperation',
@@ -76,7 +79,6 @@ export class ProgrammingComponent implements OnInit {
                   const reportProgramming = dataPrograming.map(elementPrograming => {
                     const reportUser = [];
                     dataReports.forEach(elementReports => {
-
                       if (parseFloat(elementPrograming.identification) === parseFloat(elementReports.email.split('@')[0])) {
                         const diffTime = this.diffHours(elementPrograming.date.toDate(), elementReports.createAt.toDate());
 
@@ -113,16 +115,18 @@ export class ProgrammingComponent implements OnInit {
                   });
 
                   this.reports = reportProgramming.map(mapperObject => {
-
                     const hoursDiff = mapperObject.reportUser[0] !== undefined && mapperObject.reportUser[1] !== undefined ?
                       this.diffHours(mapperObject.reportUser[0].date, mapperObject.reportUser[1].date) :
                       undefined;
 
+                    const entry = mapperObject.reportUser.filter(init => init.type === 'Entrada');
+                    const exit = mapperObject.reportUser.filter(init => init.type === 'Salida');
+
                     const objectReturn = {
                       identification: mapperObject.identification,
                       name: mapperObject.name,
-                      dateInit: mapperObject.reportUser[0] !== undefined ? mapperObject.reportUser[0].date : 'No Registra',
-                      dateEnd: mapperObject.reportUser[1] !== undefined ? mapperObject.reportUser[1].date : 'No Registra',
+                      dateInit: entry.length > 0 ? entry[0].date : 'No Registra',
+                      dateEnd: exit.length > 0 ? exit[0].date : 'No Registra',
                       hours: hoursDiff !== undefined ? `${hoursDiff[0]}:${hoursDiff[1]}` : 'No Registra',
                       observations: mapperObject.observation,
                       applicantName: mapperObject.applicantName,
@@ -132,16 +136,14 @@ export class ProgrammingComponent implements OnInit {
                       codeOperation: mapperObject.workCenter.operationCode,
                       operation: mapperObject.workCenter.operation,
                       transport: mapperObject.transport === true ? 'Si' : 'No',
-                      positionEntry: mapperObject.reportUser[0] !== undefined ? mapperObject.reportUser[0].position : 'No Registra',
-                      positionExit: mapperObject.reportUser[1] !== undefined ? mapperObject.reportUser[1].position : 'No Registra',
-                      addressEntry: mapperObject.reportUser[0] !== undefined ? mapperObject.reportUser[0].address : 'No Registra',
-                      addressExit: mapperObject.reportUser[1] !== undefined ? mapperObject.reportUser[1].address : 'No Registra',
+                      positionEntry: entry.length > 0 ? entry.position : 'No Registra',
+                      positionExit: exit.length > 0 ? exit[0].position : 'No Registra',
+                      addressEntry: entry.length > 0 ? entry.address : 'No Registra',
+                      addressExit: exit.length > 0 ? exit[0].address : 'No Registra',
                     }
 
                     return objectReturn;
                   });
-
-
                   this.dataSourceReports = new MatTableDataSource(this.reports);
 
                   setTimeout(() => {

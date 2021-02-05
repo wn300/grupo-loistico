@@ -73,42 +73,42 @@
               >
                 <ng-container matColumnDef="identification">
                   <th mat-header-cell *matHeaderCellDef>Identifiación (CC)</th>
-                  <td mat-cell *matCellDef="let element" class="border-dable">
+                  <td mat-cell *matCellDef="let element" class="border-dable text-center">
                     {{ element.identification }}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="names">
                   <th mat-header-cell *matHeaderCellDef>Nombre</th>
-                  <td mat-cell *matCellDef="let element" class="border-dable">
+                  <td mat-cell *matCellDef="let element" class="border-dable text-center">
                     {{ element.names }}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="company">
                   <th mat-header-cell *matHeaderCellDef>Empresa</th>
-                  <td mat-cell *matCellDef="let element" class="border-dable">
+                  <td mat-cell *matCellDef="let element" class="border-dable text-center">
                     {{ element.company }}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="phone">
                   <th mat-header-cell *matHeaderCellDef>Telefono</th>
-                  <td mat-cell *matCellDef="let element" class="border-dable">
+                  <td mat-cell *matCellDef="let element" class="border-dable text-center">
                     {{ element.phone }}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="memberShip">
                   <th mat-header-cell *matHeaderCellDef>Afiliación</th>
-                  <td mat-cell *matCellDef="let element" class="border-dable">
+                  <td mat-cell *matCellDef="let element" class="border-dable text-center">
                     {{ element.memberShip }}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="email">
                   <th mat-header-cell *matHeaderCellDef>E-Mail</th>
-                  <td mat-cell *matCellDef="let element" class="border-dable">
+                  <td mat-cell *matCellDef="let element" class="border-dable text-center">
                     <span *ngIf="element.position !== 'Supernumerario'">
                       {{ element.email }}
                     </span>
@@ -120,14 +120,14 @@
 
                 <ng-container matColumnDef="position">
                   <th mat-header-cell *matHeaderCellDef>Cargo</th>
-                  <td mat-cell *matCellDef="let element" class="border-dable">
+                  <td mat-cell *matCellDef="let element" class="border-dable text-center">
                     {{ element.position }}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="dayOfRest">
                   <th mat-header-cell *matHeaderCellDef>Día Descanso</th>
-                  <td mat-cell *matCellDef="let element" class="border-dable">
+                  <td mat-cell *matCellDef="let element" class="border-dable text-center">
                     {{ element.dayOfRest }}
                   </td>
                 </ng-container>

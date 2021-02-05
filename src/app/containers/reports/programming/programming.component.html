@@ -75,7 +75,14 @@
                 <ng-container matColumnDef="dateProgramming">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Fecha programada </th>
                   <td mat-cell *matCellDef="let element" class="text-center border-dable">
-                    {{element.dateProgramming | date: 'dd/MM/yyyy - HH:mm:ss'}}
+                    {{element.dateProgramming | date: 'dd/MM/yyyy'}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="hourProgramming">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Hora programada </th>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
+                    {{element.dateProgramming | date: 'HH:mm:ss'}}
                   </td>
                 </ng-container>
 
@@ -100,7 +107,19 @@
                       {{element.dateInit}}
                     </span>
                     <span *ngIf="element.dateInit !== 'No Registra'">
-                      {{element.dateInit | date: 'dd/MM/yyyy - HH:mm:ss'}}
+                      {{element.dateInit | date: 'dd/MM/yyyy'}}
+                    </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="hourInit">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Hora Inicio </th>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
+                    <span *ngIf="element.dateInit === 'No Registra'">
+                      {{element.dateInit}}
+                    </span>
+                    <span *ngIf="element.dateInit !== 'No Registra'">
+                      {{element.dateInit | date: 'HH:mm:ss'}}
                     </span>
                   </td>
                 </ng-container>
@@ -112,7 +131,19 @@
                       {{element.dateEnd}}
                     </span>
                     <span *ngIf="element.dateEnd !== 'No Registra'">
-                      {{element.dateEnd | date: 'dd/MM/yyyy - HH:mm:ss'}}
+                      {{element.dateEnd | date: 'dd/MM/yyyy'}}
+                    </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="hourEnd">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Hora Fin </th>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
+                    <span *ngIf="element.dateEnd === 'No Registra'">
+                      {{element.dateEnd}}
+                    </span>
+                    <span *ngIf="element.dateEnd !== 'No Registra'">
+                      {{element.dateEnd | date: 'HH:mm:ss'}}
                     </span>
                   </td>
                 </ng-container>
