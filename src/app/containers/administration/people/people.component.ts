@@ -41,8 +41,6 @@ export class PeopleComponent implements OnInit {
       'email',
       'position',
       'status',
-      'city',
-      'dayOfRest',
       'update'
     ];
     this.subscription = [];
