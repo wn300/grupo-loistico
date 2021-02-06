@@ -37,7 +37,7 @@ export const createMenu = (permissions: {
       }
       if (permissions[MODULE.management][MODULE.people]) {
         childrens.push({
-          displayName: 'Personas',
+          displayName: 'Empleados',
           iconName: '',
           route: '/containers/administration/people',
         });

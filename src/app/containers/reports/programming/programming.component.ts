@@ -82,17 +82,20 @@ export class ProgrammingComponent implements OnInit {
                       if (parseFloat(elementPrograming.identification) === parseFloat(elementReports.email.split('@')[0])) {
                         const diffTime = this.diffHours(elementPrograming.date.toDate(), elementReports.createAt.toDate());
 
-                        if ((diffTime[0] === 0 && diffTime[1] <= 60 && elementReports.type === 'Llegada')
+                        if ((diffTime[0] === 0 && diffTime[1] <= 15 && elementReports.type === 'Llegada')
                           || ((diffTime[0] <= 12 && diffTime[0] > 0) && elementReports.type === 'Salida')) {
 
-                          const x1 = this.digitThrird(elementPrograming.workCenter.latitude);
-                          const y1 = this.digitThrird(elementPrograming.workCenter.longitude);
-                          const x2 = this.digitThrird(elementReports.location.latitude);
-                          const y2 = this.digitThrird(elementReports.location.longitude);
-                          const delta = 4;
+                          const x1 = elementPrograming.workCenter.latitude;
+                          const y1 = elementPrograming.workCenter.longitude;
+                          const x2 = elementReports.location.latitude;
+                          const y2 = elementReports.location.longitude;
+
+                          const km = this.getKilometros(x1, y1, x2, y2);
+
+                          console.log((parseFloat(km) * 1000), x1, y1, x2, y2);
 
                           let position = 'Fuera de rango';
-                          if ((x1 - delta < x2 < x1 + delta) && (y1 - delta < y2 < y1 + delta)) {
+                          if ((parseFloat(km) * 1000) <= 300) {
                             position = 'Dentro del rango';
                           }
 
@@ -119,7 +122,7 @@ export class ProgrammingComponent implements OnInit {
                       this.diffHours(mapperObject.reportUser[0].date, mapperObject.reportUser[1].date) :
                       undefined;
 
-                    const entry = mapperObject.reportUser.filter(init => init.type === 'Entrada');
+                    const entry = mapperObject.reportUser.filter(init => init.type === 'Llegada');
                     const exit = mapperObject.reportUser.filter(init => init.type === 'Salida');
 
                     const objectReturn = {
@@ -136,9 +139,9 @@ export class ProgrammingComponent implements OnInit {
                       codeOperation: mapperObject.workCenter.operationCode,
                       operation: mapperObject.workCenter.operation,
                       transport: mapperObject.transport === true ? 'Si' : 'No',
-                      positionEntry: entry.length > 0 ? entry.position : 'No Registra',
+                      positionEntry: entry.length > 0 ? entry[0].position : 'No Registra',
                       positionExit: exit.length > 0 ? exit[0].position : 'No Registra',
-                      addressEntry: entry.length > 0 ? entry.address : 'No Registra',
+                      addressEntry: entry.length > 0 ? entry[0].address : 'No Registra',
                       addressExit: exit.length > 0 ? exit[0].address : 'No Registra',
                     }
 
@@ -162,6 +165,19 @@ export class ProgrammingComponent implements OnInit {
     }
   }
 
+  getKilometros(lat1, lon1, lat2, lon2): string {
+    const rad = (x) => x * Math.PI / 180;
+    // Radio de la tierra en km
+    const R = 6378.137;
+    const dLat = rad(lat2 - lat1);
+    const dLong = rad(lon2 - lon1);
+    // tslint:disable-next-line:max-line-length
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c;
+    return d.toFixed(3);
+  }
+
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSourceReports.filter = filterValue.trim().toLowerCase();
@@ -175,9 +191,16 @@ export class ProgrammingComponent implements OnInit {
     const startTime = moment(startDate, 'HH:mm:ss');
     const endTime = moment(endDate, 'HH:mm:ss');
 
+    let hours = 0;
+    let minutes = '';
     // calculate total duration
-    const hours = endTime.diff(startTime, 'hours');
-    const minutes = moment.utc(endTime.diff(startTime)).format('mm');
+    if (startDate < endDate) {
+      hours = endTime.diff(startTime, 'hours');
+      minutes = moment.utc(endTime.diff(startTime)).format('mm');
+    } else {
+      hours = startTime.diff(endTime, 'hours');
+      minutes = moment.utc(startTime.diff(endTime)).format('mm');
+    }
     return [hours, minutes];
   }
 

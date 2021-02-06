@@ -177,6 +177,10 @@ export class DialogFormComponent implements OnInit {
       }, [
         Validators.required
       ]),
+      uid: new FormControl({
+        value: form.data ? form.data.uid : '',
+        disabled: ''
+      }),
     });
 
     this.validationMessages = {

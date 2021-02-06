@@ -75,6 +75,7 @@ export class PeopleComponent implements OnInit {
             firstLastName: catData.payload.doc.data().firstLastName,
             secondLastName: catData.payload.doc.data().secondLastName,
             manager: catData.payload.doc.data().manager,
+            uid: catData.payload.doc.data().uid,
           };
         });
         this.dataSourcePeople = new MatTableDataSource(this.people);

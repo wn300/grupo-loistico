@@ -58,10 +58,8 @@ export class ProgrmmingService {
   }
 
   getReportsUsers(startDate: Date, endDate: Date): Observable<any> {
-    console.log(startDate, endDate);
-
     return this.firestore.collection(this.collectionReport, (ref) =>
-      ref.where('createAt', '<=', endDate).where('createAt', '>=', startDate),
+      ref.where('createAt', '<=', endDate).where('createAt', '>=', startDate).orderBy('createAt', 'desc'),
     ).valueChanges();
   }
 }
