@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
+import { ExportExcelService } from 'src/app/shared/services/export-excel.service';
 
 import { ProgrmmingService } from './services/progrmming.service';
 @Component({
@@ -19,11 +20,12 @@ export class ProgrammingComponent implements OnInit {
   public dataSourceReports;
   public isLoading: boolean;
   public reports: any[];
+  dataForExcel = [];
 
   selected = 'Todos';
   private readonly dateFormat = 'DD/MM/YYYY';
 
-  constructor(private progrmmingService: ProgrmmingService) {
+  constructor(private progrmmingService: ProgrmmingService, public ete: ExportExcelService) {
     const onlyDateNow = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 12, 59, 59);
     this.startDate = moment(onlyDateNow).subtract(1, 'days').toDate();
     this.endDate = moment(onlyDateNow).add(1, 'days').toDate();
@@ -46,7 +48,6 @@ export class ProgrammingComponent implements OnInit {
       'workCenter',
       'codeOperation',
       'operation',
-      'transport',
       'positionEntry',
       'positionExit',
       'addressEntry',
@@ -181,6 +182,64 @@ export class ProgrammingComponent implements OnInit {
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSourceReports.filter = filterValue.trim().toLowerCase();
+  }
+
+  exportToExcel(): void {
+    this.dataForExcel = [];
+    this.reports.forEach((row: any) => {
+      const newObject = {
+        Identificacion: row.identification,
+        Nombre: row.name,
+        'Fecha inicio': row.dateInit === 'No Registra' ? row.dateInit : moment(row.dateInit).format('DD/MM/YYYY'),
+        'Hora inicio': row.dateInit === 'No Registra' ? row.dateInit : moment(row.dateInit).format('HH:mm:ss'),
+        'Fecha fin': row.dateEnd === 'No Registra' ? row.dateEnd : moment(row.dateEnd).format('DD/MM/YYYY'),
+        'Hora fin': row.dateEnd === 'No Registra' ? row.dateEnd : moment(row.dateEnd).format('HH:mm:ss'),
+        Horas: row.hours,
+        Observacion: row.observations,
+        Solicitante: row.applicantName,
+        'Fecha programada': moment(row.dateProgramming).format('DD/MM/YYYY'),
+        'Hora programada': moment(row.dateProgramming).format('HH:mm:ss'),
+        'Id centro de trabajo': row.identificationWorckCenter,
+        'Centro de trabajo': row.workCenter,
+        'Cod operacion': row.codeOperation,
+        'Localizacion entrada': row.positionEntry,
+        'Localizacion salida': row.positionExit,
+        'Direccion entrada': row.addressEntry,
+        'Direccion salida': row.addressExit,
+        Modificado: '',
+        'Motivo modificacion': ''
+      };
+      this.dataForExcel.push(Object.values(newObject));
+    });
+
+    const reportData = {
+      title: `Reporte de programación ${moment(this.startDate).format('DD/MM/YYYY')} - ${moment(this.endDate).format('DD/MM/YYYY')}`,
+      data: this.dataForExcel,
+      headers: [
+        'Identificacion',
+        'Nombre',
+        'Fecha inicio',
+        'Hora inicio',
+        'Fecha fin',
+        'Hora fin',
+        'Horas',
+        'Observacion',
+        'Solicitante',
+        'Fecha programada',
+        'Hora programada',
+        'Id centro de trabajo',
+        'Centro de trabajo',
+        'Cod operacion',
+        'Localizacion entrada',
+        'Localizacion salida',
+        'Direccion entrada',
+        'Direccion salida',
+        'Modificado',
+        'Motivo modificacion'
+      ]
+    };
+
+    this.ete.exportExcel(reportData);
   }
 
   digitThrird(cordenada: number): any {

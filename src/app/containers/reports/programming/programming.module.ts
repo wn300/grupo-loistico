@@ -10,10 +10,10 @@ import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
 
 import { ProgrammingRoutingModule } from './programming-routing.module';
 import { ProgrammingComponent } from './programming.component';
-
 
 @NgModule({
   declarations: [ProgrammingComponent],
@@ -29,7 +29,8 @@ import { ProgrammingComponent } from './programming.component';
     MatProgressBarModule,
     MatTableModule,
     MatButtonModule,
-    MatSelectModule
+    MatSelectModule,
+    MatIconModule
   ]
 })
 export class ProgrammingModule { }
