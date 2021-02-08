@@ -79,33 +79,33 @@ export class ProgrammingComponent implements OnInit {
                   const reportProgramming = dataPrograming.map(elementPrograming => {
                     const reportUser = [];
                     dataReports.forEach(elementReports => {
-                      if (parseFloat(elementPrograming.identification) === parseFloat(elementReports.email.split('@')[0])) {
-                        const diffTime = this.diffHours(elementPrograming.date.toDate(), elementReports.createAt.toDate());
+                      if (elementReports.type !== 'Incapacidad') {
+                        if (parseFloat(elementPrograming.identification) === parseFloat(elementReports.email.split('@')[0])) {
+                          const diffTime = this.diffHours(elementPrograming.date.toDate(), elementReports.createAt.toDate());
 
-                        if ((diffTime[0] === 0 && diffTime[1] <= 15 && elementReports.type === 'Llegada')
-                          || ((diffTime[0] <= 12 && diffTime[0] > 0) && elementReports.type === 'Salida')) {
+                          if ((diffTime[0] === 0 && diffTime[1] <= 15 && elementReports.type === 'Llegada')
+                            || ((diffTime[0] <= 12 && diffTime[0] > 0) && elementReports.type === 'Salida')) {
 
-                          const x1 = elementPrograming.workCenter.latitude;
-                          const y1 = elementPrograming.workCenter.longitude;
-                          const x2 = elementReports.location.latitude;
-                          const y2 = elementReports.location.longitude;
+                            const x1 = elementPrograming.workCenter.latitude;
+                            const y1 = elementPrograming.workCenter.longitude;
+                            const x2 = elementReports.location.latitude;
+                            const y2 = elementReports.location.longitude;
 
-                          const km = this.getKilometros(x1, y1, x2, y2);
+                            const km = this.getKilometros(x1, y1, x2, y2);
 
-                          console.log((parseFloat(km) * 1000), x1, y1, x2, y2);
+                            let position = 'Fuera de rango';
+                            if ((parseFloat(km) * 1000) <= 300) {
+                              position = 'Dentro del rango';
+                            }
 
-                          let position = 'Fuera de rango';
-                          if ((parseFloat(km) * 1000) <= 300) {
-                            position = 'Dentro del rango';
+                            reportUser.push({
+                              ...elementReports,
+                              date: elementReports.createAt.toDate(),
+                              position,
+                              diferenceHours: diffTime,
+                              identificationUser: parseFloat(elementReports.email.split('@')[0]),
+                            });
                           }
-
-                          reportUser.push({
-                            ...elementReports,
-                            date: elementReports.createAt.toDate(),
-                            position,
-                            diferenceHours: diffTime,
-                            identificationUser: parseFloat(elementReports.email.split('@')[0]),
-                          });
                         }
                       }
                     });
