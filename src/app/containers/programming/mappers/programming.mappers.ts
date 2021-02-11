@@ -25,7 +25,7 @@ export const programmingTemplateMapper = (
         operationName: item[8],
         applicantIdentification: parseInt(item[9], 10),
         applicantName: item[10],
-        observation: item[11],
+        observation: item[11] || '',
         isValid: validate.valid,
         errorValues: validate.errors,
       };
@@ -70,6 +70,7 @@ export const validateProgrammingTemp = (
   if (!date.isValid() || date.toDate() < new Date()) {
     valid = false;
     errors.push(3);
+    errors.push(4);
   }
   if (
     !dataBase ||
