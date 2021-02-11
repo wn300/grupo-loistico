@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
+
 import { ExportExcelService } from 'src/app/shared/services/export-excel.service';
+import { DialogEditComponent } from './components/dialog-edit/dialog-edit.component';
 
 import { ProgrmmingService } from './services/progrmming.service';
 @Component({
@@ -25,7 +28,10 @@ export class ProgrammingComponent implements OnInit {
   selected = 'Todos';
   private readonly dateFormat = 'DD/MM/YYYY';
 
-  constructor(private progrmmingService: ProgrmmingService, public ete: ExportExcelService) {
+  constructor(private progrmmingService: ProgrmmingService,
+    public ete: ExportExcelService,
+    public dialog: MatDialog
+  ) {
     const onlyDateNow = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 12, 59, 59);
     this.startDate = moment(onlyDateNow).subtract(1, 'days').toDate();
     this.endDate = moment(onlyDateNow).add(1, 'days').toDate();
@@ -52,6 +58,7 @@ export class ProgrammingComponent implements OnInit {
       'positionExit',
       'addressEntry',
       'addressExit',
+      'update'
     ];
 
     this.isLoading = true;
@@ -62,6 +69,7 @@ export class ProgrammingComponent implements OnInit {
   }
 
   getReport(): void {
+    this.isLoading = true;
     if (this.startDate !== null && this.endDate !== null) {
       this.selected = 'Todos';
       this.dataSourceReports = [];
@@ -80,17 +88,21 @@ export class ProgrammingComponent implements OnInit {
                   const reportProgramming = dataPrograming.map(elementPrograming => {
                     const reportUser = [];
                     dataReports.forEach(elementReports => {
-                      if (elementReports.type !== 'Incapacidad') {
-                        if (parseFloat(elementPrograming.identification) === parseFloat(elementReports.email.split('@')[0])) {
-                          const diffTime = this.diffHours(elementPrograming.date.toDate(), elementReports.createAt.toDate());
+                      const newElementReport = {
+                        reportId: elementReports.payload.doc.id,
+                        ...elementReports.payload.doc.data(),
+                      }
+                      if (newElementReport.type !== 'Incapacidad') {
+                        if (parseFloat(elementPrograming.identification) === parseFloat(newElementReport.email.split('@')[0])) {
+                          const diffTime = this.diffHours(elementPrograming.date.toDate(), newElementReport.createAt.toDate(), newElementReport.type);
 
-                          if ((diffTime[0] === 0 && diffTime[1] <= 15 && elementReports.type === 'Llegada')
-                            || ((diffTime[0] <= 12 && diffTime[0] > 0) && elementReports.type === 'Salida')) {
+                          if ((diffTime[0] === 0 && diffTime[1] <= 15 && newElementReport.type === 'Llegada')
+                            || ((diffTime[0] <= 12 && diffTime[0] > 0) && newElementReport.type === 'Salida')) {
 
                             const x1 = elementPrograming.workCenter.latitude;
                             const y1 = elementPrograming.workCenter.longitude;
-                            const x2 = elementReports.location.latitude;
-                            const y2 = elementReports.location.longitude;
+                            const x2 = newElementReport.location.latitude;
+                            const y2 = newElementReport.location.longitude;
 
                             const km = this.getKilometros(x1, y1, x2, y2);
 
@@ -100,11 +112,11 @@ export class ProgrammingComponent implements OnInit {
                             }
 
                             reportUser.push({
-                              ...elementReports,
-                              date: elementReports.createAt.toDate(),
+                              ...newElementReport,
+                              date: newElementReport.createAt.toDate(),
                               position,
                               diferenceHours: diffTime,
-                              identificationUser: parseFloat(elementReports.email.split('@')[0]),
+                              identificationUser: parseFloat(newElementReport.email.split('@')[0]),
                             });
                           }
                         }
@@ -120,13 +132,14 @@ export class ProgrammingComponent implements OnInit {
 
                   this.reports = reportProgramming.map(mapperObject => {
                     const hoursDiff = mapperObject.reportUser[0] !== undefined && mapperObject.reportUser[1] !== undefined ?
-                      this.diffHours(mapperObject.reportUser[0].date, mapperObject.reportUser[1].date) :
+                      this.diffHours(mapperObject.reportUser[0].date, mapperObject.reportUser[1].date, '') :
                       undefined;
 
                     const entry = mapperObject.reportUser.filter(init => init.type === 'Llegada');
                     const exit = mapperObject.reportUser.filter(init => init.type === 'Salida');
 
                     const objectReturn = {
+                      ...mapperObject,
                       identification: mapperObject.identification,
                       name: mapperObject.name,
                       dateInit: entry.length > 0 ? entry[0].date : 'No Registra',
@@ -242,24 +255,62 @@ export class ProgrammingComponent implements OnInit {
     this.ete.exportExcel(reportData);
   }
 
+  editProgramming(element: any): void {
+    const dialogRef = this.dialog.open(DialogEditComponent, {
+      width: '80%',
+      data: {
+        title: 'Edición de reporte de programación',
+        data: element
+      },
+      disableClose: true
+    });
+
+    dialogRef.afterClosed()
+      .subscribe((resultDialogForm: any) => {
+        console.log(resultDialogForm);
+
+        // if (resultDialogFormPeople) {
+        //   const newElement = {
+        //     name: element.name,
+        //     identification: element.identification,
+        //     city: element.city,
+        //     contact: element.contact,
+        //     phone: element.phone,
+        //     email: element.email
+        //   };
+        //   const isEqual = _.isEqual(newElement, resultDialogFormPeople.value);
+
+        //   if (!isEqual) {
+        //     this.updatePeople(element.id, resultDialogFormPeople.value);
+        //   }
+        // }
+      });
+  }
+
   digitThrird(cordenada: number): any {
     return parseFloat(cordenada.toString().split('.')[1].slice(2, 3));
   }
 
-  diffHours(startDate, endDate): any {
+  diffHours(startDate, endDate, type): any {
     const startTime = moment(startDate, 'HH:mm:ss');
     const endTime = moment(endDate, 'HH:mm:ss');
 
     let hours = 0;
     let minutes = '';
     // calculate total duration
-    if (startDate < endDate) {
+    if (type !== 'Salida') {
+      if (startDate < endDate) {
+        hours = endTime.diff(startTime, 'hours');
+        minutes = moment.utc(endTime.diff(startTime)).format('mm');
+      } else {
+        hours = startTime.diff(endTime, 'hours');
+        minutes = moment.utc(startTime.diff(endTime)).format('mm');
+      }
+    } else {
       hours = endTime.diff(startTime, 'hours');
       minutes = moment.utc(endTime.diff(startTime)).format('mm');
-    } else {
-      hours = startTime.diff(endTime, 'hours');
-      minutes = moment.utc(startTime.diff(endTime)).format('mm');
     }
+
     return [hours, minutes];
   }
 
