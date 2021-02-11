@@ -15,14 +15,19 @@ export class ProgrmmingService {
   constructor(private firestore: AngularFirestore) { }
 
   getPrograming(startDate: Date, endDate: Date): Observable<any> {
-    console.log(startDate, endDate);
-
     return this.firestore.collection(this.collectionProgramming, (ref) =>
       ref.where('date', '<=', endDate).where('date', '>=', startDate),
     )
-      .valueChanges()
+      .snapshotChanges()
       .pipe(
-        switchMap((programmings: any) => {
+        switchMap((programmingsSnapShot: any) => {
+          const programmings = programmingsSnapShot.map(resultProgrammings => {
+            return {
+              programmingId: resultProgrammings.payload.doc.id,
+              ...resultProgrammings.payload.doc.data(),
+            }
+          })          
+          
           const operationCodeIds = uniq(programmings.map(p => p.operationCode));
 
           if (operationCodeIds.length > 0) {
@@ -42,7 +47,7 @@ export class ProgrmmingService {
           }
 
         }),
-        map(([programmings, workCenter]) => {
+        map(([programmings, workCenter]) => { 
           if (workCenter) {
             return programmings.map(programming => {
               return {
@@ -60,6 +65,19 @@ export class ProgrmmingService {
   getReportsUsers(startDate: Date, endDate: Date): Observable<any> {
     return this.firestore.collection(this.collectionReport, (ref) =>
       ref.where('createAt', '<=', endDate).where('createAt', '>=', startDate).orderBy('createAt', 'desc'),
+    ).snapshotChanges();
+  }
+
+  getProgramingByIdProgramming(programmingUID: string): Observable<any> {
+    return this.firestore.collection(this.collectionProgramming, (ref) =>
+      ref.where('id', '==', programmingUID),
+    ).valueChanges();
+
+  }
+
+  getReportsUsersByIdReport(reportUID: string): Observable<any> {
+    return this.firestore.collection(this.collectionReport, (ref) =>
+      ref.where('id', '==', reportUID),
     ).valueChanges();
   }
 }
