@@ -87,7 +87,7 @@
                     mat-cell
                     *matCellDef="let element"
                     class="text-center color-blue cursor-pointer border-dable"
-                    (click)="(null)"
+                    (click)="updateItem(element)"
                   >
                     <mat-icon
                       aria-hidden="false"
@@ -106,7 +106,7 @@
                     mat-cell
                     *matCellDef="let element"
                     class="text-center color-red cursor-pointer border-dable"
-                    (click)="(null)"
+                    (click)="deleteItem(element)"
                   >
                     <mat-icon aria-hidden="false" aria-label="Example home icon"
                       >delete_forever</mat-icon

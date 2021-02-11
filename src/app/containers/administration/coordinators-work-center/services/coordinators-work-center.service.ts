@@ -3,21 +3,27 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CoordinatorsWorkCenterService {
   public collectionCoordinatorsWorkCenter = 'coordinatorsWorkCenter';
 
-  constructor(private firestore: AngularFirestore) { }
+  constructor(private firestore: AngularFirestore) {}
 
   getCoordinatorsWorkCenters(): Observable<any> {
-    return this.firestore.collection(this.collectionCoordinatorsWorkCenter).snapshotChanges();
+    return this.firestore
+      .collection(this.collectionCoordinatorsWorkCenter)
+      .snapshotChanges();
   }
 
-  getCoordinatorsWorkCentersByIdentificationWorkCenter(identificationWorkCenter: any): Observable<any> {
-    return this.firestore.collection(this.collectionCoordinatorsWorkCenter, (ref) =>
-      ref.where('workCenterCode', '==', identificationWorkCenter.toString()),
-    ).valueChanges();
+  getCoordinatorsWorkCentersByIdentificationWorkCenter(
+    identificationWorkCenter: any
+  ): Observable<any> {
+    return this.firestore
+      .collection(this.collectionCoordinatorsWorkCenter, (ref) =>
+        ref.where('workCenterCode', '==', identificationWorkCenter.toString())
+      )
+      .valueChanges();
   }
 
   postCoordinatorsWorkCenter(dataSave: any): Promise<any> {
@@ -26,8 +32,8 @@ export class CoordinatorsWorkCenterService {
         .collection(this.collectionCoordinatorsWorkCenter)
         .add(dataSave)
         .then(
-          res => resolve(res)
-          , err => reject(err)
+          (res) => resolve(res),
+          (err) => reject(err)
         );
     });
   }
@@ -39,8 +45,8 @@ export class CoordinatorsWorkCenterService {
         .doc(id)
         .set(dataSave)
         .then(
-          res => resolve(res)
-          , err => reject(err)
+          (res) => resolve(res),
+          (err) => reject(err)
         );
     });
   }
@@ -52,8 +58,8 @@ export class CoordinatorsWorkCenterService {
         .doc(id)
         .delete()
         .then(
-          res => resolve(res)
-          , err => reject(err)
+          (res) => resolve(res),
+          (err) => reject(err)
         );
     });
   }

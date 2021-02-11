@@ -10,8 +10,12 @@ import { Programming } from './entities/programming.entity';
 import { ProgrammingService } from './services/programming.service';
 import { AddItemsFormComponent } from './components/add-items-form/add-items-form.component';
 import { AddItemFormComponent } from './components/add-item-form/add-item-form.component';
-import { FUNCTIONS, PermissionsService } from 'src/app/core/services/permissions.service';
+import {
+  FUNCTIONS,
+  PermissionsService,
+} from 'src/app/core/services/permissions.service';
 import { MODULE } from 'src/app/constants/app.constants';
+import { DialogConfirmComponent } from 'src/app/shared/components/dialog-confirm/dialog-confirm.component';
 
 @Component({
   selector: 'app-programming',
@@ -64,10 +68,14 @@ export class ProgrammingComponent implements OnInit, OnDestroy {
       }, 100);
     });
 
-    if (this.permissionsService.canActiveFunction(this._module, FUNCTIONS.update)) {
+    if (
+      this.permissionsService.canActiveFunction(this._module, FUNCTIONS.update)
+    ) {
       this.displayedColumns.push('update');
     }
-    if (this.permissionsService.canActiveFunction(this._module, FUNCTIONS.delete)) {
+    if (
+      this.permissionsService.canActiveFunction(this._module, FUNCTIONS.delete)
+    ) {
       this.displayedColumns.push('delete');
     }
   }
@@ -79,7 +87,10 @@ export class ProgrammingComponent implements OnInit, OnDestroy {
   }
 
   get canAdd(): boolean {
-    return this.permissionsService.canActiveFunction(this._module, FUNCTIONS.add);
+    return this.permissionsService.canActiveFunction(
+      this._module,
+      FUNCTIONS.add
+    );
   }
 
   public openSnackBar(message: string, action: string): void {
@@ -110,6 +121,44 @@ export class ProgrammingComponent implements OnInit, OnDestroy {
         title: 'Agregar programación',
       },
       disableClose: true,
+    });
+  }
+
+  public updateItem(element: Programming): void {
+    this.dialog.open(AddItemFormComponent, {
+      width: '80%',
+      data: {
+        title: 'Agregar programación',
+        item: element,
+      },
+      disableClose: true,
+    });
+  }
+
+  public deleteItem(element: Programming): void {
+    const dialogRef = this.dialog.open(DialogConfirmComponent, {
+      width: '500px',
+      data: {
+        title: '¡¡¡Advertencia!!!',
+        question: `¿Esta seguro que desea eliminar la programación de ${element.name}?`,
+        actionClose: true,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.programmingService
+          .deleteProgramming(element.id)
+          .then((res) => {
+            this.openSnackBar('Programación eliminada correctamente', 'cerrar');
+          })
+          .catch((err) => {
+            this.openSnackBar(
+              'Error al eliminar la programación, verifique la información é intente de nuevo',
+              'cerrar'
+            );
+          });
+      }
     });
   }
 }

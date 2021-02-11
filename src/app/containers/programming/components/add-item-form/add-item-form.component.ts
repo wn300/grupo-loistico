@@ -21,6 +21,7 @@ import {
 } from 'src/app/containers/administration/work-center/entity/work-center';
 import { WorkCenterService } from 'src/app/containers/administration/work-center/services/work-center.service';
 import { OperationCenter } from '../../entities/operation-center.entity';
+import { Programming } from '../../entities/programming.entity';
 import { OperationCenterService } from '../../services/operation-center.service';
 import { ProgrammingService } from '../../services/programming.service';
 import { UploadItemsFormComponent } from '../upload-items-form/upload-items-form.component';
@@ -52,6 +53,7 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
     name: string;
     workCenterId: number;
   }[] = [];
+  public initSubsChanges = false;
 
   @ViewChild(UploadItemsFormComponent)
   uploadComponent: UploadItemsFormComponent;
@@ -67,10 +69,29 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA)
     public data: {
       title: string;
+      item: Programming;
     }
-  ) { }
+  ) {}
 
   ngOnInit(): void {
+    const item = this.data.item;
+    this.form = new FormGroup({
+      people: new FormControl('', [Validators.required]),
+      workCenter: new FormControl('', [Validators.required]),
+      operationCenter: new FormControl('', [Validators.required]),
+      client: new FormControl('', [Validators.required]),
+      transport: new FormControl(item ? item.transport : '', [
+        Validators.required,
+      ]),
+      date: new FormControl(item && item.date ? item.date : '', [
+        Validators.required,
+      ]),
+      observation: new FormControl(
+        item && item.observation ? item.observation : '',
+        []
+      ),
+    });
+
     this.subscriptions.push(
       this.peopleService
         .getPeople()
@@ -80,6 +101,14 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
           (data as Array<any>).forEach((item) => {
             this.people.push({ ...item.payload.doc.data() });
           });
+          if (item) {
+            const people = this.people.find(
+              (_people) => _people.identification === item.identification
+            );
+            if (people) {
+              this.fControl('people').setValue(people);
+            }
+          }
         })
     );
     this.subscriptions.push(
@@ -96,18 +125,20 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
             if (items.indexOf(itemWork.identification) < 0) {
               this.workCenters.push({ ...itemWork });
             }
-            // if (
-            //   itemsApplications.indexOf(itemWork.coordinatorIdentification) < 0
-            // ) {
-            //   this.applicants.push({
-            //     identification: itemWork.coordinatorIdentification,
-            //     name: itemWork.coordinator,
-            //     workCenterId: itemWork.identification,
-            //   });
-            // }
             items.push(itemWork.identification);
-            // itemsApplications.push(itemWork.coordinatorIdentification);
           });
+          if (item) {
+            const workCenter = this.workCenters.find(
+              (_workCenter) => _workCenter.identification === item.workplaceCode
+            );
+            if (workCenter) {
+              this.fControl('workCenter').setValue(workCenter);
+              this._filterApplications(workCenter.identification, true);
+            }
+          }
+          setTimeout(() => {
+            this.initSubsChanges = true;
+          }, 1000);
         })
     );
     this.subscriptions.push(
@@ -119,17 +150,16 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
           (data as Array<any>).forEach((item) => {
             this.operationCenters.push({ ...item.payload.doc.data() });
           });
+          if (item) {
+            const operationCenter = this.operationCenters.find(
+              (_operationCenter) => _operationCenter.code === item.operationCode
+            );
+            if (operationCenter) {
+              this.fControl('operationCenter').setValue(operationCenter);
+            }
+          }
         })
     );
-    this.form = new FormGroup({
-      people: new FormControl('', [Validators.required]),
-      workCenter: new FormControl('', [Validators.required]),
-      operationCenter: new FormControl('', [Validators.required]),
-      client: new FormControl('', [Validators.required]),
-      transport: new FormControl('', [Validators.required]),
-      date: new FormControl('', [Validators.required]),
-      observation: new FormControl('', []),
-    });
 
     this.filteredPeople = this.form.get('people').valueChanges.pipe(
       startWith(''),
@@ -144,8 +174,10 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
       debounceTime(300),
       map((value) => (typeof value === 'string' ? value : value.name)),
       map((name) => {
-        this.form.get('operationCenter').setValue('');
-        this.form.get('client').setValue('');
+        if (this.initSubsChanges) {
+          this.form.get('operationCenter').setValue('');
+          this.form.get('client').setValue('');
+        }
         return name ? this._filterWorkCenter(name) : this.workCenters.slice();
       })
     );
@@ -163,20 +195,6 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
     if (this.subscriptions.length > 0) {
       this.subscriptions.forEach((data) => data.unsubscribe());
     }
-  }
-
-  selectWorkCenter(selected: any): void {
-    this.filterApplicants = [];
-    this.coordinatorsWorkCenterService.getCoordinatorsWorkCentersByIdentificationWorkCenter(selected.option.value.identification)
-      .subscribe(data => {
-        this.filterApplicants = data.map(dataMapper => {
-          return {
-            identification: dataMapper.identification,
-            name: dataMapper.name,
-            workCenterId: dataMapper.workCenterCode,
-          };
-        });
-      });
   }
 
   public fControl(control: string): AbstractControl {
@@ -217,6 +235,10 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
     this.isValid = valid;
   }
 
+  public selectWorkCenter(selected: any): void {
+    this._filterApplications(selected.option.value.identification);
+  }
+
   public handleClose(): void {
     this.dialogRef.close(null);
   }
@@ -250,6 +272,14 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
   }
 
   private save(data: any): void {
+    if (this.data.item) {
+      this.update(data[0]);
+    } else {
+      this.create(data);
+    }
+  }
+
+  private create(data: any): void {
     this.programmingService
       .postProgramming(data)
       .then((res) => {
@@ -259,6 +289,21 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
       .catch((err) => {
         this.openSnackBar(
           'Error al agregar el registro, verifique su conexión é intente de nuevo',
+          'cerrar'
+        );
+      });
+  }
+
+  private update(data: any): void {
+    this.programmingService
+      .putProgramming(this.data.item.id, data)
+      .then((res) => {
+        this.openSnackBar('Registro se guardo correctamente', 'cerrar');
+      })
+      .catch((err) => {
+        console.log(err);
+        this.openSnackBar(
+          'Error al guardar el registro, verifique su conexión é intente de nuevo',
           'cerrar'
         );
       });
@@ -308,6 +353,34 @@ export class AddItemFormComponent implements OnInit, OnDestroy {
           option.name.toLowerCase().indexOf(filterValue) >= 0 ||
           String(option.code).toLowerCase().indexOf(filterValue) >= 0)
     );
+  }
+
+  private _filterApplications(
+    idWorkCenter: string | number,
+    initForm: boolean = false
+  ): void {
+    this.filterApplicants = [];
+    this.coordinatorsWorkCenterService
+      .getCoordinatorsWorkCentersByIdentificationWorkCenter(idWorkCenter)
+      .subscribe((data) => {
+        this.filterApplicants = data.map((dataMapper) => {
+          return {
+            identification: dataMapper.identification,
+            name: dataMapper.name,
+            workCenterId: dataMapper.workCenterCode,
+          };
+        });
+        if (initForm && this.data.item) {
+          const application = this.filterApplicants.find(
+            (_application) =>
+              _application.identification ===
+              this.data.item.applicantIdentification
+          );
+          if (application) {
+            this.fControl('client').setValue(application);
+          }
+        }
+      });
   }
 
   private openSnackBar(message: string, action: string): void {

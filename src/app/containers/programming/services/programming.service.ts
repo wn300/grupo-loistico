@@ -40,4 +40,30 @@ export class ProgrammingService {
       );
     });
   }
+
+  putProgramming(id: string, data: Programming): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      this.firestore
+        .collection(this.collectionProgramming)
+        .doc(id)
+        .set(data)
+        .then(
+          (res) => resolve(res),
+          (err) => reject(err)
+        );
+    });
+  }
+
+  deleteProgramming(id: string): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      this.firestore
+        .collection(this.collectionProgramming)
+        .doc(id)
+        .delete()
+        .then(
+          (res) => resolve(res),
+          (err) => reject(err)
+        );
+    });
+  }
 }
