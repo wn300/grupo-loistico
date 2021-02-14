@@ -16,8 +16,9 @@ export class AppUserService {
     return this.firestore.collection(this.collectionReport).snapshotChanges();
   }
   // getReportsByFilesByDates(startDate: Date, endDate: Date): Observable<any> {
-  getReportsByFilesByDates(): Observable<any> {
-    return this.firestore.collection(this.collectionReport
+  getReportsByFilesByDates(startDate: Date, endDate: Date): Observable<any> {
+    return this.firestore.collection(this.collectionReport, (ref) =>
+      ref.where('createAt', '<=', endDate).where('createAt', '>=', startDate).orderBy('createAt', 'desc'),
     ).valueChanges()
       .pipe(
         switchMap((reports: any) => {

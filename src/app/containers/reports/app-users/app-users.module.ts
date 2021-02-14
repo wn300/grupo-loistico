@@ -10,6 +10,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { FormsModule } from '@angular/forms';
+import { MatNativeDateModule } from '@angular/material/core';
 
 import { AppUsersRoutingModule } from './app-users-routing.module';
 import { AppUsersComponent } from './app-users.component';
@@ -19,6 +22,7 @@ import { AppUsersComponent } from './app-users.component';
   declarations: [AppUsersComponent],
   imports: [
     CommonModule,
+    FormsModule,
     MatCardModule,
     MatTableModule,
     MatSnackBarModule,
@@ -29,6 +33,8 @@ import { AppUsersComponent } from './app-users.component';
     MatFormFieldModule,
     MatInputModule,
     SharedModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     AppUsersRoutingModule
   ]
 })

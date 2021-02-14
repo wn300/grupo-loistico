@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 
 import { AppUserService } from './services/app-user.service';
@@ -17,8 +18,16 @@ export class AppUsersComponent implements OnInit, OnDestroy {
   public displayedColumns: string[];
   public dataSourceReports;
   public isLoading: boolean;
+  public startDate: Date;
+  public endDate: Date;
+
+  private readonly dateFormat = 'DD/MM/YYYY';
 
   constructor(public reportsService: AppUserService) {
+    const onlyDateNow = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    this.startDate = moment(onlyDateNow).toDate();
+    this.endDate = moment(onlyDateNow).toDate();
+
     this.titlePage = 'Reportes';
     this.subTitle = 'Reportes desde la App';
     this.subscription = [];
@@ -37,7 +46,17 @@ export class AppUsersComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription.push(
-      this.reportsService.getReportsByFilesByDates()
+      this.getReport()
+    );
+  }
+
+  getReport(): Subscription {
+    this.isLoading = true;
+    if (this.startDate !== null && this.endDate !== null) {
+      const startDate = moment(this.startDate).toDate();
+      const endDate = moment(this.endDate).add(12, 'hours').add(59, 'minutes').add(59, 'seconds').toDate();
+
+      return this.reportsService.getReportsByFilesByDates(startDate, endDate)
         .subscribe(data => {
           this.reports = data.map(dataMapper => {
             return {
@@ -52,8 +71,8 @@ export class AppUsersComponent implements OnInit, OnDestroy {
           setTimeout(() => {
             this.isLoading = false;
           }, 100);
-        })
-    );
+        });
+    }
   }
 
   applyFilter(event: Event): void {

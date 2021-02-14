@@ -32,15 +32,17 @@ export class ProgrammingComponent implements OnInit {
     public ete: ExportExcelService,
     public dialog: MatDialog
   ) {
-    const onlyDateNow = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 12, 59, 59);
-    this.startDate = moment(onlyDateNow).subtract(1, 'days').toDate();
-    this.endDate = moment(onlyDateNow).add(1, 'days').toDate();
+    const onlyDateNow = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    this.startDate = moment(onlyDateNow).toDate();
+    this.endDate = moment(onlyDateNow).toDate();
 
     this.titlePage = 'Reporte de programación';
     this.subTitle = 'Reportes de programación conta el reporte de usuarios por la app';
     this.displayedColumns = [
       'identification',
       'name',
+      'dateProgramming',
+      'hourProgramming',
       'dateInit',
       'hourInit',
       'dateEnd',
@@ -48,8 +50,6 @@ export class ProgrammingComponent implements OnInit {
       'hours',
       'observations',
       'applicantName',
-      'dateProgramming',
-      'hourProgramming',
       'identificationWorckCenter',
       'workCenter',
       'codeOperation',
@@ -75,8 +75,8 @@ export class ProgrammingComponent implements OnInit {
       this.dataSourceReports = [];
       this.reports = [];
 
-      const startDate = moment(this.startDate, this.dateFormat).toDate();
-      const endDate = moment(this.endDate, this.dateFormat).toDate();
+      const startDate = moment(this.startDate).toDate();
+      const endDate = moment(this.endDate).add(12, 'hours').add(59, 'minutes').add(59, 'seconds').toDate();
 
 
       this.progrmmingService.getPrograming(startDate, endDate)
