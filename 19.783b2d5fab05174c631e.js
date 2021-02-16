@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[19],{S5Ro:function(n,o,t){"use strict";t.r(o),t.d(o,"ReportsModule",(function(){return c}));var e=t("SVse"),r=t("EaFE"),s=t("8Y7J");let c=(()=>{class n{}return n.\u0275mod=s.Lb({type:n}),n.\u0275inj=s.Kb({factory:function(o){return new(o||n)},imports:[[e.c,r.a]]}),n})()}}]);

@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[6],{opcc:function(n,t,o){"use strict";o.r(t),o.d(t,"AdministrationModule",(function(){return i}));var r=o("SVse"),c=o("fRzt"),e=o("8Y7J");let i=(()=>{class n{}return n.\u0275mod=e.Lb({type:n}),n.\u0275inj=e.Kb({factory:function(t){return new(t||n)},imports:[[r.c,c.a]]}),n})()}}]);

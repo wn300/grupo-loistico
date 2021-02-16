@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[12],{"z/n2":function(n,t,e){"use strict";e.r(t),e.d(t,"ContainersModule",(function(){return c}));var o=e("SVse"),r=e("4kaR"),s=e("8Y7J");let c=(()=>{class n{}return n.\u0275mod=s.Lb({type:n}),n.\u0275inj=s.Kb({factory:function(t){return new(t||n)},imports:[[o.c,r.a]]}),n})()}}]);
