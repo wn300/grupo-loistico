@@ -11,7 +11,8 @@ export interface Programming {
   workplaceName?: string;
   operationName?: string;
   applicantName?: string;
-
+  reportStart?: boolean;
+  reportEnd?: boolean;
   dateFormat?: string;
 }
 

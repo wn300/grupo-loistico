@@ -11,12 +11,19 @@ export class ProgrmmingService {
   public collectionReport = 'reports';
   public collectionProgramming = 'programming';
   public collectionWorkCenter = 'workCenter';
+  public collectionReportProgramming = 'reportProgramming';
 
   constructor(private firestore: AngularFirestore) { }
 
+  getProgrammingJoinReport(startDate: Date, endDate: Date): Observable<any> {
+    return this.firestore.collection(this.collectionReportProgramming, (ref) =>
+      ref.where('date', '<=', endDate).where('date', '>=', startDate).orderBy('date', 'asc'),
+    ).valueChanges();
+  }
+
   getPrograming(startDate: Date, endDate: Date): Observable<any> {
     return this.firestore.collection(this.collectionProgramming, (ref) =>
-      ref.where('date', '<=', endDate).where('date', '>=', startDate).orderBy('date', 'desc'),
+      ref.where('date', '<=', endDate).where('date', '>=', startDate).orderBy('date', 'asc'),
     )
       .snapshotChanges()
       .pipe(

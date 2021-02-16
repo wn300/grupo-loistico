@@ -65,11 +65,11 @@
       </div>
       <section *ngIf="!isLoading">
         <div class="row justify-content-center mt-3">
-          <div class="col-3" *ngIf="reports.length > 0">
+          <div class="col-3" *ngIf="print.length > 0">
             <button mat-raised-button class="w-100" (click)="exportToExcel()">Descargar Excel</button>
           </div>
         </div>
-        <div class="row" *ngIf="reports.length > 0">
+        <div class="row" *ngIf="print.length > 0">
           <div class="col-12">
             <mat-form-field>
               <mat-label>Filtro general</mat-label>
@@ -129,6 +129,13 @@
                   </td>
                 </ng-container>
 
+                <ng-container matColumnDef="messageInit">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Entrada </th>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
+                    {{element.messageInit}}
+                  </td>
+                </ng-container>
+
                 <ng-container matColumnDef="dateEnd">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Fecha Fin </th>
                   <td mat-cell *matCellDef="let element" class="text-center border-dable">
@@ -150,6 +157,13 @@
                     <span *ngIf="element.dateEnd !== 'No Registra'">
                       {{element.dateEnd | date: 'HH:mm:ss'}}
                     </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="messageEnd">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Salida </th>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
+                    {{element.messageEnd}}
                   </td>
                 </ng-container>
 
@@ -251,7 +265,7 @@
             </div>
           </div>
         </div>
-        <div class="row mt-5" *ngIf="reports.length == 0">
+        <div class="row mt-5" *ngIf="print.length == 0">
           <div class="col-12 text-center">
             <h2>
               No se encontrarón registros

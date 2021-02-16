@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 import { Subscription } from 'rxjs';
 
 import { ExportExcelService } from 'src/app/shared/services/export-excel.service';
@@ -23,6 +24,8 @@ export class ProgrammingComponent implements OnInit {
   public dataSourceReports;
   public isLoading: boolean;
   public reports: any[];
+  public programmingWithoutReport: any[];
+  public print: any[];
   dataForExcel = [];
 
   selected = 'Todos';
@@ -45,8 +48,10 @@ export class ProgrammingComponent implements OnInit {
       'hourProgramming',
       'dateInit',
       'hourInit',
+      'messageInit',
       'dateEnd',
       'hourEnd',
+      'messageEnd',
       'hours',
       'observations',
       'applicantName',
@@ -57,8 +62,7 @@ export class ProgrammingComponent implements OnInit {
       'positionEntry',
       'positionExit',
       'addressEntry',
-      'addressExit',
-      'update'
+      'addressExit'
     ];
 
     this.isLoading = true;
@@ -76,120 +80,92 @@ export class ProgrammingComponent implements OnInit {
       this.reports = [];
 
       const startDate = moment(this.startDate).toDate();
-      const endDate = moment(this.endDate).add(12, 'hours').add(59, 'minutes').add(59, 'seconds').toDate();
-
+      const endDate = moment(this.endDate).add(23, 'hours').add(59, 'minutes').add(59, 'seconds').toDate();
 
       this.progrmmingService.getPrograming(startDate, endDate)
-        .subscribe(
-          dataPrograming => {
-            if (dataPrograming.length > 0) {
-              this.progrmmingService.getReportsUsers(startDate, endDate)
-                .subscribe(dataReports => {
-                  const reportProgramming = dataPrograming.map(elementPrograming => {
-                    const reportUser = [];
-                    dataReports.forEach(elementReports => {
-                      const newElementReport = {
-                        reportId: elementReports.payload.doc.id,
-                        ...elementReports.payload.doc.data(),
-                      }
-                      if (newElementReport.type !== 'Incapacidad') {
-                        if (parseFloat(elementPrograming.identification) === parseFloat(newElementReport.email.split('@')[0])) {
-                          const diffTime = this.diffHours(elementPrograming.date.toDate(), newElementReport.createAt.toDate(), newElementReport.type);
+        .subscribe(programmings => {
+          this.programmingWithoutReport = programmings.map(programming => {
+            const objectReturn = {
+              ...programming,
+              id: programming.programmingId,
+              identification: programming.identification,
+              name: programming.name,
+              dateInit: 'No Registra',
+              messageInit: 'No Registra',
+              dateEnd: 'No Registra',
+              messageEnd: 'No Registra',
+              hours: 'No Registra',
+              observations: programming.observation,
+              applicantName: programming.applicantName,
+              dateProgramming: moment(programming.date.toDate(), this.dateFormat),
+              identificationWorckCenter: programming.workplaceCode,
+              workCenter: programming.workplaceName,
+              codeOperation: programming.operationCode,
+              operation: programming.operationName,
+              transport: programming.transport === true ? 'Si' : 'No',
+              positionEntry: 'No Registra',
+              positionExit: 'No Registra',
+              addressEntry: 'No Registra',
+              addressExit: 'No Registra',
+            };
 
-                          if ((diffTime[0] === 0 && diffTime[1] <= 15 && newElementReport.type === 'Llegada')
-                            || ((diffTime[0] <= 12 && diffTime[0] > 0) && newElementReport.type === 'Salida')) {
+            return objectReturn;
+          });
 
-                            const x1 = elementPrograming.workCenter.latitude;
-                            const y1 = elementPrograming.workCenter.longitude;
-                            const x2 = newElementReport.location.latitude;
-                            const y2 = newElementReport.location.longitude;
+          this.progrmmingService.getProgrammingJoinReport(startDate, endDate)
+            .subscribe(dataPrograming => {
+              if (dataPrograming.length > 0) {
+                this.reports = dataPrograming.map(dataProgramingNew => {
+                  const hoursDiff = dataProgramingNew.reportStart.data.date !== '' &&
+                    dataProgramingNew.reportEnd.data.date !== ''
+                    ? this.diffHours(dataProgramingNew.reportStart.data.date.toDate(),
+                      dataProgramingNew.reportEnd.data.date.toDate(), '') : undefined;
 
-                            const km = this.getKilometros(x1, y1, x2, y2);
+                  const objectReturn = {
+                    ...dataProgramingNew,
+                    identification: dataProgramingNew.identification,
+                    name: dataProgramingNew.name,
+                    // tslint:disable-next-line:max-line-length
+                    dateInit: dataProgramingNew.reportStart.data.date !== '' ? dataProgramingNew.reportStart.data.date.toDate() : 'No Registra',
+                    messageInit: dataProgramingNew.reportStart.data.message !== '' ? dataProgramingNew.reportStart.data.message : 'No Registra',
+                    // tslint:disable-next-line:max-line-length
+                    dateEnd: dataProgramingNew.reportEnd.data.date !== '' ? dataProgramingNew.reportEnd.data.date.toDate() : 'No Registra',
+                    messageEnd: dataProgramingNew.reportEnd.data.message !== '' ? dataProgramingNew.reportEnd.data.message : 'No Registra',
+                    hours: hoursDiff !== undefined ? `${hoursDiff[0]}:${hoursDiff[1]}` : 'No Registra',
+                    observations: dataProgramingNew.observation,
+                    applicantName: dataProgramingNew.applicantName,
+                    dateProgramming: moment(dataProgramingNew.date.toDate(), this.dateFormat),
+                    identificationWorckCenter: dataProgramingNew.workplaceCode,
+                    workCenter: dataProgramingNew.workplaceName,
+                    codeOperation: dataProgramingNew.operationCode,
+                    operation: dataProgramingNew.operationName,
+                    transport: dataProgramingNew.transport === true ? 'Si' : 'No',
+                    // tslint:disable-next-line:max-line-length
+                    positionEntry: dataProgramingNew.reportStart.data.location.message !== undefined ? dataProgramingNew.reportStart.data.location.message : 'No Registra',
+                    // tslint:disable-next-line:max-line-length
+                    positionExit: dataProgramingNew.reportEnd.data.location.message !== undefined ? dataProgramingNew.reportEnd.data.location.message : 'No Registra',
+                    addressEntry: dataProgramingNew.reportStart.data.address !== '' ? dataProgramingNew.reportStart.data.address : 'No Registra',
+                    addressExit: dataProgramingNew.reportEnd.data.address !== '' ? dataProgramingNew.reportEnd.data.address : 'No Registra',
+                  };
 
-                            let position = 'Fuera de rango';
-                            if ((parseFloat(km) * 1000) <= 300) {
-                              position = 'Dentro del rango';
-                            }
-
-                            reportUser.push({
-                              ...newElementReport,
-                              date: newElementReport.createAt.toDate(),
-                              position,
-                              diferenceHours: diffTime,
-                              identificationUser: parseFloat(newElementReport.email.split('@')[0]),
-                            });
-                          }
-                        }
-                      }
-                    });
-
-                    return {
-                      ...elementPrograming,
-                      date: elementPrograming.date.toDate(),
-                      reportUser,
-                    };
-                  });
-
-                  this.reports = reportProgramming.map(mapperObject => {
-                    const hoursDiff = mapperObject.reportUser[0] !== undefined && mapperObject.reportUser[1] !== undefined ?
-                      this.diffHours(mapperObject.reportUser[0].date, mapperObject.reportUser[1].date, '') :
-                      undefined;
-
-                    const entry = mapperObject.reportUser.filter(init => init.type === 'Llegada');
-                    const exit = mapperObject.reportUser.filter(init => init.type === 'Salida');
-
-                    const objectReturn = {
-                      ...mapperObject,
-                      identification: mapperObject.identification,
-                      name: mapperObject.name,
-                      dateInit: entry.length > 0 ? entry[0].date : 'No Registra',
-                      dateEnd: exit.length > 0 ? exit[0].date : 'No Registra',
-                      hours: hoursDiff !== undefined ? `${hoursDiff[0]}:${hoursDiff[1]}` : 'No Registra',
-                      observations: mapperObject.observation,
-                      applicantName: mapperObject.applicantName,
-                      dateProgramming: moment(mapperObject.date, this.dateFormat),
-                      identificationWorckCenter: mapperObject.workCenter.identification,
-                      workCenter: mapperObject.workCenter.name,
-                      codeOperation: mapperObject.workCenter.operationCode,
-                      operation: mapperObject.workCenter.operation,
-                      transport: mapperObject.transport === true ? 'Si' : 'No',
-                      positionEntry: entry.length > 0 ? entry[0].position : 'No Registra',
-                      positionExit: exit.length > 0 ? exit[0].position : 'No Registra',
-                      addressEntry: entry.length > 0 ? entry[0].address : 'No Registra',
-                      addressExit: exit.length > 0 ? exit[0].address : 'No Registra',
-                    }
-
-                    return objectReturn;
-                  });
-                  this.dataSourceReports = new MatTableDataSource(this.reports);
-
-                  setTimeout(() => {
-                    this.isLoading = false;
-                  }, 100);
-
+                  return objectReturn;
                 });
-            } else {
-              this.reports = [];
+              }
+
+              this.print = [];
+
+              this.print = _.orderBy([..._.differenceBy(this.programmingWithoutReport, this.reports, 'id'), ...this.reports], ['dateProgramming'], ['asc']);
+
+              this.dataSourceReports = new MatTableDataSource(this.print);
+
               setTimeout(() => {
                 this.isLoading = false;
               }, 100);
-            }
-          },
-          error => console.log(error));
-    }
-  }
+            });
 
-  getKilometros(lat1, lon1, lat2, lon2): string {
-    const rad = (x) => x * Math.PI / 180;
-    // Radio de la tierra en km
-    const R = 6378.137;
-    const dLat = rad(lat2 - lat1);
-    const dLong = rad(lon2 - lon1);
-    // tslint:disable-next-line:max-line-length
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const d = R * c;
-    return d.toFixed(3);
+
+        });
+    }
   }
 
   applyFilter(event: Event): void {
@@ -199,10 +175,13 @@ export class ProgrammingComponent implements OnInit {
 
   exportToExcel(): void {
     this.dataForExcel = [];
-    this.reports.forEach((row: any) => {
+    const print = _.orderBy([..._.differenceBy(this.programmingWithoutReport, this.reports, 'id'), ...this.reports], ['dateProgramming'], ['asc']);
+    print.forEach((row: any) => {
       const newObject = {
         Identificacion: row.identification,
         Nombre: row.name,
+        'Fecha programada': moment(row.dateProgramming).format('DD/MM/YYYY'),
+        'Hora programada': moment(row.dateProgramming).format('HH:mm:ss'),
         'Fecha inicio': row.dateInit === 'No Registra' ? row.dateInit : moment(row.dateInit).format('DD/MM/YYYY'),
         'Hora inicio': row.dateInit === 'No Registra' ? row.dateInit : moment(row.dateInit).format('HH:mm:ss'),
         'Fecha fin': row.dateEnd === 'No Registra' ? row.dateEnd : moment(row.dateEnd).format('DD/MM/YYYY'),
@@ -210,8 +189,6 @@ export class ProgrammingComponent implements OnInit {
         Horas: row.hours,
         Observacion: row.observations,
         Solicitante: row.applicantName,
-        'Fecha programada': moment(row.dateProgramming).format('DD/MM/YYYY'),
-        'Hora programada': moment(row.dateProgramming).format('HH:mm:ss'),
         'Id centro de trabajo': row.identificationWorckCenter,
         'Centro de trabajo': row.workCenter,
         'Cod operacion': row.codeOperation,
@@ -312,6 +289,19 @@ export class ProgrammingComponent implements OnInit {
     }
 
     return [hours, minutes];
+  }
+
+  getKilometros(lat1, lon1, lat2, lon2): string {
+    const rad = (x) => x * Math.PI / 180;
+    // Radio de la tierra en km
+    const R = 6378.137;
+    const dLat = rad(lat2 - lat1);
+    const dLong = rad(lon2 - lon1);
+    // tslint:disable-next-line:max-line-length
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c;
+    return d.toFixed(3);
   }
 
   validationAssistance(typeAssitance: any): void {

@@ -54,7 +54,7 @@ export class AppUsersComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     if (this.startDate !== null && this.endDate !== null) {
       const startDate = moment(this.startDate).toDate();
-      const endDate = moment(this.endDate).add(12, 'hours').add(59, 'minutes').add(59, 'seconds').toDate();
+      const endDate = moment(this.endDate).add(23, 'hours').add(59, 'minutes').add(59, 'seconds').toDate();
 
       return this.reportsService.getReportsByFilesByDates(startDate, endDate)
         .subscribe(data => {
