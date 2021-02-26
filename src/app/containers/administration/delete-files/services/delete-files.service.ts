@@ -16,6 +16,51 @@ export class DeleteFilesService {
   getReportsByFiles(): Observable<any> {
     return this.firestore.collection(this.collectionReport).snapshotChanges();
   }
+  getReportsByFilesJoinPeople(): Observable<any> {
+    return this.firestore.collection(this.collectionReport)
+    .snapshotChanges()
+    .pipe(
+      switchMap((reportSnapShot: any) => {
+        const report = reportSnapShot.map(resultreport => {
+          return {
+            id: resultreport.payload.doc.id,
+            ...resultreport.payload.doc.data(),
+          };
+        });
+
+        const reportsCreateIds = uniq(report.map(p => p.createBy));
+
+        if (reportsCreateIds.length > 0) {
+          return combineLatest(
+            of(report),
+            combineLatest(
+              reportsCreateIds.map(reportCreateId =>
+                this.firestore.collection('people',
+                  ref => ref.where('uid', '==', reportCreateId)).valueChanges().pipe(
+                    map(people => people[0])
+                  )
+              )
+            )
+          );
+        } else {
+          return ['N'];
+        }
+
+      }),
+      map(([report, people]) => {
+        if (report) {
+          return report.map(reportResult => {
+            return {
+              ...reportResult,
+              people: people.find((p: any) => p.uid === reportResult.createBy)
+            };
+          });
+        } else {
+          return [];
+        }
+      })
+    );
+  }
 
   getPeople(): Observable<any> {
     return this.firestore

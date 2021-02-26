@@ -52,48 +52,41 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.subscription.push(this.deleteFilesService.getReportsByFilesJoinPeople().subscribe(data => {
 
-    this.subscription.push(
-      this.deleteFilesService.getPeople().subscribe(dataPeople => {
-        this.subscription.push(this.deleteFilesService.getReportsByFiles().subscribe(data => {
+      this.imagesMappper = [];
+      this.imagesByReport = data.map((catData: any) => {
+        const objectReport = {
+          ...catData
+        };
 
-          this.imagesMappper = [];
-          this.imagesByReport = data.map((catData: any) => {
-            const objectReport = {
-              id: catData.payload.doc.id,
-              ...catData.payload.doc.data()
-            };
+        const imagesBucket = catData.images;
+        this.images = [...imagesBucket];
 
-            const imagesBucket = catData.payload.doc.data().images;
-            this.images = [...imagesBucket];
+        return objectReport;
+      });
 
-            return objectReport;
+      this.imagesByReport.forEach(imageByReport => {
+        if (imageByReport.images.length > 0) {
+          imageByReport.images.forEach(image => {
+            this.imagesMappper.push({
+              id: imageByReport.id,
+              name: image.split('reports%2F')[1].split('?')[0],
+              nameShow: `${imageByReport.people.firstName} ${imageByReport.people.secondName} ${imageByReport.people.firstLastName} ${imageByReport.people.secondLastName}`,
+              url: image,
+              type: imageByReport.type,
+              date: imageByReport.createAt.toDate(),
+              selected: false
+            });
           });
+        }
+      });
 
-          this.imagesByReport.forEach(imageByReport => {
-            if (imageByReport.images.length > 0) {
-              const person = dataPeople.filter(people => people.identification === parseFloat(imageByReport.email.split('@')[0]))[0];
-              imageByReport.images.forEach(image => {
-                this.imagesMappper.push({
-                  id: imageByReport.id,
-                  name: image.split('reports%2F')[1].split('?')[0],
-                  nameShow: `${person.firstName} ${person.secondName} ${person.firstLastName} ${person.secondLastName}`,
-                  url: image,
-                  type: imageByReport.type,
-                  date: imageByReport.createAt.toDate(),
-                  selected: false
-                });
-              });
-            }
-          });
-
-          this.dataSourceImages = new MatTableDataSource(this.imagesMappper);
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 100);
-        }));
-      })
-    );
+      this.dataSourceImages = new MatTableDataSource(this.imagesMappper);
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 100);
+    }));
   }
 
   goToImage(image: string): void {

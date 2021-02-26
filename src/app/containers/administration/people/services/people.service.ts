@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Observable, pipe } from 'rxjs';
+import { combineLatest, Observable, of, pipe } from 'rxjs';
 import { People } from '../entity/people';
 import { JoinsFirebaseService } from 'src/app/shared/services/joins-firebase.service';
+import { switchMap, map } from 'rxjs/operators';
+import { uniq } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +24,7 @@ export class PeopleService {
       .snapshotChanges();
   }
 
-  getOnlyPeopleSupernumeraria(): Observable<any> {
+  getOnlyPeopleSupernumeraria(): any {
     return this.firestore
       .collection(this.collectionPeople, ref => ref.where('position', '==', 'Supernumerario'))
       .snapshotChanges();
@@ -36,6 +38,54 @@ export class PeopleService {
         this.JoinsFirebaseService.innerJoin(this.firestore, 'company', 'company'),
       );
   }
+
+  getOnlyPeopleSupernumerariaJoinCompany(): Observable<any> {
+    return this.firestore
+      .collection(this.collectionPeople, ref => ref.where('position', '==', 'Supernumerario'))
+      .snapshotChanges()
+      .pipe(
+        switchMap((peopleSnapShot: any) => {
+          const people = peopleSnapShot.map(resultPeople => {
+            return {
+              id: resultPeople.payload.doc.id,
+              ...resultPeople.payload.doc.data(),
+            };
+          });
+
+          const companyIds = uniq(people.map(p => p.company));
+
+          if (companyIds.length > 0) {
+            return combineLatest(
+              of(people),
+              combineLatest(
+                companyIds.map(companyId =>
+                  this.firestore.collection('company',
+                    ref => ref.where('code', '==', companyId)).valueChanges().pipe(
+                      map(company => company[0])
+                    )
+                )
+              )
+            );
+          } else {
+            return ['N'];
+          }
+
+        }),
+        map(([people, company]) => {
+          if (company) {
+            return people.map(peopleResult => {
+              return {
+                ...peopleResult,
+                company: company.find((wc: any) => wc.operationCode === peopleResult.operationCode)
+              };
+            });
+          } else {
+            return [];
+          }
+        })
+      );
+  }
+
 
   getCordinators(): Observable<any> {
     return this.firestore.collection(this.collectionPeople, ref => ref.where('position', '==', 'Coordinador')).snapshotChanges();

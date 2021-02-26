@@ -47,8 +47,8 @@ export class NotScheduledComponent implements OnInit, OnDestroy {
       'Reportes de programación contra lista de usuarios en la app';
 
     this.displayedColumns = [
-      'names',
       'identification',
+      'names',
       'company',
       'phone',
       'memberShip',
@@ -63,17 +63,14 @@ export class NotScheduledComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.push(
-      this.peopleService.getOnlyPeopleSupernumeraria().subscribe((data) => {
-        (data as Array<any>).forEach((item) => {
-          this.people.push({
-            ...item.payload.doc.data(),
-            id: item.payload.doc.id,
-            names: `${item.payload.doc.data().firstName} ${
-              item.payload.doc.data().secondName
-            } ${item.payload.doc.data().firstLastName} ${
-              item.payload.doc.data().secondLastName
-            }`,
-          });
+      this.peopleService.getOnlyPeopleSupernumerariaJoinCompany().subscribe((data) => {
+        this.people = data.map((item) => {
+          return {
+            ...item,
+            names: `${item.firstName} ${item.secondName
+              } ${item.firstLastName} ${item.secondLastName
+              }`,
+          };
         });
         this.isLoading = false;
         this.getReports();
@@ -112,7 +109,6 @@ export class NotScheduledComponent implements OnInit, OnDestroy {
         this.programmings = data.programming.map((item: any) => {
           return {
             ...item.payload.doc.data(),
-            id: item.payload.doc.id,
             date: new Date(item.payload.doc.data().date.seconds * 1000),
             dateFormat: moment(
               item.payload.doc.data().date.seconds * 1000
