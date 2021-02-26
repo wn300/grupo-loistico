@@ -22,6 +22,12 @@ export class PeopleService {
       .snapshotChanges();
   }
 
+  getOnlyPeopleSupernumeraria(): Observable<any> {
+    return this.firestore
+      .collection(this.collectionPeople, ref => ref.where('position', '==', 'Supernumerario'))
+      .snapshotChanges();
+  }
+
   getPeopleJoinCompany(): any {
     return this.firestore
       .collection(this.collectionPeople)

@@ -63,7 +63,7 @@ export class NotScheduledComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.push(
-      this.peopleService.getPeople().subscribe((data) => {
+      this.peopleService.getOnlyPeopleSupernumeraria().subscribe((data) => {
         (data as Array<any>).forEach((item) => {
           this.people.push({
             ...item.payload.doc.data(),
