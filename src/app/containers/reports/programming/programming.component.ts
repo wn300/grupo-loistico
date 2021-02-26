@@ -59,6 +59,8 @@ export class ProgrammingComponent implements OnInit {
       'workCenter',
       'codeOperation',
       'operation',
+      'city',
+      'client',
       'positionEntry',
       'positionExit',
       'addressEntry',
@@ -84,6 +86,8 @@ export class ProgrammingComponent implements OnInit {
 
       this.progrmmingService.getPrograming(startDate, endDate)
         .subscribe(programmings => {
+          console.log(programmings);
+
           this.programmingWithoutReport = programmings.map(programming => {
             const objectReturn = {
               ...programming,
@@ -102,6 +106,8 @@ export class ProgrammingComponent implements OnInit {
               workCenter: programming.workplaceName,
               codeOperation: programming.operationCode,
               operation: programming.operationName,
+              city: programming.workCenter.city,
+              client: programming.workCenter.client,
               transport: programming.transport === true ? 'Si' : 'No',
               positionEntry: 'No Registra',
               positionExit: 'No Registra',
@@ -115,6 +121,7 @@ export class ProgrammingComponent implements OnInit {
           this.progrmmingService.getProgrammingJoinReport(startDate, endDate)
             .subscribe(dataPrograming => {
               if (dataPrograming.length > 0) {
+
                 this.reports = dataPrograming.map(dataProgramingNew => {
                   const hoursDiff = dataProgramingNew.reportStart.data.date !== '' &&
                     dataProgramingNew.reportEnd.data.date !== ''
@@ -139,6 +146,8 @@ export class ProgrammingComponent implements OnInit {
                     workCenter: dataProgramingNew.workplaceName,
                     codeOperation: dataProgramingNew.operationCode,
                     operation: dataProgramingNew.operationName,
+                    city: dataProgramingNew.workCenter.city,
+                    client: dataProgramingNew.workCenter.client,
                     transport: dataProgramingNew.transport === true ? 'Si' : 'No',
                     // tslint:disable-next-line:max-line-length
                     positionEntry: dataProgramingNew.reportStart.data.location.message !== undefined ? dataProgramingNew.reportStart.data.location.message : 'No Registra',
@@ -192,6 +201,8 @@ export class ProgrammingComponent implements OnInit {
         'Id centro de trabajo': row.identificationWorckCenter,
         'Centro de trabajo': row.workCenter,
         'Cod operacion': row.codeOperation,
+        Ciudad: row.city,
+        Cliente: row.client,
         'Localizacion entrada': row.positionEntry,
         'Localizacion salida': row.positionExit,
         'Direccion entrada': row.addressEntry,
@@ -220,6 +231,8 @@ export class ProgrammingComponent implements OnInit {
         'Id centro de trabajo',
         'Centro de trabajo',
         'Cod operacion',
+        'Ciudad',
+        'Cliente',
         'Localizacion entrada',
         'Localizacion salida',
         'Direccion entrada',

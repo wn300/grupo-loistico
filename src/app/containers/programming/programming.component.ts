@@ -47,6 +47,8 @@ export class ProgrammingComponent implements OnInit, OnDestroy {
       'date',
       'workplaceName',
       'operationName',
+      'city',
+      'client',
     ];
   }
 
@@ -54,9 +56,9 @@ export class ProgrammingComponent implements OnInit, OnDestroy {
     this.programmingService.getProgramming().subscribe((data) => {
       this.registries = data.map((item: any) => {
         return {
-          ...item.payload.doc.data(),
-          id: item.payload.doc.id,
-          date: new Date(item.payload.doc.data().date.seconds * 1000),
+          ...item,
+          id: item.id,
+          date: new Date(item.date.seconds * 1000),
         };
       });
 

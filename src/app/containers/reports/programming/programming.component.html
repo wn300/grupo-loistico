@@ -216,6 +216,20 @@
                   </td>
                 </ng-container>
 
+                <ng-container matColumnDef="city">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Ciudad </th>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
+                    {{element.city}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="client">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Cliente </th>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
+                    {{element.client}}
+                  </td>
+                </ng-container>
+
                 <ng-container matColumnDef="transport">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Transporte </th>
                   <td mat-cell *matCellDef="let element" class="text-center border-dable">
