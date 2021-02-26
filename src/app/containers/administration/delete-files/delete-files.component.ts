@@ -8,6 +8,7 @@ import * as fileSaver from 'file-saver';
 import { DeleteFilesService } from './services/delete-files.service';
 import { DialogConfirmComponent } from 'src/app/shared/components/dialog-confirm/dialog-confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-delete-files',
@@ -30,7 +31,7 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
     private storage: AngularFireStorage,
     private deleteFilesService: DeleteFilesService,
     public dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {
     this.titlePage = 'Imagenes guardadas';
     this.subTitle = 'Imagenes en bucket de firebase';
@@ -42,6 +43,7 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
       'name',
       'type',
       'date',
+      'hour',
       'url',
       'delete'
     ];
@@ -50,48 +52,46 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
     this.subscription.push(
-      this.deleteFilesService.getReportsByFiles().subscribe(data => {
-        this.imagesMappper = [];
-        this.imagesByReport = data.map((catData: any) => {
-          const objectReport = {
-            id: catData.payload.doc.id,
-            images: catData.payload.doc.data().images,
-            address: catData.payload.doc.data().address,
-            createAt: catData.payload.doc.data().createAt,
-            createBy: catData.payload.doc.data().createBy,
-            description: catData.payload.doc.data().description,
-            type: catData.payload.doc.data().type,
-            status: catData.payload.doc.data().status,
-            location: catData.payload.doc.data().location,
-          };
+      this.deleteFilesService.getPeople().subscribe(dataPeople => {
+        this.subscription.push(this.deleteFilesService.getReportsByFiles().subscribe(data => {
 
-          const imagesBucket = catData.payload.doc.data().images;
-          this.images = [...imagesBucket];
+          this.imagesMappper = [];
+          this.imagesByReport = data.map((catData: any) => {
+            const objectReport = {
+              id: catData.payload.doc.id,
+              ...catData.payload.doc.data()
+            };
 
-          return objectReport;
-        });
+            const imagesBucket = catData.payload.doc.data().images;
+            this.images = [...imagesBucket];
 
-        this.imagesByReport.forEach(imageByReport => {
-          if (imageByReport.images.length > 0) {
-            imageByReport.images.forEach(image => {
-              this.imagesMappper.push({
-                id: imageByReport.id,
-                name: image.split('reports%2F')[1].split('?')[0],
-                url: image,
-                type: imageByReport.type,
-                date: imageByReport.createAt.toDate(),
-                selected: false
+            return objectReport;
+          });
+
+          this.imagesByReport.forEach(imageByReport => {
+            if (imageByReport.images.length > 0) {
+              const person = dataPeople.filter(people => people.identification === parseFloat(imageByReport.email.split('@')[0]))[0];
+              imageByReport.images.forEach(image => {
+                this.imagesMappper.push({
+                  id: imageByReport.id,
+                  name: image.split('reports%2F')[1].split('?')[0],
+                  nameShow: `${person.firstName} ${person.secondName} ${person.firstLastName} ${person.secondLastName}`,
+                  url: image,
+                  type: imageByReport.type,
+                  date: imageByReport.createAt.toDate(),
+                  selected: false
+                });
               });
-            });
-          }
-        });
+            }
+          });
 
-        this.dataSourceImages = new MatTableDataSource(this.imagesMappper);
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 100);
-
+          this.dataSourceImages = new MatTableDataSource(this.imagesMappper);
+          setTimeout(() => {
+            this.isLoading = false;
+          }, 100);
+        }));
       })
     );
   }
@@ -110,6 +110,7 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
       this.imagesDelete.push({
         id: element.id,
         image: element.name,
+        imageShow: element.nameShow,
         url: element.url,
         type: element.type,
         date: element.date
@@ -138,7 +139,7 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
                 xhr.onload = (event) => {
                   const blob = xhr.response;
 
-                  fileSaver.saveAs(blob, `${data.type}_${data.date}_${data.image}`);
+                  fileSaver.saveAs(blob, `${data.type}_${moment(data.date).format('DD/YY/MMMM')}_${data.imageShow}`);
 
                   this.storage.storage.ref(`reports/${data.image}`).delete()
                     .then(resDelete => {
@@ -171,6 +172,7 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
       return {
         id: data.id,
         image: data.name,
+        imageShow: data.nameShow,
         url: data.url,
         type: data.type,
         date: data.date

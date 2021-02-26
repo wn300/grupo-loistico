@@ -1,17 +1,26 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
+import { uniq } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DeleteFilesService {
   public collectionReport = 'reports';
+  public collectionPeople = 'people';
 
   constructor(private firestore: AngularFirestore) { }
 
   getReportsByFiles(): Observable<any> {
     return this.firestore.collection(this.collectionReport).snapshotChanges();
+  }
+
+  getPeople(): Observable<any> {
+    return this.firestore
+      .collection(this.collectionPeople)
+      .valueChanges();
   }
 
   putReportsByFiles(id: string, dataSave: any): Promise<any> {
