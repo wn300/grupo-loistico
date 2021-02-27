@@ -13,6 +13,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { FormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 
 import { AppUsersRoutingModule } from './app-users-routing.module';
 import { AppUsersComponent } from './app-users.component';
@@ -32,6 +33,7 @@ import { AppUsersComponent } from './app-users.component';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     SharedModule,
     MatDatepickerModule,
     MatNativeDateModule,

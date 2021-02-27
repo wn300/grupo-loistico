@@ -3,12 +3,14 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { uniq } from 'lodash';
+import { WorkCenter } from 'src/app/containers/administration/work-center/entity/work-center';
 @Injectable({
   providedIn: 'root'
 })
 export class AppUserService {
   public collectionReport = 'reports';
   public collectionPeople = 'people';
+  public collectionCompany = 'company';
 
   constructor(private firestore: AngularFirestore) { }
 
@@ -53,5 +55,9 @@ export class AppUserService {
           }
         })
       );
+  }
+
+  getCompany(): Observable<any> {
+    return this.firestore.collection(this.collectionCompany).valueChanges();
   }
 }
