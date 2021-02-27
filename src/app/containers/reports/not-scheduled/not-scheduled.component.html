@@ -21,6 +21,9 @@
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
           </div>
+          <div class="col-3" *ngIf="peopleNotScheduled.length > 0 || peopleNotScheduledNew.length > 0">
+            <button mat-raised-button class="w-100" (click)="exportToExcel()">Descargar Excel</button>
+          </div>
         </div>
       </section>
       <section *ngIf="isLoading">

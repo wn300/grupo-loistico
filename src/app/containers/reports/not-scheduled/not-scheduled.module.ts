@@ -8,6 +8,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 import { NotScheduledRoutingModule } from './not-scheduled-routing.module';
 import { NotScheduledComponent } from './not-scheduled.component';
@@ -19,6 +20,7 @@ import { NotScheduledComponent } from './not-scheduled.component';
     MatCardModule,
     MatDatepickerModule,
     MatFormFieldModule,
+    MatButtonModule,
     MatInputModule,
     MatNativeDateModule,
     MatProgressBarModule,

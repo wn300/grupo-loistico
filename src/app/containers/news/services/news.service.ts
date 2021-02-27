@@ -34,7 +34,33 @@ export class NewsService {
       );
   }
 
-  public getAllByDates(startDate: Date, endDate: Date): Observable<New[]> {
+  public getAllByDates(from: Date, to: Date): Observable<New[]> {
+    return this.firestore
+      .collection(this.collectionNews, (ref) =>
+        ref.where('dateStart', '<=', from)
+      )
+      .snapshotChanges()
+      .pipe(
+        map((data) =>
+          data.map((item) => {
+            const _data = item.payload.doc.data() as object;
+            return {
+              ..._data,
+              id: item.payload.doc.id,
+              dateStart: new Date(_data['dateStart'].seconds * 1000),
+              dateEnd: new Date(_data['dateEnd'].seconds * 1000),
+            } as New;
+          })
+        ),
+        map((data: New[]) => {
+          return data.filter((item) => {
+            return to <= item.dateEnd;
+          });
+        })
+      );
+  }
+
+  public getAllByRangeOfDates(startDate: Date, endDate: Date): Observable<New[]> {
     return this.firestore
       .collection(this.collectionNews, (ref) =>
         ref.where('dateStart', '<=', endDate).where('dateStart', '>=', startDate)

@@ -89,7 +89,7 @@ export class NewsComponent implements OnInit, OnDestroy {
 
       this.subscriptions.push(
         combineLatest(
-          this.newsService.getAllByDates(startDate, endDate),
+          this.newsService.getAllByRangeOfDates(startDate, endDate),
           this.typesNewsService.getAll(),
           (news, typesNews) => ({ news, typesNews })
         ).subscribe((data) => {
