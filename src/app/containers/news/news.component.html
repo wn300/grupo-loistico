@@ -9,13 +9,8 @@
               <mat-card-subtitle>{{ subTitle }}</mat-card-subtitle>
             </div>
             <div class="col-auto">
-              <button
-                mat-fab
-                class="bg-color-secundary-corporative"
-                aria-label="add segment"
-                *ngIf="canAdd"
-                (click)="handleAdd()"
-              >
+              <button mat-fab class="bg-color-secundary-corporative" aria-label="add segment" *ngIf="canAdd"
+                (click)="handleAdd()">
                 <mat-icon>add</mat-icon>
               </button>
             </div>
@@ -44,23 +39,19 @@
         </div>
       </div>
       <section *ngIf="!isLoading">
+        <div class="row justify-content-center mt-3">
+          <div class="col-3" *ngIf="news.length > 0">
+            <button mat-raised-button class="w-100" (click)="exportToExcel()">Descargar Excel</button>
+          </div>
+        </div>
         <div class="row mt-3" *ngIf="news.length > 0">
           <div class="col-12">
             <mat-form-field>
               <mat-label>Filtro general</mat-label>
-              <input
-                matInput
-                (keyup)="applyFilter($event)"
-                placeholder="Ej. Consultoria"
-                #input
-              />
+              <input matInput (keyup)="applyFilter($event)" placeholder="Ej. Consultoria" #input />
             </mat-form-field>
             <div class="table-container">
-              <table
-                mat-table
-                [dataSource]="dataSourceNews"
-                class="mat-elevation-z8 w-100"
-              >
+              <table mat-table [dataSource]="dataSourceNews" class="mat-elevation-z8 w-100">
                 <ng-container matColumnDef="id">
                   <th mat-header-cell *matHeaderCellDef>#</th>
                   <td mat-cell *matCellDef="let element; let i = index" class="border-dable text-center">
@@ -112,18 +103,11 @@
                   <th mat-header-cell class="text-center" *matHeaderCellDef>
                     Editar
                   </th>
-                  <td
-                    mat-cell
-                    *matCellDef="let element"
+                  <td mat-cell *matCellDef="let element"
                     class="text-center color-blue cursor-pointer border-dable text-center"
-                    (click)="handleEdit(element)"
-                  >
-                    <mat-icon
-                      aria-hidden="false"
-                      aria-label="Example home icon"
-                    >
-                      create</mat-icon
-                    >
+                    (click)="handleEdit(element)">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon">
+                      create</mat-icon>
                   </td>
                 </ng-container>
 
@@ -131,28 +115,19 @@
                   <th mat-header-cell class="text-center" *matHeaderCellDef>
                     Eliminar
                   </th>
-                  <td
-                    mat-cell
-                    *matCellDef="let element"
-                    class="text-center color-red cursor-pointer border-dable"
-                    (click)="handleDelete(element)"
-                  >
-                    <mat-icon aria-hidden="false" aria-label="Example home icon"
-                      >delete_forever</mat-icon
-                    >
+                  <td mat-cell *matCellDef="let element" class="text-center color-red cursor-pointer border-dable"
+                    (click)="handleDelete(element)">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon">delete_forever</mat-icon>
                   </td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr
-                  mat-row
-                  *matRowDef="let row; columns: displayedColumns; let i = index"
-                ></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index"></tr>
               </table>
             </div>
           </div>
         </div>
-        <div class="row mt-5" *ngIf="types.length == 0">
+        <div class="row mt-5" *ngIf="news.length == 0">
           <div class="col-12 text-center">
             <h2>No se encontrarón registros</h2>
           </div>

@@ -3,6 +3,7 @@ import { TypeNew } from '../../administration/types-news/entity/type-new.entity'
 export interface New {
   id: string;
   peopleId: string;
+  people?: any,
   identification: number;
   name: string;
   typeId: string;

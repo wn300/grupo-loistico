@@ -9,7 +9,6 @@ import { DialogConfirmComponent } from './components/dialog-confirm/dialog-confi
 import { JoinsFirebaseService } from './services/joins-firebase.service';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { FileUploadService } from './services/file-upload.service';
-import { ExportExcelService } from './services/export-excel.service';
 
 @NgModule({
   declarations: [DialogConfirmComponent, FileUploadComponent],
@@ -21,6 +20,6 @@ import { ExportExcelService } from './services/export-excel.service';
     MatIconModule,
     MatProgressBarModule
   ],
-  providers: [JoinsFirebaseService, FileUploadService, ExportExcelService]
+  providers: [JoinsFirebaseService, FileUploadService]
 })
 export class SharedModule { }

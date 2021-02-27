@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { uniq } from 'lodash';
 
 import { New, NewPayload } from '../entity/new.entity';
 
@@ -10,8 +11,9 @@ import { New, NewPayload } from '../entity/new.entity';
 })
 export class NewsService {
   public collectionNews = 'news';
+  public collectionPeople = 'people';
 
-  constructor(private firestore: AngularFirestore) {}
+  constructor(private firestore: AngularFirestore) { }
 
   public getAll(): Observable<New[]> {
     return this.firestore
@@ -41,16 +43,66 @@ export class NewsService {
       .pipe(
         map((data) =>
           data.map((item) => {
-            const _data = item.payload.doc.data() as object;
+            const _data: any = item.payload.doc.data() as object;
             return {
               ..._data,
               id: item.payload.doc.id,
+              people: {},
               dateStart: new Date(_data['dateStart'].seconds * 1000),
               dateEnd: new Date(_data['dateEnd'].seconds * 1000),
             } as New;
           })
         )
       );
+  }
+
+  getOnlyPeopleJoinCompany(): any {
+    const observable = this.firestore
+      .collection(this.collectionPeople)
+      .snapshotChanges()
+      .pipe(
+        switchMap((peopleSnapShot: any) => {
+          const people = peopleSnapShot.map(resultPeople => {
+            return {
+              id: resultPeople.payload.doc.id,
+              ...resultPeople.payload.doc.data(),
+            };
+          });
+
+          const companyIds = uniq(people.map(p => p.company));
+
+          if (companyIds.length > 0) {
+            return combineLatest(
+              of(people),
+              combineLatest(
+                companyIds.map(companyId =>
+                  this.firestore.collection('company',
+                    ref => ref.where('code', '==', companyId)).valueChanges().pipe(
+                      map(company => company[0])
+                    )
+                )
+              )
+            );
+          } else {
+            return ['N'];
+          }
+
+        }),
+        map(([people, company]) => {
+          if (company) {
+            return people.map(peopleResult => {
+              return {
+                ...peopleResult,
+                company: company.find((wc: any) => wc.operationCode === peopleResult.operationCode)
+              };
+            });
+          } else {
+            return [];
+          }
+        })
+      );
+
+    return observable;
   }
 
   public create(data: NewPayload): Promise<any> {

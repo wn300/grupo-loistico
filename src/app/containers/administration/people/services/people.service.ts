@@ -86,7 +86,6 @@ export class PeopleService {
       );
   }
 
-
   getCordinators(): Observable<any> {
     return this.firestore.collection(this.collectionPeople, ref => ref.where('position', '==', 'Coordinador')).snapshotChanges();
   }
