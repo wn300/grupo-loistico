@@ -55,6 +55,55 @@ export class ProgrmmingService {
     );
   }
 
+  getOnlyPeopleJoinCompany(): any {
+    const observable = this.firestore
+      .collection('people')
+      .snapshotChanges()
+      .pipe(
+        switchMap((peopleSnapShot: any) => {
+          const people = peopleSnapShot.map(resultPeople => {
+            return {
+              id: resultPeople.payload.doc.id,
+              ...resultPeople.payload.doc.data(),
+            };
+          });
+
+          const companyIds = uniq(people.map(p => p.company));
+
+          if (companyIds.length > 0) {
+            return combineLatest(
+              of(people),
+              combineLatest(
+                companyIds.map(companyId =>
+                  this.firestore.collection('company',
+                    ref => ref.where('code', '==', companyId)).valueChanges().pipe(
+                      map(company => company[0])
+                    )
+                )
+              )
+            );
+          } else {
+            return ['N'];
+          }
+
+        }),
+        map(([people, company]) => {
+          if (company) {
+            return people.map(peopleResult => {
+              return {
+                ...peopleResult,
+                company: company.find((wc: any) => wc.operationCode === peopleResult.operationCode)
+              };
+            });
+          } else {
+            return [];
+          }
+        })
+      );
+
+    return observable;
+  }
+
   getPrograming(startDate: Date, endDate: Date): Observable<any> {
     return this.firestore.collection(this.collectionProgramming, (ref) =>
       ref.where('date', '<=', endDate).where('date', '>=', startDate).orderBy('date', 'asc'),

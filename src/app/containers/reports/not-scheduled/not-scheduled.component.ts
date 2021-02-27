@@ -160,123 +160,129 @@ export class NotScheduledComponent implements OnInit, OnDestroy {
     this.dataForExcelWith = [];
 
     const onlyDateNow = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-    this.peopleNotScheduled.forEach((row: any) => {
-      const newObject = {
-        'Encab: Empresa': row.company.name,
-        'Encab: Tipo Documento': '',
-        'Encab: Prefijo': '',
-        'Encab: Documento Número': row.identification,
-        'Encab: Fecha': moment(onlyDateNow).format('DD/MM/YYYY'),
-        'Encab: Tercero Interno': '',
-        'Encab: Tercero Externo': '',
-        'Encab: Nota': '',
-        'Encab: Anulado': '',
-        'Detalle: Empleado': row.names,
-        'Detalle: Concepto': '',
-        'Detalle: Fecha': this.dateFilter,
-        'Detalle: Cantidad': '',
-        'Detalle: Valor': '',
-        'Detalle: Unidad Medida': '',
-        'Detalle: Centro Costos': '',
-        'Detalle: Nota': '',
-        'Detalle: Proceso': '',
-        'Detalle: Pasa a Nómina': '',
-        'Detalle: Aprobado': '',
-        'Detalle: Usuario Aprueba': '',
-        'Detalle: Código Centro Costos': ''
+
+    if (this.peopleNotScheduled.length > 0) {
+      this.peopleNotScheduled.forEach((row: any) => {
+        const newObject = {
+          'Encab: Empresa': row.company.name,
+          'Encab: Tipo Documento': '',
+          'Encab: Prefijo': '',
+          'Encab: Documento Número': row.identification,
+          'Encab: Fecha': moment(onlyDateNow).format('DD/MM/YYYY'),
+          'Encab: Tercero Interno': '',
+          'Encab: Tercero Externo': '',
+          'Encab: Nota': '',
+          'Encab: Anulado': '',
+          'Detalle: Empleado': row.names,
+          'Detalle: Concepto': '',
+          'Detalle: Fecha': this.dateFilter,
+          'Detalle: Cantidad': '',
+          'Detalle: Valor': '',
+          'Detalle: Unidad Medida': '',
+          'Detalle: Centro Costos': '',
+          'Detalle: Nota': '',
+          'Detalle: Proceso': '',
+          'Detalle: Pasa a Nómina': '',
+          'Detalle: Aprobado': '',
+          'Detalle: Usuario Aprueba': '',
+          'Detalle: Código Centro Costos': ''
+        };
+        this.dataForExcel.push(Object.values(newObject));
+      });
+
+      const reportData = {
+        title: `Reporte de no programados sin novedad ${this.dateFilter}`,
+        data: this.dataForExcel,
+        headers: [
+          'Encab: Empresa',
+          'Encab: Tipo Documento',
+          'Encab: Prefijo',
+          'Encab: Documento Número',
+          'Encab: Fecha',
+          'Encab: Tercero Interno',
+          'Encab: Tercero Externo',
+          'Encab: Nota',
+          'Encab: Anulado',
+          'Detalle: Empleado',
+          'Detalle: Concepto',
+          'Detalle: Fecha',
+          'Detalle: Cantidad',
+          'Detalle: Valor',
+          'Detalle: Unidad Medida',
+          'Detalle: Centro Costos',
+          'Detalle: Nota',
+          'Detalle: Proceso',
+          'Detalle: Pasa a Nómina',
+          'Detalle: Aprobado',
+          'Detalle: Usuario Aprueba',
+          'Detalle: Código Centro Costos',
+        ]
       };
-      this.dataForExcel.push(Object.values(newObject));
-    });
 
-    const reportData = {
-      title: `Reporte de no programados sin novedad ${this.dateFilter}`,
-      data: this.dataForExcel,
-      headers: [
-        'Encab: Empresa',
-        'Encab: Tipo Documento',
-        'Encab: Prefijo',
-        'Encab: Documento Número',
-        'Encab: Fecha',
-        'Encab: Tercero Interno',
-        'Encab: Tercero Externo',
-        'Encab: Nota',
-        'Encab: Anulado',
-        'Detalle: Empleado',
-        'Detalle: Concepto',
-        'Detalle: Fecha',
-        'Detalle: Cantidad',
-        'Detalle: Valor',
-        'Detalle: Unidad Medida',
-        'Detalle: Centro Costos',
-        'Detalle: Nota',
-        'Detalle: Proceso',
-        'Detalle: Pasa a Nómina',
-        'Detalle: Aprobado',
-        'Detalle: Usuario Aprueba',
-        'Detalle: Código Centro Costos',
-      ]
-    };
+      this.exportExcel(reportData, 'Sin Novedad');
+    }
 
-    this.exportExcel(reportData, 'Sin Novedad');
+    if (this.peopleNotScheduledNew.length > 0) {
+      this.peopleNotScheduledNew.forEach((row: any) => {
+        const newObjectWith = {
+          'Encab: Empresa': row.company.name,
+          'Encab: Tipo Documento': '',
+          'Encab: Prefijo': '',
+          'Encab: Documento Número': row.identification,
+          'Encab: Fecha': moment(onlyDateNow).format('DD/MM/YYYY'),
+          'Encab: Tercero Interno': '',
+          'Encab: Tercero Externo': '',
+          'Encab: Nota': '',
+          'Encab: Anulado': '',
+          'Detalle: Empleado': row.names,
+          'Detalle: Concepto': '',
+          'Detalle: Fecha': this.dateFilter,
+          'Detalle: Cantidad': '',
+          'Detalle: Valor': '',
+          'Detalle: Unidad Medida': '',
+          'Detalle: Centro Costos': '',
+          'Detalle: Nota': '',
+          'Detalle: Proceso': '',
+          'Detalle: Pasa a Nómina': '',
+          'Detalle: Aprobado': '',
+          'Detalle: Usuario Aprueba': '',
+          'Detalle: Código Centro Costos': ''
+        };
+        this.dataForExcelWith.push(Object.values(newObjectWith));
+      });
 
-    this.peopleNotScheduledNew.forEach((row: any) => {
-      const newObjectWith = {
-        'Encab: Empresa': row.company.name,
-        'Encab: Tipo Documento': '',
-        'Encab: Prefijo': '',
-        'Encab: Documento Número': row.identification,
-        'Encab: Fecha': moment(onlyDateNow).format('DD/MM/YYYY'),
-        'Encab: Tercero Interno': '',
-        'Encab: Tercero Externo': '',
-        'Encab: Nota': '',
-        'Encab: Anulado': '',
-        'Detalle: Empleado': row.names,
-        'Detalle: Concepto': '',
-        'Detalle: Fecha': this.dateFilter,
-        'Detalle: Cantidad': '',
-        'Detalle: Valor': '',
-        'Detalle: Unidad Medida': '',
-        'Detalle: Centro Costos': '',
-        'Detalle: Nota': '',
-        'Detalle: Proceso': '',
-        'Detalle: Pasa a Nómina': '',
-        'Detalle: Aprobado': '',
-        'Detalle: Usuario Aprueba': '',
-        'Detalle: Código Centro Costos': ''
+      const reportDataWith = {
+        title: `Reporte de no programados con novedad ${this.dateFilter}`,
+        data: this.dataForExcelWith,
+        headers: [
+          'Encab: Empresa',
+          'Encab: Tipo Documento',
+          'Encab: Prefijo',
+          'Encab: Documento Número',
+          'Encab: Fecha',
+          'Encab: Tercero Interno',
+          'Encab: Tercero Externo',
+          'Encab: Nota',
+          'Encab: Anulado',
+          'Detalle: Empleado',
+          'Detalle: Concepto',
+          'Detalle: Fecha',
+          'Detalle: Cantidad',
+          'Detalle: Valor',
+          'Detalle: Unidad Medida',
+          'Detalle: Centro Costos',
+          'Detalle: Nota',
+          'Detalle: Proceso',
+          'Detalle: Pasa a Nómina',
+          'Detalle: Aprobado',
+          'Detalle: Usuario Aprueba',
+          'Detalle: Código Centro Costos',
+        ]
       };
-      this.dataForExcelWith.push(Object.values(newObjectWith));
-    });
 
-    const reportDataWith = {
-      title: `Reporte de no programados con novedad ${this.dateFilter}`,
-      data: this.dataForExcelWith,
-      headers: [
-        'Encab: Empresa',
-        'Encab: Tipo Documento',
-        'Encab: Prefijo',
-        'Encab: Documento Número',
-        'Encab: Fecha',
-        'Encab: Tercero Interno',
-        'Encab: Tercero Externo',
-        'Encab: Nota',
-        'Encab: Anulado',
-        'Detalle: Empleado',
-        'Detalle: Concepto',
-        'Detalle: Fecha',
-        'Detalle: Cantidad',
-        'Detalle: Valor',
-        'Detalle: Unidad Medida',
-        'Detalle: Centro Costos',
-        'Detalle: Nota',
-        'Detalle: Proceso',
-        'Detalle: Pasa a Nómina',
-        'Detalle: Aprobado',
-        'Detalle: Usuario Aprueba',
-        'Detalle: Código Centro Costos',
-      ]
-    };
+      this.exportExcel(reportDataWith, 'Con Novedad');
+    }
 
-    this.exportExcel(reportDataWith, 'Con Novedad');
   }
 
   exportExcel(excelData: any, message: string): any {

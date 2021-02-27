@@ -60,7 +60,7 @@ export class NewsComponent implements OnInit, OnDestroy {
       'dateEnd',
       'observations',
     ];
-
+    this.people = [];
     this.newsService.getOnlyPeopleJoinCompany()
       .subscribe(data => {
         this.people = data;

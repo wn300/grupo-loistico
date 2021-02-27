@@ -68,6 +68,9 @@
           <div class="col-3" *ngIf="print.length > 0">
             <button mat-raised-button class="w-100" (click)="exportToExcel()">Descargar Excel</button>
           </div>
+          <div class="col-3" *ngIf="print.length > 0">
+            <button mat-raised-button color="primary" class="w-100" (click)="exportToExcelHourExtras()">Descargar World Office</button>
+          </div>
         </div>
         <div class="row" *ngIf="print.length > 0">
           <div class="col-12">
