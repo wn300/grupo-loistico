@@ -28,6 +28,23 @@ export class TypesNewsService {
       );
   }
 
+  public getAllByDates(): Observable<TypeNew[]> {
+    return this.firestore
+      .collection(this.collectionTypesNews)
+      .snapshotChanges()
+      .pipe(
+        map((data) =>
+          data.map((item) => {
+            const _data = item.payload.doc.data() as object;
+            return {
+              ..._data,
+              id: item.payload.doc.id,
+            } as TypeNew;
+          })
+        )
+      );
+  }
+
   public create(data: TypeNewPayload): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       this.firestore

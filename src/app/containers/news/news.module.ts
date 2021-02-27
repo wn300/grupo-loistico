@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import {
   NgxMatDatetimePickerModule,
@@ -30,6 +30,7 @@ import { MatSelectModule } from '@angular/material/select';
   declarations: [NewsComponent, DialogFormComponent],
   imports: [
     CommonModule,
+    FormsModule,
     MatAutocompleteModule,
     MatCardModule,
     MatButtonModule,

@@ -86,8 +86,6 @@ export class ProgrammingComponent implements OnInit {
 
       this.progrmmingService.getPrograming(startDate, endDate)
         .subscribe(programmings => {
-          console.log(programmings);
-
           this.programmingWithoutReport = programmings.map(programming => {
             const objectReturn = {
               ...programming,

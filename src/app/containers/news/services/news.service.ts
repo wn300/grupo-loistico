@@ -32,10 +32,10 @@ export class NewsService {
       );
   }
 
-  public getAllByDates(from: Date, to: Date): Observable<New[]> {
+  public getAllByDates(startDate: Date, endDate: Date): Observable<New[]> {
     return this.firestore
       .collection(this.collectionNews, (ref) =>
-        ref.where('dateStart', '<=', from)
+        ref.where('dateStart', '<=', endDate).where('dateStart', '>=', startDate)
       )
       .snapshotChanges()
       .pipe(
@@ -49,12 +49,7 @@ export class NewsService {
               dateEnd: new Date(_data['dateEnd'].seconds * 1000),
             } as New;
           })
-        ),
-        map((data: New[]) => {
-          return data.filter((item) => {
-            return to <= item.dateEnd;
-          });
-        })
+        )
       );
   }
 

@@ -13,6 +13,7 @@ import { TypesNewsService } from '../administration/types-news/services/types-ne
 import { TypeNew } from '../administration/types-news/entity/type-new.entity';
 import { FUNCTIONS, PermissionsService } from 'src/app/core/services/permissions.service';
 import { MODULE } from 'src/app/constants/app.constants';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-news',
@@ -28,6 +29,8 @@ export class NewsComponent implements OnInit, OnDestroy {
   public displayedColumns: string[] = [];
   public dataSourceNews;
   public isLoading: boolean = false;
+  public startDate: Date;
+  public endDate: Date;
 
   private readonly _module: MODULE = MODULE.news;
 
@@ -38,6 +41,11 @@ export class NewsComponent implements OnInit, OnDestroy {
     private newsService: NewsService,
     private permissionsService: PermissionsService
   ) {
+    const onlyDateNow = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    this.startDate = moment(onlyDateNow).toDate();
+    this.endDate = moment(onlyDateNow).toDate();
+
+
     this.titlePage = 'Novedades';
     this.subTitle = 'Novedades registradas en el sistema';
     this.displayedColumns = [
@@ -52,34 +60,55 @@ export class NewsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscriptions.push(
-      combineLatest(
-        this.newsService.getAll(),
-        this.typesNewsService.getAll(),
-        (news, typesNews) => ({ news, typesNews })
-      ).subscribe((data) => {
-        this.news = _.orderBy(data.news, ['dateStart'], ['desc']);
-        this.types = data.typesNews;
+    this.getReport();
+  }
 
-        this.news = this.news.map((newItem) => {
-          return {
-            ...newItem,
-            type: this.types.find((type) => type.id === newItem.typeId),
-          };
-        });
+  getReport(): void {
+    this.displayedColumns = [
+      'id',
+      'identification',
+      'name',
+      'type',
+      'dateStart',
+      'dateEnd',
+      'observations',
+    ];
+    this.isLoading = true;
+    if (this.startDate !== null && this.endDate !== null) {
 
-        this.dataSourceNews = new MatTableDataSource(this.news);
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 100);
-      })
-    );
+      const startDate = moment(this.startDate).toDate();
+      const endDate = moment(this.endDate).add(23, 'hours').add(59, 'minutes').add(59, 'seconds').toDate();
+      console.log(startDate, endDate);
 
-    if (this.permissionsService.canActiveFunction(this._module, FUNCTIONS.update)) {
-      this.displayedColumns.push('update');
-    }
-    if (this.permissionsService.canActiveFunction(this._module, FUNCTIONS.delete)) {
-      this.displayedColumns.push('delete');
+      this.subscriptions.push(
+        combineLatest(
+          this.newsService.getAllByDates(startDate, endDate),
+          this.typesNewsService.getAll(),
+          (news, typesNews) => ({ news, typesNews })
+        ).subscribe((data) => {
+          this.news = _.orderBy(data.news, ['dateStart'], ['desc']);
+          this.types = data.typesNews;
+
+          this.news = this.news.map((newItem) => {
+            return {
+              ...newItem,
+              type: this.types.find((type) => type.id === newItem.typeId),
+            };
+          });
+
+          this.dataSourceNews = new MatTableDataSource(this.news);
+          setTimeout(() => {
+            this.isLoading = false;
+          }, 100);
+        })
+      );
+
+      if (this.permissionsService.canActiveFunction(this._module, FUNCTIONS.update)) {
+        this.displayedColumns.push('update');
+      }
+      if (this.permissionsService.canActiveFunction(this._module, FUNCTIONS.delete)) {
+        this.displayedColumns.push('delete');
+      }
     }
   }
 
