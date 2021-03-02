@@ -73,7 +73,8 @@ export class ProgrammingComponent implements OnInit {
       'positionEntry',
       'positionExit',
       'addressEntry',
-      'addressExit'
+      'addressExit',
+      'update'
     ];
 
     this.isLoading = true;
@@ -575,21 +576,9 @@ export class ProgrammingComponent implements OnInit {
       .subscribe((resultDialogForm: any) => {
         console.log(resultDialogForm);
 
-        // if (resultDialogFormPeople) {
-        //   const newElement = {
-        //     name: element.name,
-        //     identification: element.identification,
-        //     city: element.city,
-        //     contact: element.contact,
-        //     phone: element.phone,
-        //     email: element.email
-        //   };
-        //   const isEqual = _.isEqual(newElement, resultDialogFormPeople.value);
+        if (resultDialogForm) {
 
-        //   if (!isEqual) {
-        //     this.updatePeople(element.id, resultDialogFormPeople.value);
-        //   }
-        // }
+        }
       });
   }
 
