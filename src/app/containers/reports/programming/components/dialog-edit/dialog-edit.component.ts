@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogFormComponent } from 'src/app/containers/administration/client/components/dialog-form/dialog-form.component';
 
@@ -16,20 +17,24 @@ export class DialogEditComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<DialogFormComponent>,
     @Inject(MAT_DIALOG_DATA) public form: any) {
     const onlyDateNow = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    console.log(this.form.data.dateInit, this.form.data.dateEnd);
 
     this.objectEdit = {
       dialogForm: {
         startDate: this.form.data.dateInit === 'No Registra'
           ? moment(onlyDateNow).toDate()
-          : this.form.data.dateEnd,
+          : _.clone(new Date(this.form.data.dateInit)),
         endDate: this.form.data.dateEnd === 'No Registra'
           ? moment(onlyDateNow).toDate()
-          : this.form.data.dateEnd,
-        observation: this.form.data.observation,
+          : _.clone(this.form.data.dateEnd),
+        observation: _.clone(this.form.data.observation),
         reason: '',
       },
       ...this.form.data
     };
+
+    console.log(this.objectEdit);
+
   }
 
   ngOnInit(): void {

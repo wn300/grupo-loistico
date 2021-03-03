@@ -13,10 +13,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { ProgrammingRoutingModule } from './programming-routing.module';
 import { ProgrammingComponent } from './programming.component';
 import { DialogEditComponent } from './components/dialog-edit/dialog-edit.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [ProgrammingComponent, DialogEditComponent],
@@ -38,6 +40,8 @@ import { DialogEditComponent } from './components/dialog-edit/dialog-edit.compon
     NgxMatNativeDateModule,
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
+    SharedModule,
+    MatSnackBarModule
   ]
 })
 export class ProgrammingModule { }
