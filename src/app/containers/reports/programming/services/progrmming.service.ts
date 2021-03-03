@@ -4,7 +4,6 @@ import { combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { uniq } from 'lodash';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AnyARecord } from 'dns';
 
 @Injectable({
   providedIn: 'root'
