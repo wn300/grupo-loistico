@@ -767,7 +767,7 @@ export class ProgrammingComponent implements OnInit {
                       this.updateReportById(resultDialogForm.reportEnd.id, objectSend, resultDialogForm, 'Salida', people);
                     }
                   }
-                }, 200);
+                }, 1000);
 
               });
           });
