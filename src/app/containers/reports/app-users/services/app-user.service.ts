@@ -44,7 +44,7 @@ export class AppUserService {
         }),
         map(([reports, people]) => {
           if (people) {
-            console.log(people.filter(peop => peop.undefined === true));
+            console.log('People not found  report apk', people.filter(peop => peop.undefined === true));
             return reports.map(report => {
               return {
                 ...report,
