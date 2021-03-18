@@ -33,7 +33,7 @@ export class AppUserService {
                 usersIds.map(usersId =>
                   this.firestore.collection(this.collectionPeople,
                     ref => ref.where('uid', '==', usersId)).valueChanges().pipe(
-                      map(people => people[0])
+                      map(people => people[0] === undefined ? { undefined: true, uid: usersId } : people[0])
                     )
                 )
               )
@@ -44,6 +44,7 @@ export class AppUserService {
         }),
         map(([reports, people]) => {
           if (people) {
+            console.log(people.filter(peop => peop.undefined === true));
             return reports.map(report => {
               return {
                 ...report,

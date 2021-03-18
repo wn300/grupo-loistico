@@ -75,15 +75,17 @@ export class AppUsersComponent implements OnInit, OnDestroy {
 
       return this.reportsService.getReportsByFilesByDates(startDate, endDate)
         .subscribe(data => {
-          this.reports = data.map(dataMapper => {
-            return {
-              ...dataMapper,
-              createByIdentification: dataMapper.people.identification,
-              createByNames: `${dataMapper.people.firstName} ${dataMapper.people.secondName} ${dataMapper.people.firstLastName} ${dataMapper.people.secondLastName}`,
-              position: dataMapper.people.position,
-              company: this.companies.filter(filwc => filwc.code === dataMapper.people.company)[0],
-              date: dataMapper.createAt.toDate(),
-            };
+          this.reports = data
+          .filter(filt => filt.people.undefined === undefined)
+          .map(dataMapper => {
+              return {
+                ...dataMapper,
+                createByIdentification: dataMapper.people.identification,
+                createByNames: `${dataMapper.people.firstName} ${dataMapper.people.secondName} ${dataMapper.people.firstLastName} ${dataMapper.people.secondLastName}`,
+                position: dataMapper.people.position,
+                company: this.companies.filter(filwc => filwc.code === dataMapper.people.company)[0],
+                date: dataMapper.createAt.toDate(),
+              };    
           });
 
           this.dataSourceReports = new MatTableDataSource(this.reports);
