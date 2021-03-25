@@ -64,7 +64,7 @@ export class DialogFormComponent implements OnInit {
       'Independiente'
     ];
     this.postions = [
-      'Auxiliar operativo',
+      'Auxiliar Operativo',
       'Supernumerario',
       'Coordinador',
       'Administrativo'
