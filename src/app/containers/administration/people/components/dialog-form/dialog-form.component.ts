@@ -244,7 +244,7 @@ export class DialogFormComponent implements OnInit {
   }
 
   changePosition(position: string): any {
-    if (position === 'Supernumerario') {
+    if (position === 'Supernumerario' || position === 'Auxiliar Operativo') {
       this.formPeople.controls.email.setValue(`${this.formPeople.value.identification}@whatever.com`);
       this.formPeople.controls.manager.setValue('');
     } else {
