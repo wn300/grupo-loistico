@@ -26,6 +26,8 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
   public displayedColumns: string[];
   public isLoading: boolean;
   public dataSourceImages;
+  public startDate: Date;
+  public endDate: Date;
 
   constructor(
     private storage: AngularFireStorage,
@@ -33,6 +35,10 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private snackBar: MatSnackBar,
   ) {
+    const onlyDateNow = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    this.startDate = moment(onlyDateNow).toDate();
+    this.endDate = moment(onlyDateNow).toDate();
+
     this.titlePage = 'Imagenes guardadas';
     this.subTitle = 'Imagenes en bucket de firebase';
     this.images = [];
@@ -52,41 +58,56 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription.push(this.deleteFilesService.getReportsByFilesJoinPeople().subscribe(data => {
+    this.getReport();
+  }
 
-      this.imagesMappper = [];
-      this.imagesByReport = data.map((catData: any) => {
-        const objectReport = {
-          ...catData
-        };
+  getReport() {
+    this.isLoading = true;
+    if (this.startDate !== null && this.endDate !== null) {
+      const startDate = moment(this.startDate).toDate();
+      const endDate = moment(this.endDate).add(23, 'hours').add(59, 'minutes').add(59, 'seconds').toDate();
 
-        const imagesBucket = catData.images;
-        this.images = [...imagesBucket];
+      this.subscription.push(this.deleteFilesService.getReportsByFilesJoinPeople(startDate, endDate)
+        .subscribe(data => {
 
-        return objectReport;
-      });
+          this.imagesMappper = [];
+          this.imagesByReport = data.map((catData: any) => {
+            console.log(catData);
 
-      this.imagesByReport.forEach(imageByReport => {
-        if (imageByReport.images.length > 0) {
-          imageByReport.images.forEach(image => {
-            this.imagesMappper.push({
-              id: imageByReport.id,
-              name: image.split('reports%2F')[1].split('?')[0],
-              nameShow: `${imageByReport.people.firstName} ${imageByReport.people.secondName} ${imageByReport.people.firstLastName} ${imageByReport.people.secondLastName}`,
-              url: image,
-              type: imageByReport.type,
-              date: imageByReport.createAt.toDate(),
-              selected: false
-            });
+            const objectReport = {
+              ...catData
+            };
+
+            const imagesBucket = catData.images;
+            this.images = [...imagesBucket];
+
+            return objectReport;
           });
-        }
-      });
 
-      this.dataSourceImages = new MatTableDataSource(this.imagesMappper);
-      setTimeout(() => {
-        this.isLoading = false;
-      }, 100);
-    }));
+          this.imagesByReport.forEach(imageByReport => {
+            if (imageByReport.images.length > 0) {
+              imageByReport.images.forEach(image => {
+                this.imagesMappper.push({
+                  id: imageByReport.id,
+                  name: image.split('reports%2F')[1].split('?')[0],
+                  nameShow: `${imageByReport.people.firstName} ${imageByReport.people.secondName} ${imageByReport.people.firstLastName} ${imageByReport.people.secondLastName}`,
+                  url: image,
+                  type: imageByReport.type,
+                  date: imageByReport.createAt.toDate(),
+                  selected: false
+                });
+              });
+            }
+          });
+
+          this.dataSourceImages = new MatTableDataSource(this.imagesMappper);
+          setTimeout(() => {
+            this.isLoading = false;
+          }, 1000);
+        }));
+
+    }
+
   }
 
   goToImage(image: string): void {

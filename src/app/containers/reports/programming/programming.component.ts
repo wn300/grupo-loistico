@@ -77,6 +77,8 @@ export class ProgrammingComponent implements OnInit {
       'positionExit',
       'addressEntry',
       'addressExit',
+      'reason',
+      'userUpdate',
       'update'
     ];
 
@@ -175,7 +177,8 @@ export class ProgrammingComponent implements OnInit {
               this.print = [];
 
               this.print = _.orderBy([..._.differenceBy(this.programmingWithoutReport, this.reports, 'id'), ...this.reports], ['dateProgramming'], ['asc']);
-
+              console.log(this.print);
+              
               this.dataSourceReports = new MatTableDataSource(this.print);
 
               setTimeout(() => {
@@ -390,6 +393,8 @@ export class ProgrammingComponent implements OnInit {
     this.dataForExcel = [];
     const print = _.orderBy([..._.differenceBy(this.programmingWithoutReport, this.reports, 'id'), ...this.reports], ['dateProgramming'], ['asc']);
     print.forEach((row: any) => {
+      console.log(row);
+      
       const newObject = {
         Identificacion: row.identification,
         Nombre: row.name,
@@ -400,7 +405,7 @@ export class ProgrammingComponent implements OnInit {
         'Fecha fin': row.dateEnd === 'No Registra' ? row.dateEnd : moment(row.dateEnd).format('DD/MM/YYYY'),
         'Hora fin': row.dateEnd === 'No Registra' ? row.dateEnd : moment(row.dateEnd).format('HH:mm:ss'),
         Horas: row.hours,
-        Observacion: row.observations,
+        Observacion: row.dialogForm ? row.dialogForm.reason : row.observations,
         Solicitante: row.applicantName,
         'Id centro de trabajo': row.identificationWorckCenter,
         'Centro de trabajo': row.workCenter,
@@ -411,8 +416,8 @@ export class ProgrammingComponent implements OnInit {
         'Localizacion salida': row.positionExit,
         'Direccion entrada': row.addressEntry,
         'Direccion salida': row.addressExit,
-        Modificado: '',
-        'Motivo modificacion': ''
+        'Motivo modificacion': row.dialogForm ? row.dialogForm.reason : '',
+        'Modificado por': (row.dialogForm && row.dialogForm.userUpdate) ? row.dialogForm.userUpdate : '',
       };
       this.dataForExcel.push(Object.values(newObject));
     });
@@ -441,8 +446,8 @@ export class ProgrammingComponent implements OnInit {
         'Localizacion salida',
         'Direccion entrada',
         'Direccion salida',
-        'Modificado',
-        'Motivo modificacion'
+        'Motivo modificacion',
+        'Modificado por',
       ]
     };
 
@@ -578,6 +583,8 @@ export class ProgrammingComponent implements OnInit {
     dialogRef.afterClosed()
       .subscribe((resultDialogForm: any) => {
         if (resultDialogForm) {
+          console.log(resultDialogForm);
+          
           this.progrmmingService.currentUser.subscribe(data => {
             this.progrmmingService.getOnlyPeopleByUID(data.uid)
               .subscribe(peopleUpdate => {

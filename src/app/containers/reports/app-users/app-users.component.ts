@@ -250,8 +250,8 @@ export class AppUsersComponent implements OnInit, OnDestroy {
       case 'Supernumerario':
         this.dataSourceReports = new MatTableDataSource(this.reports.filter(data => data.position === 'Supernumerario'));
         break;
-      case 'Operador Logistico':
-        this.dataSourceReports = new MatTableDataSource(this.reports.filter(data => data.position === 'Operador Logistico'));
+      case 'Auxiliar Operativo':
+        this.dataSourceReports = new MatTableDataSource(this.reports.filter(data => data.position === 'Auxiliar Operativo'));
         break;
     }
 

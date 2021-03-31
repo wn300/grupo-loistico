@@ -72,7 +72,8 @@
             <button mat-raised-button class="w-100" (click)="exportToExcel()">Descargar Excel</button>
           </div>
           <div class="col-3" *ngIf="print.length > 0">
-            <button mat-raised-button color="primary" class="w-100" (click)="exportToExcelHourExtras()">Descargar World Office</button>
+            <button mat-raised-button color="primary" class="w-100" (click)="exportToExcelHourExtras()">Descargar World
+              Office</button>
           </div>
         </div>
         <div class="row" *ngIf="print.length > 0">
@@ -183,7 +184,12 @@
                 <ng-container matColumnDef="observations">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Observación </th>
                   <td mat-cell *matCellDef="let element" class="text-center border-dable">
-                    {{element.observations}}
+                    <div *ngIf="element.dialogForm">
+                      {{element.dialogForm.observation}}
+                    </div>
+                    <div *ngIf="!element.dialogForm">
+                      {{element.observations}}
+                    </div>
                   </td>
                 </ng-container>
 
@@ -270,6 +276,31 @@
                     {{element.addressExit}}
                   </td>
                 </ng-container>
+
+                <ng-container matColumnDef="reason">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Motivo de modificación </th>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
+                    <div *ngIf="element.dialogForm">
+                      {{element.dialogForm.reason}}
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="userUpdate">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Usuario modificación </th>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
+                    <div *ngIf="element.dialogForm &&  element.dialogForm.userUpdate">
+                      {{element.dialogForm.userUpdate}}
+                    </div>
+                  </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="dateUpdate">
+                  <th mat-header-cell class="text-center" *matHeaderCellDef> Motivo de modificación </th>
+                  <td mat-cell *matCellDef="let element" class="text-center border-dable">
+                    <div *ngIf="element.dialogForm &&  element.dialogForm.dateUpdate">
+                      {{element.dialogForm.dateUpdate | date: 'dd/MM/yyyy'}}
+                    </div>
+                  </td>
+                </ng-container> -->
 
                 <ng-container matColumnDef="update">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Editar </th>
