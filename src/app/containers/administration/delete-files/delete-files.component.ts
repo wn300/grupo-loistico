@@ -103,7 +103,7 @@ export class DeleteFilesComponent implements OnInit, OnDestroy {
           this.dataSourceImages = new MatTableDataSource(this.imagesMappper);
           setTimeout(() => {
             this.isLoading = false;
-          }, 100);
+          }, 1000);
         }));
 
     }
