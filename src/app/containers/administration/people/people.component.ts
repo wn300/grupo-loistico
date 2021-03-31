@@ -49,38 +49,45 @@ export class PeopleComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.peopleService.getCompanies()
+      .subscribe((companies) => {
+        this.peopleService.getPeople()
+          .subscribe(dataPeople => {
+            console.log(companies);
 
-    this.peopleService.getPeople()
-      .subscribe(dataPeople => {
-        this.people = dataPeople.map((catData: any) => {
-          return {
-            id: catData.payload.doc.id,
-            identification: catData.payload.doc.data().identification,
-            names: `${catData.payload.doc.data().firstName} ${catData.payload.doc.data().secondName} ${catData.payload.doc.data().firstLastName} ${catData.payload.doc.data().secondLastName}`,
-            date: catData.payload.doc.data().dateAdmission.toDate(),
-            company: catData.payload.doc.data().company,
-            phone: catData.payload.doc.data().phone,
-            memberShip: catData.payload.doc.data().memberShip,
-            email: catData.payload.doc.data().email,
-            position: catData.payload.doc.data().position,
-            status: catData.payload.doc.data().status,
-            city: catData.payload.doc.data().city,
-            dayOfRest: catData.payload.doc.data().dayOfRest,
-            address: catData.payload.doc.data().address,
-            dateAdmission: catData.payload.doc.data().dateAdmission.toDate(),
-            firstName: catData.payload.doc.data().firstName,
-            secondName: catData.payload.doc.data().secondName,
-            firstLastName: catData.payload.doc.data().firstLastName,
-            secondLastName: catData.payload.doc.data().secondLastName,
-            manager: catData.payload.doc.data().manager,
-            uid: catData.payload.doc.data().uid,
-          };
-        });
-        this.dataSourcePeople = new MatTableDataSource(this.people);
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 100);
-      });
+            this.people = dataPeople.map((catData: any) => {
+              return {
+                id: catData.payload.doc.id,
+                identification: catData.payload.doc.data().identification,
+                names: `${catData.payload.doc.data().firstName} ${catData.payload.doc.data().secondName} ${catData.payload.doc.data().firstLastName} ${catData.payload.doc.data().secondLastName}`,
+                date: catData.payload.doc.data().dateAdmission.toDate(),
+                company: companies.filter(filt => filt.code === catData.payload.doc.data().company),
+                phone: catData.payload.doc.data().phone,
+                memberShip: catData.payload.doc.data().memberShip,
+                email: catData.payload.doc.data().email,
+                position: catData.payload.doc.data().position,
+                status: catData.payload.doc.data().status,
+                city: catData.payload.doc.data().city,
+                dayOfRest: catData.payload.doc.data().dayOfRest,
+                address: catData.payload.doc.data().address,
+                dateAdmission: catData.payload.doc.data().dateAdmission.toDate(),
+                firstName: catData.payload.doc.data().firstName,
+                secondName: catData.payload.doc.data().secondName,
+                firstLastName: catData.payload.doc.data().firstLastName,
+                secondLastName: catData.payload.doc.data().secondLastName,
+                manager: catData.payload.doc.data().manager,
+                uid: catData.payload.doc.data().uid,
+              };
+            });
+            console.log(this.people);
+
+            this.dataSourcePeople = new MatTableDataSource(this.people);
+            setTimeout(() => {
+              this.isLoading = false;
+            }, 100);
+          });
+      })
+
   }
 
   addNewPeople(): void {

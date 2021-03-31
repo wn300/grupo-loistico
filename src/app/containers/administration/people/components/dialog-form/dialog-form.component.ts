@@ -64,7 +64,7 @@ export class DialogFormComponent implements OnInit {
       'Independiente'
     ];
     this.postions = [
-      'Auxiliar operativo',
+      'Auxiliar Operativo',
       'Supernumerario',
       'Coordinador',
       'Administrativo'
@@ -73,9 +73,6 @@ export class DialogFormComponent implements OnInit {
       'Activo',
       'Inactivo'
     ];
-
-    console.log(form.data);
-
 
     this.formPeople = new FormGroup({
       firstName: new FormControl({
@@ -244,7 +241,7 @@ export class DialogFormComponent implements OnInit {
   }
 
   changePosition(position: string): any {
-    if (position === 'Supernumerario') {
+    if (position === 'Supernumerario' || position === 'Auxiliar Operativo') {
       this.formPeople.controls.email.setValue(`${this.formPeople.value.identification}@whatever.com`);
       this.formPeople.controls.manager.setValue('');
     } else {

@@ -160,7 +160,7 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div class="col-lg-4 col-md-4 col-12" *ngIf="formPeople.value.position !== 'Supernumerario'">
+      <div class="col-lg-4 col-md-4 col-12" *ngIf="formPeople.value.position !== 'Supernumerario' && formPeople.value.position !== 'Auxiliar Operativo'">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>E-Mail</mat-label>
           <input required autocomplete="off" matInput placeholder="E-Mail" formControlName="email" maxlength="100">
@@ -173,7 +173,7 @@
           </mat-error>
         </ng-container>
       </div>
-      <div class="col-lg-4 col-md-4 col-12"  *ngIf="formPeople.value.position === 'Supernumerario'">
+      <div class="col-lg-4 col-md-4 col-12"  *ngIf="formPeople.value.position === 'Supernumerario' || formPeople.value.position === 'Auxiliar Operativo'">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>Coordinador</mat-label>
           <mat-select formControlName="manager" required>

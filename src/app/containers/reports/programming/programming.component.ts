@@ -893,6 +893,9 @@ export class ProgrammingComponent implements OnInit {
       case 'Asistieron sin salida':
         this.dataSourceReports = new MatTableDataSource(this.reports.filter(data => data.dateInit !== 'No Registra' && data.dateEnd === 'No Registra'));
         break;
+      case 'Asistieron sin entrada':
+        this.dataSourceReports = new MatTableDataSource(this.reports.filter(data => data.dateInit === 'No Registra' && data.dateEnd !== 'No Registra'));
+        break;
       case 'Fuera de rango al ingreso':
         this.dataSourceReports = new MatTableDataSource(this.reports.filter(data => data.positionEntry !== 'Dentro del rango'));
         break;
