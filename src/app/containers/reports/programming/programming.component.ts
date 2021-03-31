@@ -12,6 +12,8 @@ import * as logo from '../../../../assets/mylogo.js';
 import { DialogEditComponent } from './components/dialog-edit/dialog-edit.component';
 
 import { ProgrmmingService } from './services/progrmming.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 @Component({
   selector: 'app-programming',
   templateUrl: './programming.component.html',
@@ -36,7 +38,8 @@ export class ProgrammingComponent implements OnInit {
   private readonly dateFormat = 'DD/MM/YYYY';
 
   constructor(private progrmmingService: ProgrmmingService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {
     this.people = [];
     this.progrmmingService.getOnlyPeopleJoinCompany()
@@ -57,10 +60,10 @@ export class ProgrammingComponent implements OnInit {
       'hourProgramming',
       'dateInit',
       'hourInit',
-      'messageInit',
+      // 'messageInit',
       'dateEnd',
       'hourEnd',
-      'messageEnd',
+      // 'messageEnd',
       'hours',
       'observations',
       'applicantName',
@@ -574,12 +577,264 @@ export class ProgrammingComponent implements OnInit {
 
     dialogRef.afterClosed()
       .subscribe((resultDialogForm: any) => {
-        console.log(resultDialogForm);
-
         if (resultDialogForm) {
+          this.progrmmingService.currentUser.subscribe(data => {
+            this.progrmmingService.getOnlyPeopleByUID(data.uid)
+              .subscribe(peopleUpdate => {
+                const people = peopleUpdate[0];
+                const isEqualDateStart = _.isEqual(resultDialogForm.dateInit, resultDialogForm.dialogForm.startDate);
+                const isEqualDateEnd = _.isEqual(resultDialogForm.dateEnd, resultDialogForm.dialogForm.endDate);
 
+                if (!isEqualDateStart) {
+                  if (resultDialogForm.dateInit === 'No Registra') {
+
+                    const objectSave = {
+                      type: 'Llegada',
+                      description: resultDialogForm.dialogForm.observation,
+                      address: 'No disponible',
+                      location: [],
+                      images: [],
+                      status: true,
+                      date: resultDialogForm.dialogForm.startDate,
+                      createAt: resultDialogForm.dialogForm.startDate,
+                      createBy: people.uid,
+                      email: `${resultDialogForm.identification}@whatever.com`
+                    };
+
+                    const diffTime = this.diffHours(resultDialogForm.date.toDate(), objectSave.date, objectSave.type);
+
+                    this.progrmmingService.postReports(objectSave)
+                      .then(resReport => {
+
+                        this.progrmmingService.getProgrammingJoinReportById(resultDialogForm.id)
+                          .subscribe(dataProgramingById => {
+                            if (dataProgramingById.length === 0) {
+                              const newObject = {
+                                diffTime: parseFloat(`${diffTime[0]}${diffTime[1]}`),
+                                ...resultDialogForm,
+                                startDate: resultDialogForm.dialogForm.startDate,
+                                dateProgramming: resultDialogForm.date,
+                                reportStart: {
+                                  data: {
+                                    ...objectSave,
+                                    message: diffTime[0] === 0 && diffTime[1] <= 15 ? 'A tiempo' : 'Fuera de rango'
+                                  },
+                                  id: resReport.id
+                                },
+                                reportEnd: {
+                                  data: {
+                                    type: '',
+                                    description: '',
+                                    address: '',
+                                    location: {},
+                                    images: [],
+                                    status: '',
+                                    date: '',
+                                    createAt: '',
+                                    createBy: '',
+                                    email: '',
+                                    message: ''
+                                  },
+                                  id: ''
+                                }
+                              };
+
+                              this.progrmmingService.postReportsProgramming(newObject)
+                                .then(resProgramming => {
+                                  this.openSnackBar('Registro editada correctamente', 'cerrar');
+                                }).catch(err => {
+                                  console.log(err);
+
+                                  this.openSnackBar('Error al editar registro, verifique la información é intente de nuevo', 'cerrar');
+                                });
+                            } else {
+                            }
+
+                          });
+                      })
+                      .catch(err => {
+                        console.log(err);
+
+                        this.openSnackBar('Error al editar registro, verifique la información é intente de nuevo', 'cerrar');
+                      });
+                  } else {
+                    const objectSend = this.objectUpdateReport(
+                      resultDialogForm.reportStart.data,
+                      resultDialogForm.dialogForm.reason,
+                      people.uid,
+                      `${people.firstName} ${people.secondName} ${people.firstLastName} ${people.secondLastName}`,
+                      resultDialogForm.dialogForm.startDate);
+
+                    this.updateReportById(resultDialogForm.reportStart.id, objectSend, resultDialogForm, 'Llegada', people);
+                  }
+                }
+                setTimeout(() => {
+                  if (!isEqualDateEnd) {
+                    if (resultDialogForm.dateEnd === 'No Registra') {
+                      const objectSave = {
+                        type: 'Salida',
+                        description: resultDialogForm.dialogForm.observation,
+                        address: 'No disponible',
+                        location: [],
+                        images: [],
+                        status: false,
+                        date: resultDialogForm.dialogForm.endDate,
+                        createAt: resultDialogForm.dialogForm.endDate,
+                        createBy: people.uid,
+                        email: `${resultDialogForm.identification}@whatever.com`
+                      };
+
+                      const diffTime = this.diffHours(resultDialogForm.date.toDate(), objectSave.date, objectSave.type);
+
+                      this.progrmmingService.postReports(objectSave)
+                        .then(resReport => {
+
+                          this.progrmmingService.getProgrammingJoinReportById(resultDialogForm.id)
+                            .subscribe(dataProgramingById => {
+                              if (dataProgramingById.length === 0) {
+                                const newObject = {
+                                  diffTime: parseFloat(`${diffTime[0]}${diffTime[1]}`),
+                                  ...resultDialogForm,
+                                  endDate: resultDialogForm.dialogForm.endDate,
+                                  dateProgramming: resultDialogForm.date,
+                                  reportEnd: {
+                                    data: {
+                                      ...objectSave,
+                                      message: diffTime[0] <= 12 && diffTime[0] > 6 ? 'A tiempo' : 'Fuera de rango'
+                                    },
+                                    id: resReport.id
+                                  },
+                                  reportStart: {
+                                    data: {
+                                      type: '',
+                                      description: '',
+                                      address: '',
+                                      location: {},
+                                      images: [],
+                                      status: '',
+                                      date: '',
+                                      createAt: '',
+                                      createBy: '',
+                                      email: '',
+                                      message: ''
+                                    },
+                                    id: ''
+                                  }
+                                };
+
+                                this.progrmmingService.postReportsProgramming(newObject)
+                                  .then(resProgramming => {
+                                    this.openSnackBar('Registro editada correctamente', 'cerrar');
+                                  }).catch(err => {
+                                    console.log(err);
+
+                                    this.openSnackBar('Error al editar registro, verifique la información é intente de nuevo', 'cerrar');
+                                  });
+                              } else {
+                                dataProgramingById[0].reportEnd = {
+                                  data: {
+                                    ...objectSave,
+                                    message: diffTime[0] <= 12 && diffTime[0] > 6 ? 'A tiempo' : 'Fuera de rango'
+                                  },
+                                  id: resReport.id
+                                };
+                                console.log(dataProgramingById[0], 'dataProgramingById[0]');
+                                this.progrmmingService.putReportProgramming(dataProgramingById[0].idProgrammingJoin, dataProgramingById[0])
+                                  .then(resProgramming => {
+                                    this.openSnackBar('Registro editada correctamente', 'cerrar');
+                                  }).catch(err => {
+                                    console.log(err);
+
+                                    this.openSnackBar('Error al editar registro, verifique la información é intente de nuevo', 'cerrar');
+                                  });
+                              }
+
+                            });
+                        })
+                        .catch(err => {
+                          console.log(err);
+
+                          this.openSnackBar('Error al editar registro, verifique la información é intente de nuevo', 'cerrar');
+                        });
+                    } else {
+                      const objectSend = this.objectUpdateReport(
+                        resultDialogForm.reportEnd.data,
+                        resultDialogForm.dialogForm.reason,
+                        people.uid,
+                        `${people.firstName} ${people.secondName} ${people.firstLastName} ${people.secondLastName}`,
+                        resultDialogForm.dialogForm.endDate);
+
+                      this.updateReportById(resultDialogForm.reportEnd.id, objectSend, resultDialogForm, 'Salida', people);
+                    }
+                  }
+                }, 1000);
+
+              });
+          });
         }
       });
+  }
+
+  private updateReportById(id, object: any, resultDialogForm: any, type: any, people: any): void {
+    this.progrmmingService.putReports(
+      id,
+      object
+    )
+      .then(res => {
+        if (type === 'Llegada') {
+          const diffTime = this.diffHours(resultDialogForm.date.toDate(), object.date, object.type);
+          object.message = diffTime[0] === 0 && diffTime[1] <= 15 ? 'A tiempo' : 'Fuera de rango';
+          resultDialogForm.reportStart.data = object;
+        } else {
+          const diffTime = this.diffHours(resultDialogForm.date.toDate(), object.date, object.type);
+          object.message = diffTime[0] <= 12 && diffTime[0] > 6 ? 'A tiempo' : 'Fuera de rango';
+          resultDialogForm.reportEnd.data = object;
+        }
+
+        this.progrmmingService.putReportProgramming(
+          resultDialogForm.idProgrammingJoin,
+          this.objectUpdateReportProgrammingAll(resultDialogForm, people.uid, `${people.firstName} ${people.secondName} ${people.firstLastName} ${people.secondLastName}`))
+          .then(resProgramming => {
+            this.openSnackBar('Registro editada correctamente', 'cerrar');
+          }).catch(err => {
+            console.log(err);
+
+            this.openSnackBar('Error al editar registro, verifique la información é intente de nuevo', 'cerrar');
+          });
+
+      })
+      .catch(err => {
+        console.log(err);
+
+        this.openSnackBar('Error al editar registro, verifique la información é intente de nuevo', 'cerrar');
+      });
+  }
+
+  private objectUpdateReport(object: any, reason: any, updateId: any, updateName: string, dateNew: Date): any {
+    return {
+      ...object,
+      date: dateNew,
+      createAt: dateNew,
+      updateAt: new Date(),
+      updateId,
+      updateName,
+      updateReason: reason,
+    };
+  }
+
+
+  private objectUpdateReportProgrammingAll(object: any, updateId: any, updateName: string): any {
+    return {
+      ...object,
+      dateProgramming: object.date,
+      dateInit: object.dialogForm.startDate,
+      dateEnd: object.dialogForm.endDate,
+      observation: object.dialogForm.observation,
+      updateAt: new Date(),
+      updateId,
+      updateName,
+      updateReason: object.dialogForm.reason,
+    };
   }
 
   digitThrird(cordenada: number): any {
@@ -659,5 +914,11 @@ export class ProgrammingComponent implements OnInit {
 
     }
 
+  }
+
+  openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+    });
   }
 }
