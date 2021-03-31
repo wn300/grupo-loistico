@@ -7,6 +7,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
 
 import { DeleteFilesRoutingModule } from './delete-files-routing.module';
 import { DeleteFilesComponent } from './delete-files.component';
@@ -18,6 +22,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
   declarations: [DeleteFilesComponent],
   imports: [
     CommonModule,
+    FormsModule,
     DeleteFilesRoutingModule,
     MatCardModule,
     MatTableModule,
@@ -27,6 +32,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
     MatCheckboxModule,
     MatButtonModule,
     SharedModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [DeleteFilesService]
 })
