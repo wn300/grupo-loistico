@@ -90,6 +90,10 @@ export class PeopleService {
     return this.firestore.collection(this.collectionPeople, ref => ref.where('position', '==', 'Coordinador')).snapshotChanges();
   }
 
+  getCompanies(): Observable<any> {
+    return this.firestore.collection('company').valueChanges();
+  }
+
   postUserAuth({ email, password }): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       this.firebaseAuth.createUserWithEmailAndPassword( email, password.toString() )

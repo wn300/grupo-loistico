@@ -46,7 +46,7 @@
 
                 <ng-container matColumnDef="company">
                   <th mat-header-cell class="text-center" *matHeaderCellDef> Empresa </th>
-                  <td mat-cell *matCellDef="let element" class="border-dable text-center"> {{element.company}} </td>
+                  <td mat-cell *matCellDef="let element" class="border-dable text-center"> {{element.company[0].name}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="phone">

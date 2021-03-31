@@ -74,9 +74,6 @@ export class DialogFormComponent implements OnInit {
       'Inactivo'
     ];
 
-    console.log(form.data);
-
-
     this.formPeople = new FormGroup({
       firstName: new FormControl({
         value: form.data ? form.data.firstName : '',
